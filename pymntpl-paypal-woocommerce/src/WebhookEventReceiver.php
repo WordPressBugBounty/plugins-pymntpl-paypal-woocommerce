@@ -39,7 +39,7 @@ class WebhookEventReceiver {
 	public function do_capture_completed( $capture, $event ) {
 		if ( $capture && $capture->getCustomId() ) {
 			$order = wc_get_order( $capture->getCustomId() );
-			if ( $order ) {
+			if ( $order && $order instanceof \WC_Order ) {
 				if ( ! OrderLock::has_order_lock( $order ) ) {
 					$needs_payment_complete = $order->get_meta( Constants::CAPTURE_STATUS ) === Capture::PENDING;
 					/**

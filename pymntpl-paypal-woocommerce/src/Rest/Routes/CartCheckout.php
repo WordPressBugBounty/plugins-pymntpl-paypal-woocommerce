@@ -5,6 +5,7 @@ namespace PaymentPlugins\WooCommerce\PPCP\Rest\Routes;
 
 
 use PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\AbstractGateway;
+use PaymentPlugins\WooCommerce\PPCP\Utils;
 
 /**
  * Route that handles requests to process the checkout.
@@ -45,7 +46,11 @@ class CartCheckout extends AbstractCart {
 
 	public function handle_post_request( \WP_REST_Request $request ) {
 		$this->request = $request;
+
 		$this->initialize();
+
+		$this->prepare_request_params( $request );
+
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$_POST = array_merge( $_POST, $request->get_json_params() );
 
@@ -146,6 +151,20 @@ class CartCheckout extends AbstractCart {
 					}
 				}
 			}
+		}
+	}
+
+	/**
+	 * @param \WP_REST_Request $request
+	 *
+	 * @return void
+	 */
+	private function prepare_request_params( $request ) {
+		if ( isset( $request['shipping_state'], $request['shipping_country'] ) ) {
+			$request['shipping_state'] = Utils::normalize_address_state( $request['shipping_state'], $request['shipping_country'] );
+		}
+		if ( isset( $request['billing_state'], $request['billing_country'] ) ) {
+			$request['billing_state'] = Utils::normalize_address_state( $request['billing_state'], $request['billing_country'] );
 		}
 	}
 

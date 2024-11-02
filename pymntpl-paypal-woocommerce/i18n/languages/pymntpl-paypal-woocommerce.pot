@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Payment Plugins for PayPal WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Payment Plugins for PayPal WooCommerce 1.0.52\n"
+"Project-Id-Version: Payment Plugins for PayPal WooCommerce 1.0.53\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pymntpl-paypal-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-09-10T20:46:35+00:00\n"
+"POT-Creation-Date: 2024-11-02T20:17:37+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: pymntpl-paypal-woocommerce\n"
@@ -997,7 +997,7 @@ msgid "Billing Agreement ID"
 msgstr ""
 
 #: src/Conversion/WooCommercePayPalPayments.php:101
-#: src/Conversion/WooCommercePPCPAngellEYE.php:70
+#: src/Conversion/WooCommercePPCPAngellEYE.php:72
 msgid "Payment Token ID"
 msgstr ""
 
@@ -1079,52 +1079,52 @@ msgstr ""
 msgid "This merchant account is not permitted to create Merchant Initiated Billing Agreements. Please contact PayPal support and request reference transaction access."
 msgstr ""
 
-#: src/PaymentHandler.php:131
+#: src/PaymentHandler.php:130
 msgid "Error processing payment. Reason: %s"
 msgstr ""
 
-#: src/PaymentHandler.php:169
+#: src/PaymentHandler.php:168
 msgid "PayPal capture status is pending. Reason: %1$s. Payment will complete when capture.completed webhook is received."
 msgstr ""
 
-#: src/PaymentHandler.php:184
+#: src/PaymentHandler.php:183
 msgid "PayPal order %s created. %s"
 msgstr ""
 
-#: src/PaymentHandler.php:185
+#: src/PaymentHandler.php:184
 msgid "Capture ID: %s"
 msgstr ""
 
-#: src/PaymentHandler.php:185
+#: src/PaymentHandler.php:184
 msgid "Authorization ID: %s"
 msgstr ""
 
-#: src/PaymentHandler.php:276
+#: src/PaymentHandler.php:275
 msgid "To process a refund, there must be a transaction id associated with the order."
 msgstr ""
 
-#: src/PaymentHandler.php:279
+#: src/PaymentHandler.php:278
 msgid "This payment has a status of Authorize. Only captured payments can be refunded."
 msgstr ""
 
-#: src/PaymentHandler.php:313
+#: src/PaymentHandler.php:312
 msgid "Error capturing payment. Reason: %s"
 msgstr ""
 
-#: src/PaymentHandler.php:317
+#: src/PaymentHandler.php:316
 msgid "Payment captured in PayPal. Capture ID: %s Amount: %s"
 msgstr ""
 
-#: src/PaymentHandler.php:349
+#: src/PaymentHandler.php:348
 msgid "A valid authorization ID is required to perform a void."
 msgstr ""
 
-#: src/PaymentHandler.php:363
-#: src/PaymentHandler.php:394
+#: src/PaymentHandler.php:362
+#: src/PaymentHandler.php:393
 msgid "PayPal authorization cancelled. Authorization ID: %s"
 msgstr ""
 
-#: src/PaymentHandler.php:387
+#: src/PaymentHandler.php:386
 msgid "Order cancellation"
 msgstr ""
 
@@ -1478,7 +1478,7 @@ msgstr ""
 msgid "Your API credentials have been saved and your PayPal account is connected."
 msgstr ""
 
-#: src/Rest/Routes/CartCheckout.php:76
+#: src/Rest/Routes/CartCheckout.php:81
 msgid "Please fill out all required fields then click Place Order."
 msgstr ""
 
@@ -1490,11 +1490,11 @@ msgstr ""
 msgid "Please enter a valid shipping address."
 msgstr ""
 
-#: src/Rest/Routes/CartShipping.php:64
+#: src/Rest/Routes/CartShipping.php:65
 msgid "There are no shipping options available for the provided address."
 msgstr ""
 
-#: src/Rest/Routes/CartShipping.php:71
+#: src/Rest/Routes/CartShipping.php:72
 msgid "Error fetching order %s. Reason: %s"
 msgstr ""
 

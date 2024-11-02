@@ -183,4 +183,26 @@ class Utils {
 		return $product;
 	}
 
+	/**
+	 * @param $state
+	 * @param $country
+	 *
+	 * @since 1.0.53
+	 * @return int|mixed|string
+	 */
+	public static function normalize_address_state( $state, $country ) {
+		$countries = WC()->countries ? WC()->countries : null;
+		if ( $country && $state && $countries ) {
+			$states = $countries->get_states( $country );
+			if ( ! empty( $states ) && is_array( $states ) && ! isset( $states[ $state ] ) ) {
+				$state_keys = array_flip( array_map( 'strtoupper', $states ) );
+				if ( isset( $state_keys[ strtoupper( $state ) ] ) ) {
+					$state = $state_keys[ strtoupper( $state ) ];
+				}
+			}
+		}
+
+		return $state;
+	}
+
 }

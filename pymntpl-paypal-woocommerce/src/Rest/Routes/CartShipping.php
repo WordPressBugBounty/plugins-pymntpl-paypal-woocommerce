@@ -8,6 +8,7 @@ use PaymentPlugins\PayPalSDK\Order;
 use PaymentPlugins\PayPalSDK\PatchRequest;
 use PaymentPlugins\PayPalSDK\PurchaseUnit;
 use PaymentPlugins\WooCommerce\PPCP\Constants;
+use PaymentPlugins\WooCommerce\PPCP\Utils;
 
 /**
  * Route that handles onShippingChange events from the PayPal modal.
@@ -113,6 +114,9 @@ class CartShipping extends AbstractCart {
 			'postcode' => isset( $address['postcode'] ) ? $address['postcode'] : null,
 			'city'     => isset( $address['city'] ) ? $address['city'] : null
 		];
+
+		$location['state'] = Utils::normalize_address_state( $location['state'], $location['country'] );
+
 		$customer->set_billing_location( ...array_values( $location ) );
 		$customer->set_shipping_location( ...array_values( $location ) );
 		WC()->customer->set_calculated_shipping( true );

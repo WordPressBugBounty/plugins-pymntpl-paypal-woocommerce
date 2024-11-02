@@ -68,9 +68,8 @@ class PaymentHandler {
 				$paypal_order_id = $this->get_paypal_order_id_from_request();
 				if ( ! $paypal_order_id ) {
 					$paypal_order_id = $this->cache->get( Constants::PAYPAL_ORDER_ID );
-					// If there isn't an existing PayPal order ID or this payment method is using the Place Order
-					// button, create a PayPal order.
-					if ( ! $paypal_order_id || $this->payment_method->is_place_order_button() ) {
+					// If there isn't an existing PayPal order ID button, create a PayPal order.
+					if ( ! $paypal_order_id ) {
 						$args = $this->get_create_order_params( $order );
 
 						$this->payment_method->logger->info(

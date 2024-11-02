@@ -23,7 +23,7 @@ class CartOrder extends AbstractCart {
 	public function __construct( AdvancedSettings $settings, ...$args ) {
 		parent::__construct( ...$args );
 		$this->settings  = $settings;
-		$this->validator = new CheckoutValidator( $this->settings );
+		$this->validator = new CheckoutValidator();
 	}
 
 	public function get_path() {
