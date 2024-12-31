@@ -58,7 +58,7 @@ class PaymentButtonController {
 	public function add_product_action() {
 		global $product;
 		$action = 'woocommerce_after_add_to_cart_button';
-		if ( 'top' == $product->get_meta( '_ppcp_button_position' ) ) {
+		if ( $product instanceof \WC_Product && 'top' == $product->get_meta( '_ppcp_button_position' ) ) {
 			$action = 'woocommerce_before_add_to_cart_button';
 		}
 		add_action( $action, [ $this, 'render_product_buttons' ] );

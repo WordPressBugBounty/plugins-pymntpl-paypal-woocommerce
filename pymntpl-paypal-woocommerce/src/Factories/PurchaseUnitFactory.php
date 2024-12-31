@@ -2,9 +2,11 @@
 
 namespace PaymentPlugins\WooCommerce\PPCP\Factories;
 
+use PaymentPlugins\PayPalSDK\Address;
 use PaymentPlugins\PayPalSDK\Amount;
 use PaymentPlugins\PayPalSDK\PurchaseUnit;
 use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\AdvancedSettings;
+use PaymentPlugins\WooCommerce\PPCP\Logger;
 use PaymentPlugins\WooCommerce\PPCP\Utilities\NumberUtil;
 use PaymentPlugins\WooCommerce\PPCP\Utils;
 
@@ -15,8 +17,11 @@ class PurchaseUnitFactory extends AbstractFactory {
 	 */
 	private $settings;
 
-	public function __construct( AdvancedSettings $settings, ...$args ) {
+	private $log;
+
+	public function __construct( AdvancedSettings $settings, Logger $log, ...$args ) {
 		$this->settings = $settings;
+		$this->log      = $log;
 		parent::__construct( ...$args );
 	}
 
@@ -50,7 +55,18 @@ class PurchaseUnitFactory extends AbstractFactory {
 			$purchase_unit->setShipping( $this->factories->shipping->from_order( 'shipping' ) );
 			// remove the shipping address if it's invalid.
 			if ( ! Utils::is_valid_address( $purchase_unit->getShipping()->getAddress(), 'shipping' ) ) {
+				$address = $purchase_unit->getShipping()->getAddress();
 				unset( $purchase_unit->getShipping()->address );
+				/**
+				 * log the address so we know what lead to it being filtered.
+				 */
+				$this->log->info(
+					sprintf(
+						'Shipping address filtered from order. Address: %s. Field Error: %s',
+						print_r( $address instanceof Address ? $address->toArray() : $address, true ),
+						print_r( Utils::get_last_address_field_error(), true )
+					)
+				);
 			}
 		}
 		$this->filter_purchase_unit( $purchase_unit, $this->order->get_total() );

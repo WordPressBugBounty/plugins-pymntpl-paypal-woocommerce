@@ -343,7 +343,7 @@ class PaymentHandler {
 			$authorization_id = $order->get_meta( Constants::AUTHORIZATION_ID );
 			if ( ! $authorization_id ) {
 				if ( ! $manual ) {
-					return;
+					return false;
 				}
 				throw new \Exception( __( 'A valid authorization ID is required to perform a void.', 'pymntpl-paypal-woocommerce' ) );
 			}
@@ -388,8 +388,7 @@ class PaymentHandler {
 		];
 		if ( ! $txn_id ) {
 			$result = $this->process_void( $order );
-			if ( ! is_wp_error( $result ) ) {
-				wc_create_refund( $refund_args );
+			if ( ! is_wp_error( $result ) && $result !== false ) {
 				$order->add_order_note( sprintf( __( 'PayPal authorization cancelled. Authorization ID: %s', 'pymntpl-paypal-woocommerce' ), $order->get_meta( Constants::AUTHORIZATION_ID ) ) );
 			}
 		} else {

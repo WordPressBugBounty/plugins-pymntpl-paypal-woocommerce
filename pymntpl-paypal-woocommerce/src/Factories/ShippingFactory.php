@@ -17,6 +17,7 @@ class ShippingFactory extends AbstractFactory {
 		return ( new Shipping() )
 			->setName( $this->factories->name->from_order( $prefix ) )
 			->setAddress( $this->factories->address->from_order( $prefix ) );
+		//->setOptions( $this->factories->shippingOptions->from_order() );
 	}
 
 }

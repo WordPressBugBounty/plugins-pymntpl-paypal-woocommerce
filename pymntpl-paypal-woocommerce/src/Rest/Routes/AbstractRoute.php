@@ -61,4 +61,21 @@ abstract class AbstractRoute {
 		throw new \Exception( 'Method not implemented', 405 );
 	}
 
+	/**
+	 * @param $notice_type
+	 *
+	 * @since 1.0.54
+	 * @return void
+	 */
+	protected function get_wc_notice( $notice_type = '', $default = '' ) {
+		$notices = \wc_get_notices( $notice_type );
+		if ( \is_array( $notices ) && \count( $notices ) > 0 ) {
+			$notice = current( $notices );
+
+			return $notice['notice'] ?? $default;
+		}
+
+		return $default;
+	}
+
 }

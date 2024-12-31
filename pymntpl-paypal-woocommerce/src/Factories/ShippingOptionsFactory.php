@@ -15,7 +15,6 @@ class ShippingOptionsFactory extends AbstractFactory {
 	public function from_cart() {
 		// loop through shipping options and format then
 		$incl_tax                = $this->display_prices_including_tax();
-		$decimals                = ( ( $decimals = wc_get_price_decimals() ) < 2 ? $decimals : 2 );
 		$chosen_shipping_methods = WC()->session->get( 'chosen_shipping_methods', [] );
 		$methods                 = new Collection();
 		foreach ( WC()->shipping()->get_packages() as $i => $package ) {
@@ -33,6 +32,26 @@ class ShippingOptionsFactory extends AbstractFactory {
 		return $methods;
 	}
 
+	public function from_order() {
+		$methods          = new Collection();
+		$shipping_methods = $this->order->get_shipping_methods();
+		if ( is_array( $shipping_methods ) ) {
+			if ( count( $shipping_methods ) > 1 ) {
+				$shipping_methods = [ array_shift( $shipping_methods ) ];
+			}
+			foreach ( $shipping_methods as $idx => $method ) {
+				$methods->add( $this->get_order_shipping_method_option(
+					$method->get_total(),
+					$method,
+					$idx,
+					true
+				) );
+			}
+		}
+
+		return $methods;
+	}
+
 	/**
 	 * @param string            $amount
 	 * @param \WC_Shipping_Rate $method
@@ -44,6 +63,16 @@ class ShippingOptionsFactory extends AbstractFactory {
 	public function get_shipping_method_option( $amount, \WC_Shipping_Rate $method, $idx, bool $selected ) {
 		return ( new ShippingOption() )->setId( $this->get_shipping_method_option_id( $idx, $method->id ) )
 		                               ->setLabel( substr( $method->get_label(), 0, 127 ) )
+		                               ->setType( 'SHIPPING' )
+		                               ->setSelected( $selected )
+		                               ->setAmount( ( new Amount() )
+			                               ->setValue( $this->round( $amount ) )
+			                               ->setCurrencyCode( $this->currency ) );
+	}
+
+	public function get_order_shipping_method_option( $amount, \WC_Order_Item_Shipping $method, $idx, $selected ) {
+		return ( new ShippingOption() )->setId( $this->get_shipping_method_option_id( $idx, $method->get_method_id() ) )
+		                               ->setLabel( substr( $method->get_name(), 0, 127 ) )
 		                               ->setType( 'SHIPPING' )
 		                               ->setSelected( $selected )
 		                               ->setAmount( ( new Amount() )

@@ -43,7 +43,7 @@ class ApplicationContextFactory extends AbstractFactory {
 			], WC()->api_request_url( 'ppcp_checkout_return' ) ) );
 			$context->setCancelUrl( wc_get_checkout_url() );
 		}
-		$context->setBrandName( $this->settings->get_option( 'display_name' ) );
+		$context->setBrandName( substr( $this->settings->get_option( 'display_name' ), 0, 127 ) );
 
 		return $context;
 	}

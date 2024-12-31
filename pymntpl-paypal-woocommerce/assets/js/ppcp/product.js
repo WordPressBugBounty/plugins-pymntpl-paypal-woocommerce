@@ -78,8 +78,8 @@ class Product extends Event {
             const elements = document.querySelectorAll('.variations [name^="attribute_"]');
             if (elements) {
                 elements.forEach((element) => {
-                    if (!(element.name in attributes)) {
-                        attributes[element.name] = element.value;
+                    if (!(element.name in attributes) || (attributes[element.name] === '')) {
+                        attributes[element.name] = element.value || '';
                     }
                 });
             }

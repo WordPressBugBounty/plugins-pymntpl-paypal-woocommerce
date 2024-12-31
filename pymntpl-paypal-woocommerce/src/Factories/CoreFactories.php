@@ -3,6 +3,7 @@
 namespace PaymentPlugins\WooCommerce\PPCP\Factories;
 
 use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\AdvancedSettings;
+use PaymentPlugins\WooCommerce\PPCP\Logger;
 use PaymentPlugins\WooCommerce\PPCP\Main;
 
 /**
@@ -45,7 +46,11 @@ class CoreFactories {
 			'shippingOptions'    => new ShippingOptionsFactory( $this ),
 			'items'              => new ItemsFactory( $this ),
 			'applicationContext' => new ApplicationContextFactory( $container->get( AdvancedSettings::class ), $this ),
-			'purchaseUnit'       => new PurchaseUnitFactory( $container->get( AdvancedSettings::class ), $this ),
+			'purchaseUnit'       => new PurchaseUnitFactory(
+				$container->get( AdvancedSettings::class ),
+				$container->get( Logger::class ),
+				$this
+			),
 			'name'               => new NameFactory( $this ),
 			'paymentSource'      => new PaymentSourceFactory( $this ),
 			'billingAgreement'   => new BillingAgreementTokenFactory( $this ),
