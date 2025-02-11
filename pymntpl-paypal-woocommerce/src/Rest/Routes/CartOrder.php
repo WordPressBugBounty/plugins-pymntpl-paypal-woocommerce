@@ -94,6 +94,14 @@ class CartOrder extends AbstractCart {
 				'payment'
 			);
 
+			/**
+			 * @param $result  PaymentPlugins\PayPalSDK\Order
+			 * @param $request \WP_REST_Request
+			 *
+			 * @since 1.0.55
+			 */
+			do_action( 'wc_ppcp_cart_order_created', $result, $request );
+
 
 			return $result->id;
 		} catch ( \Exception $e ) {
@@ -102,6 +110,11 @@ class CartOrder extends AbstractCart {
 		}
 	}
 
+	/**
+	 * @param $error
+	 *
+	 * @return mixed|void|\WP_Error
+	 */
 	public function get_error_response( $error ) {
 		if ( $error instanceof \Exception && $this->validator->has_errors() ) {
 			return $this->validator->get_failure_response();

@@ -53,7 +53,11 @@ class PayLaterMessaging {
 		if ( $context && wc_string_to_bool( $this->settings->get_option( "{$context}_enabled" ) ) ) {
 			$this->assets->register_script( 'wc-ppcp-blocks-commons', 'build/blocks-commons.js' );
 			$this->assets->register_script( 'wc-ppcp-blocks-paylater-messaging', 'build/paylater-messaging.js', [ 'wc-ppcp-blocks-commons' ] );
+
+			wp_enqueue_style( 'wc-ppcp-blocks-styles' );
+
 			$dependencies[]   = 'wc-ppcp-blocks-paylater-messaging';
+
 			$this->registered = true;
 		}
 

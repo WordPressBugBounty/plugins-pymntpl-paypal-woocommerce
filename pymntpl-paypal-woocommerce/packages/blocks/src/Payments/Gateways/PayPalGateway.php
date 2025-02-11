@@ -16,6 +16,7 @@ class PayPalGateway extends AbstractGateway {
 		$this->assets_api->register_script( 'wc-ppcp-blocks-commons', 'build/blocks-commons.js' );
 		$this->assets_api->register_script( 'wc-ppcp-blocks-paypal', 'build/paypal.js', [ 'wc-ppcp-blocks-commons' ] );
 		$this->assets_api->register_script( 'wc-ppcp-blocks-checkout', 'build/checkout-block.js', [ 'wc-ppcp-blocks-commons' ] );
+		wp_enqueue_style( 'wc-ppcp-blocks-styles' );
 
 		return [ 'wc-ppcp-blocks-paypal', 'wc-ppcp-blocks-checkout' ];
 	}
@@ -43,6 +44,16 @@ class PayPalGateway extends AbstractGateway {
 						'layout' => 'vertical',
 						'shape'  => $this->get_setting( 'button_shape' ),
 						'height' => (int) $this->get_setting( 'button_height' )
+					];
+				}
+				if ( $source === 'card' ) {
+					return [
+						'layout'  => 'vertical',
+						'label'   => $this->get_setting( 'button_label' ),
+						'shape'   => $this->get_setting( 'button_shape' ),
+						'height'  => (int) $this->get_setting( 'button_height' ),
+						'color'   => $this->get_setting( "{$source}_button_color" ),
+						'tagline' => wc_string_to_bool( $this->get_setting( 'card_tagline_enabled', 'no' ) )
 					];
 				}
 

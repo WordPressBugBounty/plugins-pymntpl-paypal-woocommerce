@@ -22,9 +22,7 @@ class WooCommercePayPalPayments extends GeneralPayPalPlugin {
 	 * @return \PaymentPlugins\PayPalSDK\PaymentSource
 	 */
 	public function get_payment_source_from_order( $payment_source, $order ) {
-		if ( $payment_source->getToken() && $payment_source->getToken()->getId() ) {
-			$payment_source->getToken()->setType( Token::PAYMENT_METHOD_TOKEN );
-		} else {
+		if ( $payment_source->getToken() && ! $payment_source->getToken()->getId() ) {
 			$payment_token_id = $order->get_meta( $this->payment_token_id );
 			if ( ! $payment_token_id ) {
 				$customer_id = $this->get_customer_id( $order->get_customer_id(), 'v2' );

@@ -1,15 +1,15 @@
-# Copyright (C) 2024 Payment Plugins, support@paymentplugins.com
+# Copyright (C) 2025 Payment Plugins, support@paymentplugins.com
 # This file is distributed under the same license as the Payment Plugins for PayPal WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Payment Plugins for PayPal WooCommerce 1.0.54\n"
+"Project-Id-Version: Payment Plugins for PayPal WooCommerce 1.0.55\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pymntpl-paypal-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-12-31T00:52:49+00:00\n"
+"POT-Creation-Date: 2025-02-11T19:34:02+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: pymntpl-paypal-woocommerce\n"
@@ -30,15 +30,15 @@ msgstr ""
 msgid "Payment Plugins, support@paymentplugins.com"
 msgstr ""
 
-#: packages/blocks/src/Payments/Gateways/PayPalGateway.php:37
+#: packages/blocks/src/Payments/Gateways/PayPalGateway.php:38
 msgid "After clicking \"%1$s\", you will be redirected to PayPal to complete your purchase securely."
 msgstr ""
 
-#: packages/blocks/src/Payments/Gateways/PayPalGateway.php:68
+#: packages/blocks/src/Payments/Gateways/PayPalGateway.php:79
 msgid "Some required fields are missing. Please review your details and then complete your order with PayPal."
 msgstr ""
 
-#: packages/blocks/src/Payments/Gateways/PayPalGateway.php:97
+#: packages/blocks/src/Payments/Gateways/PayPalGateway.php:108
 #: src/Payments/Gateways/PayPalGateway.php:167
 msgid "Pay with PayPal"
 msgstr ""
@@ -996,7 +996,7 @@ msgstr ""
 msgid "Billing Agreement ID"
 msgstr ""
 
-#: src/Conversion/WooCommercePayPalPayments.php:101
+#: src/Conversion/WooCommercePayPalPayments.php:99
 #: src/Conversion/WooCommercePPCPAngellEYE.php:72
 msgid "Payment Token ID"
 msgstr ""

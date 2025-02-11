@@ -23,10 +23,15 @@ const PayLaterMessaging = ({cart, extensions, context}) => {
     });
 
     useEffect(() => {
-        if (paypal) {
+        if (paypal && isEnabled) {
             paypal.Messages(options).render(el.current);
         }
-    }, [paypal, options]);
+    }, [
+        paypal,
+        options,
+        isEnabled
+    ]);
+
     if (isEnabled) {
         return (
             <TotalsWrapper>

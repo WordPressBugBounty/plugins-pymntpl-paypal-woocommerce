@@ -36,12 +36,13 @@ class Api {
 		add_filter( 'woocommerce_blocks_payment_method_type_registration', [ $this, 'register_payment_gateways' ] );
 		add_action( 'woocommerce_blocks_checkout_enqueue_data', [ $this, 'add_checkout_payment_method_data' ] );
 		add_action( 'woocommerce_blocks_cart_enqueue_data', [ $this, 'add_cart_payment_method_data' ] );
-		add_action( 'woocommerce_blocks_enqueue_checkout_block_scripts_after', [ $this, 'enqueue_assets' ] );
 		add_action( 'woocommerce_blocks_enqueue_cart_block_scripts_after', [ $this, 'dequeue_cart_scripts' ] );
 		add_action( 'woocommerce_blocks_enqueue_checkout_block_scripts_before', [ $this, 'dequeue_cart_scripts' ] );
 		add_filter( 'woocommerce_payment_gateways', [ $this, 'add_payment_gateways' ] );
 		add_action( 'woocommerce_rest_checkout_process_payment_with_context', array( $this, 'payment_with_context' ), 10 );
 		add_filter( 'rest_dispatch_request', [ $this, 'process_rest_dispatch_request' ], 10, 2 );
+
+		$this->register_assets();
 	}
 
 	public function register_payment_gateways( PaymentMethodRegistry $registry ) {
@@ -70,10 +71,8 @@ class Api {
 		}
 	}
 
-	public function enqueue_assets() {
-		if ( wp_script_is( 'wc-ppcp-blocks-commons', 'registered' ) ) {
-			$this->container->get( Package::ASSETS_API )->enqueue_style( 'wc-ppcp-blocks-styles', 'build/styles.css' );
-		}
+	public function register_assets() {
+		$this->container->get( Package::ASSETS_API )->register_style( 'wc-ppcp-blocks-styles', 'build/styles.css' );
 	}
 
 	public function dequeue_cart_scripts() {

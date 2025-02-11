@@ -12,7 +12,6 @@ use PaymentPlugins\WooCommerce\PPCP\Assets\AssetsApi;
 use PaymentPlugins\WooCommerce\PPCP\Config;
 use PaymentPlugins\WooCommerce\PPCP\Container\Container;
 use PaymentPlugins\PPCP\Blocks\Payments\Api as PaymentsApi;
-use PaymentPlugins\WooCommerce\PPCP\ContextHandler;
 use PaymentPlugins\WooCommerce\PPCP\Package\AbstractPackage;
 use PaymentPlugins\WooCommerce\PPCP\Rest\RestController;
 
@@ -56,18 +55,18 @@ class Package extends AbstractPackage {
 				$container->get( PayLaterMessageSettings::class ),
 				$container->get( self::ASSETS_API ),
 				\Automattic\WooCommerce\Blocks\Package::container()->get( AssetDataRegistry::class ) );
-			$instance->set_context_handler( $this->container->get( ContextHandler::class ) );
+			$instance->set_context_handler( $this->container->get( \PaymentPlugins\PPCP\Blocks\ContextHandler::class ) );
 
 			return $instance;
 		} );
 		$this->container->register( QueryParams::class, function ( $container ) {
 			return new QueryParams(
 				\Automattic\WooCommerce\Blocks\Package::container()->get( AssetDataRegistry::class ),
-				$container->get( ContextHandler::class ),
+				$container->get( \PaymentPlugins\PPCP\Blocks\ContextHandler::class ),
 				$container->get( APISettings::class )
 			);
 		} );
-		$this->container->register( ContextHandler::class, function () {
+		$this->container->register( \PaymentPlugins\PPCP\Blocks\ContextHandler::class, function () {
 			return new \PaymentPlugins\PPCP\Blocks\ContextHandler();
 		} );
 		$this->container->register( Rest\Controller::class, function () {

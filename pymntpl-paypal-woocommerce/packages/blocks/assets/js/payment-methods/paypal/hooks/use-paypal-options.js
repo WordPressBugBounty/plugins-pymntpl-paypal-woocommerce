@@ -102,6 +102,13 @@ export const usePayPalOptions = (
                 break;
             case paypal.FUNDING.CARD:
                 styles = buttonStyles.card;
+                if (styles.tagline) {
+                    delete styles.tagline;
+                    styles.layout = 'vertical';
+                } else {
+                    styles.layout = 'horizontal';
+                    delete styles.tagline;
+                }
                 break;
             case paypal.FUNDING.VENMO:
                 styles = buttonStyles.venmo;
@@ -204,7 +211,7 @@ export const usePayPalOptions = (
                     payment_method: 'ppcp',
                     address_provided: !isExpress && needsShipping,
                     checkout_blocks: true,
-                    context: !isExpress ? 'checkout' : null,
+                    context: !isExpress ? 'checkout' : 'express',
                     ...(needsShipping ? {
                         shipping_first_name: shippingAddress.first_name,
                         shipping_last_name: shippingAddress.last_name,

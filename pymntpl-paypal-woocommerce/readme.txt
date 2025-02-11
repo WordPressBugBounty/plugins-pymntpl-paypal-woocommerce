@@ -4,7 +4,7 @@ Tags: paypal, paylater, venmo, credit cards
 Requires at least: 4.7
 Tested up to: 6.7
 Requires PHP: 7.1
-Stable tag: 1.0.54
+Stable tag: 1.0.55
 Copyright: Payment Plugins
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -47,6 +47,10 @@ Our documentation has a step-by-step guide on how to connect the plugin to your 
 Payment Plugins is the team behind several of the highest reviewed and installed Payment integrations for WooCommerce.
 
 == Changelog ==
+= 1.0.55 - 02/11/24 =
+* Fixed - Tagline option not working for PayPal buttons on checkout block
+* Fixed - PayLater messaging not showing on checkout block
+* Added - action "wc_ppcp_cart_order_created". This action is triggered when a PayPal order is created by clicking the PayPal smartbutton.
 = 1.0.54 - 12/31/24 =
 * Added - Logging if the add to cart call fails on the product page
 * Added - Improved error message if add to cart fails on product page
