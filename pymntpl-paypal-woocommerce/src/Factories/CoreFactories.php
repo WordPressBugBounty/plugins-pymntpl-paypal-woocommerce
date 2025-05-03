@@ -5,6 +5,7 @@ namespace PaymentPlugins\WooCommerce\PPCP\Factories;
 use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\AdvancedSettings;
 use PaymentPlugins\WooCommerce\PPCP\Logger;
 use PaymentPlugins\WooCommerce\PPCP\Main;
+use PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\AbstractGateway;
 
 /**
  * @property \PaymentPlugins\WooCommerce\PPCP\Factories\OrderFactory                 $order
@@ -20,6 +21,7 @@ use PaymentPlugins\WooCommerce\PPCP\Main;
  * @property \PaymentPlugins\WooCommerce\PPCP\Factories\PaymentSourceFactory         $paymentSource
  * @property \PaymentPlugins\WooCommerce\PPCP\Factories\BillingAgreementTokenFactory $billingAgreement
  * @property \PaymentPlugins\WooCommerce\PPCP\Factories\RefundFactory                $refunds
+ * @property \PaymentPlugins\WooCommerce\PPCP\Factories\SetupTokenFactory            $setupToken
  */
 class CoreFactories {
 
@@ -30,6 +32,8 @@ class CoreFactories {
 	private $customer;
 
 	private $order;
+
+	private $payment_method;
 
 	/**
 	 * @param \PaymentPlugins\WooCommerce\PPCP\Container\Container $container
@@ -54,7 +58,8 @@ class CoreFactories {
 			'name'               => new NameFactory( $this ),
 			'paymentSource'      => new PaymentSourceFactory( $this ),
 			'billingAgreement'   => new BillingAgreementTokenFactory( $this ),
-			'refunds'            => new RefundFactory( $container->get( AdvancedSettings::class ), $this )
+			'refunds'            => new RefundFactory( $container->get( AdvancedSettings::class ), $this ),
+			'setupToken'         => new SetupTokenFactory( $this )
 		];
 	}
 
@@ -66,6 +71,8 @@ class CoreFactories {
 				$this->set_customer( $arg );
 			} elseif ( $arg instanceof \WC_Order ) {
 				$this->set_order( $arg );
+			} elseif ( $arg instanceof AbstractGateway ) {
+				$this->payment_method = $arg;
 			}
 		}
 
@@ -78,6 +85,7 @@ class CoreFactories {
 			$factory->set_cart( $this->cart );
 			$factory->set_customer( $this->customer );
 			$factory->set_order( $this->order );
+			$factory->set_payment_method( $this->payment_method );
 			if ( $this->order ) {
 				$factory->set_currency( $this->order->get_currency() );
 			} else {

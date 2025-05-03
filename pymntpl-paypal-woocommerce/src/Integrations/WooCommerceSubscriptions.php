@@ -20,7 +20,8 @@ use PaymentPlugins\WooCommerce\PPCP\WPPayPalClient;
 /**
  * Class WooCommerceSubscriptions
  *
- * @package PaymentPlugins\WooCommerce\PPCP\Integrations
+ * @deprecated - Use \PaymentPlugins\PPCP\WooCommerceSubscriptions\SubscriptionController
+ * @package    PaymentPlugins\WooCommerce\PPCP\Integrations
  */
 class WooCommerceSubscriptions implements PluginIntegrationType {
 
@@ -50,6 +51,10 @@ class WooCommerceSubscriptions implements PluginIntegrationType {
 		add_action( 'woocommerce_scheduled_subscription_payment_ppcp', [ $this, 'scheduled_subscription_payment' ], 10, 2 );
 		add_filter( 'woocommerce_subscription_payment_meta', [ $this, 'add_subscription_payment_meta' ], 10, 2 );
 		add_filter( 'woocommerce_subscription_failing_payment_method_updated_ppcp', [ $this, 'update_failing_payment_method' ], 10, 2 );
+		add_filter( 'wc_ppcp_show_card_save_checkbox', [ $this, 'show_card_save_checkbox' ] );
+		add_filter( 'wc_ppcp_add_payment_method_data', [ $this, 'add_payment_method_data' ], 10, 3 );
+		add_filter( 'wc_ppcp_payment_method_save_required', [ $this, 'get_payment_method_save_required' ], 10, 2 );
+		add_filter( 'wc_ppcp_checkout_payment_method_save_required', [ $this, 'get_checkout_payment_method_save_required' ], 10, 3 );
 	}
 
 	/**
@@ -331,6 +336,68 @@ class WooCommerceSubscriptions implements PluginIntegrationType {
 				}
 			}
 		}
+	}
+
+	public function show_card_save_checkbox( $bool ) {
+		if ( $bool ) {
+			if ( is_checkout() && ! is_checkout_pay_page() ) {
+				if ( \WC_Subscriptions_Cart::cart_contains_subscription() ) {
+					$bool = false;
+				}
+				if ( \wcs_cart_contains_renewal() ) {
+					$bool = false;
+				}
+			} elseif ( \WC_Subscriptions_Change_Payment_Gateway::$is_request_to_change_payment ) {
+				$bool = false;
+			}
+		}
+
+		return $bool;
+	}
+
+	public function get_payment_method_save_required( $bool, AbstractGateway $payment_method ) {
+		if ( ! $bool && $payment_method->supports( 'subscriptions' ) ) {
+			if ( \WC_Subscriptions_Cart::cart_contains_subscription() ) {
+				$bool = true;
+			} elseif ( wcs_cart_contains_renewal() ) {
+				$bool = true;
+			}
+		}
+
+		return $bool;
+	}
+
+	public function get_checkout_payment_method_save_required( $bool, AbstractGateway $payment_method, \WC_Order $order ) {
+		if ( ! $bool && $payment_method->supports( 'subscriptions' ) ) {
+			if ( wcs_order_contains_subscription( $order ) ) {
+				$bool = true;
+			} elseif ( wcs_order_contains_renewal( $order ) ) {
+				$bool = true;
+			}
+		}
+
+		return $bool;
+	}
+
+	/**
+	 * @param array                                           $data
+	 * @param \PaymentPlugins\WooCommerce\PPCP\ContextHandler $context
+	 * @param AbstractGateway                                 $payment_method
+	 *
+	 * @return void
+	 */
+	public function add_payment_method_data( $data, $context, $payment_method ) {
+		if ( $context->is_checkout() ) {
+			if ( \WC_Subscriptions_Cart::cart_contains_free_trial() && WC()->cart->total == 0 ) {
+				$data['needsSetupToken'] = true;
+			}
+		} else {
+			if ( \WC_Subscriptions_Change_Payment_Gateway::$is_request_to_change_payment ) {
+				$data['needsSetupToken'] = true;
+			}
+		}
+
+		return $data;
 	}
 
 }

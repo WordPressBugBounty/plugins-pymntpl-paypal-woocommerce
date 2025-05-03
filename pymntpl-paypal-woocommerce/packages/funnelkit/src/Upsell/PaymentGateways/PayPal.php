@@ -16,7 +16,7 @@ class PayPal extends AbstractGateway {
 	}
 
 	public function has_token( $order ) {
-		$token = $order->get_meta( Constants::BILLING_AGREEMENT_ID );
+		$token = $order->get_meta( Constants::PAYMENT_METHOD_TOKEN );
 
 		return ! empty( $token );
 	}
@@ -47,6 +47,10 @@ class PayPal extends AbstractGateway {
 		}
 
 		return false;
+	}
+
+	public function supports_payment_method_vaulting() {
+		return $this->is_reference_txn_enabled();
 	}
 
 }

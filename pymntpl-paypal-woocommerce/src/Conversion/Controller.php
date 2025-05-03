@@ -4,7 +4,7 @@ namespace PaymentPlugins\WooCommerce\PPCP\Conversion;
 
 use PaymentPlugins\PayPalSDK\PayPalClient;
 use PaymentPlugins\PayPalSDK\Token;
-use PaymentPlugins\WooCommerce\PPCP\PluginIntegrationController;
+use PaymentPlugins\WooCommerce\PPCP\Customer;
 
 class Controller {
 
@@ -22,6 +22,7 @@ class Controller {
 		add_filter( 'woocommerce_subscription_get_payment_method', [ $this, 'get_payment_method' ], 10, 2 );
 		add_filter( 'wc_ppcp_payment_source_from_order', [ $this, 'get_payment_source_from_order' ], 10, 2 );
 		add_action( 'wc_ppcp_renewal_payment_processed', [ $this, 'update_subscription_meta' ] );
+		add_filter( 'wc_ppcp_get_customer_id', [ $this, 'get_customer_id' ], 10, 2 );
 	}
 
 	public function register_instances( $registry, $container ) {
@@ -87,10 +88,18 @@ class Controller {
 	 * @param \WC_Order                               $order
 	 */
 	public function get_payment_source_from_order( $payment_source, $order ) {
-		if ( $payment_source->getToken() && $payment_source->getToken()->getType() === Token::BILLING_AGREEMENT ) {
+		// f the payment source token doesn't have an ID, check the integrations.
+		if ( ! $payment_source->getToken()->getId() ) {
 			foreach ( $this->registry->get_registered_integrations() as $integration ) {
 				if ( $integration->is_plugin ) {
 					$payment_source = $integration->get_payment_source_from_order( $payment_source, $order );
+					if ( $payment_source->getToken() ) {
+						if ( \is_string( $payment_source->getToken()->getId() ) && strpos( $payment_source->getToken()->getId(), 'B-' ) === 0 ) {
+							$payment_source->getToken()->setType( Token::BILLING_AGREEMENT );
+						} else {
+							$payment_source->getToken()->setType( Token::PAYMENT_METHOD_TOKEN );
+						}
+					}
 				}
 			}
 		}
@@ -110,6 +119,18 @@ class Controller {
 				}
 			}
 		}
+	}
+
+	public function get_customer_id( $id, Customer $customer ) {
+		if ( ! $id ) {
+			foreach ( $this->registry->get_registered_integrations() as $integration ) {
+				if ( ! $id ) {
+					$id = $integration->get_customer_id( $customer->get_user_id() );
+				}
+			}
+		}
+
+		return $id;
 	}
 
 }

@@ -26,6 +26,8 @@ use PaymentPlugins\WooCommerce\PPCP\Rest\Routes\CartRefresh;
 use PaymentPlugins\WooCommerce\PPCP\Rest\Routes\CartShipping;
 use PaymentPlugins\WooCommerce\PPCP\Rest\Routes\Admin\ConnectAccount;
 use PaymentPlugins\WooCommerce\PPCP\Rest\Routes\OrderPay;
+use PaymentPlugins\WooCommerce\PPCP\Rest\Routes\VaultPaymentTokensRoute;
+use PaymentPlugins\WooCommerce\PPCP\Rest\Routes\VaultSetupTokensRoute;
 use PaymentPlugins\WooCommerce\PPCP\Rest\Routes\WebhookRoute;
 
 class RestController {
@@ -83,7 +85,13 @@ class RestController {
 			'admin/webhook'           => new AdminWebhookCreate(
 				$this->container->get( PayPalClient::class ),
 				$this->container->get( APISettings::class )
-			)
+			),
+			'setup-tokens'            => new VaultSetupTokensRoute(
+				$this->container->get( PayPalClient::class ),
+				$this->container->get( CoreFactories::class ),
+				$this->container->get( AdvancedSettings::class )
+			),
+			'payment-tokens'          => new VaultPaymentTokensRoute( $this->container->get( PayPalClient::class ) )
 		];
 	}
 

@@ -2,6 +2,7 @@
 
 namespace PaymentPlugins\WooCommerce\PPCP\Payments;
 
+use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\AdvancedSettings;
 use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\APISettings;
 use PaymentPlugins\WooCommerce\PPCP\Assets\AssetDataApi;
 use PaymentPlugins\WooCommerce\PPCP\Assets\AssetsApi;
@@ -12,6 +13,7 @@ use PaymentPlugins\WooCommerce\PPCP\Main;
 use PaymentPlugins\WooCommerce\PPCP\Messages;
 use PaymentPlugins\WooCommerce\PPCP\PaymentMethodRegistry;
 use PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\AbstractGateway;
+use PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\CreditCardGateway;
 use PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\PayPal;
 use PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\PayPalGateway;
 use PaymentPlugins\WooCommerce\PPCP\Container\Container;
@@ -53,10 +55,41 @@ class PaymentGateways {
 
 	public function register_payment_methods( PaymentMethodRegistry $registry, Container $container ) {
 		$this->payment_method_registry->register( $container->get( PayPalGateway::class ) );
+		$this->payment_method_registry->register( $container->get( CreditCardGateway::class ) );
 	}
 
 	public function initialize_gateways( $gateways = [] ) {
+		/**
+		 * @var AdvancedSettings $advanced_settings
+		 */
+		$advanced_settings = wc_ppcp_get_container()->get( AdvancedSettings::class );
+		$vault_enabled     = $advanced_settings->is_vault_enabled();
+
 		foreach ( $this->payment_method_registry->get_registered_integrations() as $payment_method ) {
+			$traits   = \class_uses( \get_class( $payment_method ) );
+			$supports = [];
+			foreach ( $traits as $trait ) {
+				switch ( $trait ) {
+					case 'PaymentPlugins\WooCommerce\PPCP\Traits\ThreeDSecureTrait':
+						$supports[] = '3ds';
+						break;
+					case 'PaymentPlugins\WooCommerce\PPCP\Traits\VaultTokenTrait':
+						$supports[] = 'vault';
+						break;
+					case 'PaymentPlugins\WooCommerce\PPCP\Traits\BillingAgreementTrait':
+						if ( ! $vault_enabled ) {
+							$supports[] = 'billing_agreement';
+						}
+						break;
+				}
+			}
+
+			if ( \in_array( 'billing_agreement', $supports ) ) {
+				unset( $supports[ array_search( 'vault', $supports ) ] );
+			}
+
+			$payment_method->init_supports( \array_values( $supports ) );
+
 			$gateways[] = $payment_method;
 		}
 
@@ -115,12 +148,11 @@ class PaymentGateways {
 	public function load_scripts() {
 		$handles = [];
 		if ( $this->context_handler->has_context( [ 'checkout', 'add_payment_method', 'order_pay' ] ) || apply_filters( 'wc_ppcp_checkout_scripts', false ) ) {
+			if ( $this->context_handler->is_checkout_block() ) {
+				return;
+			}
 			$handles = $this->payment_method_registry->add_checkout_script_dependencies();
 			$handles = array_merge( $handles, $this->payment_method_registry->add_express_checkout_script_dependencies() );
-
-			if ( $this->payment_method_registry->get_active_integrations() ) {
-				$this->assets->enqueue_style( 'wc-ppcp-style', 'build/css/styles.css' );
-			}
 		} elseif ( $this->context_handler->is_cart() ) {
 			$this->payment_method_registry->initialize();
 			$handles = $this->payment_method_registry->add_cart_script_dependencies();
@@ -147,23 +179,23 @@ class PaymentGateways {
 	public function add_scripts( $handles ) {
 		if ( ! is_admin() && ( $handles = apply_filters( 'wc_ppcp_script_dependencies', $handles, $this->assets, $this->context_handler, $this ) ) ) {
 			// enqueue required script here
-
-			if ( wp_script_is( 'wc-ppcp-frontend-commons' ) ) {
-				foreach ( $handles as $handle ) {
-					wp_enqueue_script( $handle );
-				}
-			} else {
-				$this->assets->enqueue_script( 'wc-ppcp-frontend-commons', 'build/js/frontend-commons.js', $handles );
-				$this->assets->enqueue_style( 'wc-ppcp-style', 'build/css/styles.css' );
-
-				$this->asset_data->add( 'generalData', $this->get_general_asset_data() );
-				$this->asset_data->add( 'errorMessages', Main::container()->get( Messages::class )->get_messages() );
-				$this->asset_data->add( 'i18n', [
-					'locale'        => wp_json_encode( WC()->countries->get_country_locale() ),
-					'locale_fields' => wp_json_encode( WC()->countries->get_country_locale_field_selectors() )
-				] );
-				$this->payment_method_registry->add_payment_method_data( $this->asset_data, $this->context_handler );
+			foreach ( $handles as $handle ) {
+				wp_enqueue_script( $handle );
 			}
+
+			wp_enqueue_style( 'wc-ppcp-style' );
+
+			//$this->assets->enqueue_script( 'wc-ppcp-frontend-commons', 'build/js/frontend-commons.js', $handles );
+			//$this->assets->enqueue_style( 'wc-ppcp-style', 'build/css/styles.css' );
+
+
+			$this->asset_data->add( 'generalData', $this->get_general_asset_data() );
+			$this->asset_data->add( 'errorMessages', Main::container()->get( Messages::class )->get_messages() );
+			$this->asset_data->add( 'i18n', [
+				'locale'        => wp_json_encode( WC()->countries->get_country_locale() ),
+				'locale_fields' => wp_json_encode( WC()->countries->get_country_locale_field_selectors() )
+			] );
+			$this->payment_method_registry->add_payment_method_data( $this->asset_data, $this->context_handler );
 		}
 	}
 
@@ -187,8 +219,17 @@ class PaymentGateways {
 	 * @return mixed
 	 */
 	public function get_available_payment_gateways( $gateways ) {
-		if ( $this->context_handler && $this->context_handler->is_add_payment_method() ) {
-			unset( $gateways['ppcp'] );
+		if ( is_add_payment_method_page() ) {
+			/**
+			 * @var AdvancedSettings $advanced_settings
+			 */
+			$advanced_settings = wc_ppcp_get_container()->get( AdvancedSettings::class );
+			$vault_enabled     = $advanced_settings->is_vault_enabled();
+			if ( ! $vault_enabled ) {
+				foreach ( $this->payment_method_registry->get_registered_integrations() as $integration ) {
+					unset( $gateways[ $integration->id ] );
+				}
+			}
 		}
 
 		return $gateways;

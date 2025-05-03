@@ -37,8 +37,10 @@ class AbstractCart extends AbstractRoute {
 
 	protected function get_order_from_cart( $request ) {
 		$payment_method = $this->get_payment_method_from_request( $request );
-		$intent         = $payment_method->get_option( 'intent' );
-		$order          = $this->factories->initialize( WC()->cart, WC()->customer )->order->from_cart( $intent );
+		$payment_method->set_save_payment_method( ! empty( $request["{$payment_method->id}_save_payment"] ) );
+		$intent = $payment_method->get_option( 'intent' );
+		$order  = $this->factories->initialize( WC()->cart, WC()->customer, $payment_method )->order->from_cart( $intent );
+
 		/**
 		 * @var PurchaseUnit $purchase_unit
 		 */

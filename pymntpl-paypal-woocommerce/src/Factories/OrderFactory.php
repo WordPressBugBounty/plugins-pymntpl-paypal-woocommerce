@@ -20,6 +20,7 @@ class OrderFactory extends AbstractFactory {
 		$order          = ( new Order() )
 			->setIntent( $intent )
 			->setPayer( $this->factories->payer->from_customer() )
+			->setPaymentSource( $this->factories->paymentSource->from_cart() )
 			->setPurchaseUnits( ( new Collection() )->add( $this->factories->purchaseUnit->from_cart() ) )
 			->setApplicationContext( $this->factories->applicationContext->get( $needs_shipping ) );
 

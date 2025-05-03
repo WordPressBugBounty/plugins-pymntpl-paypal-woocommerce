@@ -35,6 +35,7 @@ class FunnelKitIntegration implements PluginIntegrationType {
 
 	public function initialize() {
 		add_filter( 'woocommerce_ppcp_plugin_integration_registration', [ $this, 'register' ] );
+		add_filter( 'wc_ppcp_payment_method_save_required', [ $this, 'get_payment_save_required' ], 10, 2 );
 		add_filter( 'wc_ppcp_process_payment_result', [ $this, 'process_payment' ], 10, 3 );
 		add_filter( 'wc_ppcp_get_rest_routes', [ $this, 'add_rest_routes' ], 10, 2 );
 		add_action( 'woocommerce_api_wc_ppcp_funnelkit_return', [ $this, 'handle_return_request' ] );
@@ -46,30 +47,52 @@ class FunnelKitIntegration implements PluginIntegrationType {
 	}
 
 	/**
+	 * @param                                                                    $bool
+	 * @param \PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\AbstractGateway $payment_method
+	 *
+	 * @return void
+	 */
+	public function get_payment_save_required( $bool, AbstractGateway $payment_method ) {
+		if ( ! $bool ) {
+			$funnels_payment_method = WFOCU_Core()->gateways->get_integration( $payment_method->id );
+			if ( $funnels_payment_method && $funnels_payment_method->should_tokenize() ) {
+				if ( $funnels_payment_method->supports_payment_method_vaulting() ) {
+					$bool = true;
+				}
+			}
+		}
+
+		return $bool;
+	}
+
+	/**
 	 * @param                                                                    $result
 	 * @param \WC_Order                                                          $order
 	 * @param \PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\AbstractGateway $payment_method
 	 *
 	 * @return mixed
+	 * @deprecated
 	 */
 	public function process_payment( $result, \WC_Order $order, AbstractGateway $payment_method ) {
-		$funnels_payment_method = WFOCU_Core()->gateways->get_integration( $payment_method->id );
-		if ( $funnels_payment_method->should_tokenize() ) {
-			$billing_token = $payment_method->get_billing_token_from_request();
-			if ( $billing_token ) {
-				$billing_agreement = $this->client->billingAgreements->create( [ 'token_id' => $billing_token ] );
-				if ( is_wp_error( $billing_agreement ) ) {
-					return $billing_agreement;
+		if ( $payment_method->supports( 'billing_agreement' ) ) {
+			$funnels_payment_method = WFOCU_Core()->gateways->get_integration( $payment_method->id );
+			if ( $funnels_payment_method->should_tokenize() ) {
+				$billing_token = $payment_method->get_billing_token_from_request();
+				if ( $billing_token ) {
+					$billing_agreement = $this->client->billingAgreements->create( [ 'token_id' => $billing_token ] );
+					if ( is_wp_error( $billing_agreement ) ) {
+						return $billing_agreement;
+					}
+					$token = $payment_method->get_payment_method_token_instance();
+					$token->initialize_from_payer( $billing_agreement->payer->payer_info );
+					$order->set_payment_method_title( $token->get_payment_method_title() );
+					$order->update_meta_data( Constants::BILLING_AGREEMENT_ID, $billing_agreement->id );
+					$order->update_meta_data( Constants::PPCP_ENVIRONMENT, $this->client->getEnvironment() );
+					$order->update_meta_data( Constants::PAYER_ID, $token->get_payer_id() );
+					$order->save();
+					$payment_method->payment_handler->set_use_billing_agreement( true );
+					$result = false;
 				}
-				$token = $payment_method->get_payment_method_token_instance();
-				$token->initialize_from_payer( $billing_agreement->payer->payer_info );
-				$order->set_payment_method_title( $token->get_payment_method_title() );
-				$order->update_meta_data( Constants::BILLING_AGREEMENT_ID, $billing_agreement->id );
-				$order->update_meta_data( Constants::PPCP_ENVIRONMENT, $this->client->getEnvironment() );
-				$order->update_meta_data( Constants::PAYER_ID, $token->get_payer_id() );
-				$order->save();
-				$payment_method->payment_handler->set_use_billing_agreement( true );
-				$result = false;
 			}
 		}
 

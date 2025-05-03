@@ -282,6 +282,10 @@ class APISettings extends AbstractSettings {
 		return $this->get_option( "client_id_{$environment}" );
 	}
 
+	public function get_access_token() {
+		return $this->get_option( "access_token_{$this->get_environment()}" );
+	}
+
 	public function is_connected( $environment = null ) {
 		if ( null === $environment ) {
 			$environment = $this->get_environment();
@@ -311,7 +315,7 @@ class APISettings extends AbstractSettings {
 		if ( ( $url = get_transient( 'wc_ppcp_connection_url_' . $environment ) ) ) {
 			return $url;
 		}
-		$client       = Main::container()->get( PayPalClient::class );
+		$client       = wc_ppcp_get_container()->get( PayPalClient::class );
 		$sellar_nonce = Utils::random_string();
 		$tracking_id  = Utils::random_string( 32 );
 		$args         = [
@@ -338,6 +342,7 @@ class APISettings extends AbstractSettings {
 										'PAYMENT',
 										'REFUND',
 										'VAULT',
+										'BILLING_AGREEMENT',
 										'TRACKING_SHIPMENT_READWRITE'
 									],
 									'seller_nonce' => $sellar_nonce
@@ -347,7 +352,11 @@ class APISettings extends AbstractSettings {
 					]
 				],
 				'products'                => [
-					'EXPRESS_CHECKOUT',
+					'PPCP',
+					'ADVANCED_VAULTING'
+				],
+				'capabilities'            => [
+					'PAYPAL_WALLET_VAULTING_ADVANCED'
 				],
 				'legal_consents'          => [
 					[

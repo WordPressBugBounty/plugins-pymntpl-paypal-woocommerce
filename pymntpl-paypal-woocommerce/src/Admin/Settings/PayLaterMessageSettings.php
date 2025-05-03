@@ -15,7 +15,7 @@ class PayLaterMessageSettings extends AbstractSettings {
 
 	public $id = 'ppcp_paylater_message';
 
-	protected $tab_label_priority = 40;
+	protected $tab_label_priority = 50;
 
 	private $supported_currencies = [ 'USD', 'GBP', 'EUR', 'AUD' ];
 

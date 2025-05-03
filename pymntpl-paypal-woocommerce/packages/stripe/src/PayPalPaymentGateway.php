@@ -14,7 +14,7 @@ class PayPalPaymentGateway extends \PaymentPlugins\WooCommerce\PPCP\Payments\Gat
 		parent::__construct( ...$args );
 	}
 
-	public function init_supports() {
+	public function init_supports( $params = [] ) {
 		parent::init_supports();
 		$checkout_wc = $this->packages->get( 'checkoutwc' );
 		if ( ! $checkout_wc->is_active() ) {

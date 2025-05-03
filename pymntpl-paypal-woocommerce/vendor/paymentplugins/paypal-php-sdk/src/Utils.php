@@ -48,7 +48,8 @@ class Utils {
 			'net_amount'                  => Money::class,
 			'receivable_amount'           => Money::class,
 			'tracker_identifiers'         => Tracker::class,
-			'payment_tokens'              => Token::class
+			'payment_tokens'              => Token::class,
+			'customer'                    => Customer::class
 		);
 
 	public static function isList( $value ) {

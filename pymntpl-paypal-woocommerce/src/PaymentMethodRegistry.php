@@ -72,8 +72,10 @@ class PaymentMethodRegistry extends Registry\BaseRegistry {
 			/**
 			 * @var AbstractGateway $payment_method
 			 */
-			if ( $payment_method->is_express_section_enabled() ) {
-				$gateways[] = $payment_method;
+			if ( $payment_method->is_available() ) {
+				if ( $payment_method->is_express_section_enabled() ) {
+					$gateways[] = $payment_method;
+				}
 			}
 		}
 
@@ -148,7 +150,7 @@ class PaymentMethodRegistry extends Registry\BaseRegistry {
 
 	public function add_payment_method_data( AssetDataApi $asset_data, $context ) {
 		foreach ( $this->get_active_integrations() as $payment_method ) {
-			$data = apply_filters( "wc_{$payment_method->id}_add_payment_method_data", $payment_method->get_payment_method_data( $context ), $context );
+			$data = apply_filters( 'wc_ppcp_add_payment_method_data', $payment_method->get_payment_method_data( $context ), $context, $payment_method );
 			$asset_data->add( $payment_method->id . '_data', $data );
 		}
 	}

@@ -1,6 +1,6 @@
 <?php
 /**
- * @var WC_Payment_Gateway_Stripe[] $payment_methods
+ * @var \PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\AbstractGateway[] $payment_methods
  * @var array                       $available_gateways
  * @version 1.0.12
  *

@@ -36,16 +36,16 @@
 									?>
                                 </div>
                             </li>
-                            <li>
-                                <label><?php esc_html_e( 'Enable Reference Transactions', 'pymntpl-paypal-woocommerce' ) ?></label>
+                            <!--<li>
+                                <label><?php /*esc_html_e( 'Enable Reference Transactions', 'pymntpl-paypal-woocommerce' ) */?></label>
                                 <div>
 									<?php
-									printf( esc_html__( 'Reference transactions are used to process things like subscriptions and pre-orders. If you don\'t currently have
+/*									printf( esc_html__( 'Reference transactions are used to process things like subscriptions and pre-orders. If you don\'t currently have
                                     reference transactions enabled on your production account, you will need to submit a request to PayPal. Reference transactions are enabled by default on sandbox accounts. %1$sReference transaction request instructions.%2$s' ),
 										'<a target="_blank" href="https://docs.paymentplugins.com/wc-paypal/config/#/reference_transactions">', '</a>' );
-									?>
+									*/?>
                                 </div>
-                            </li>
+                            </li>-->
                             <li>
                                 <label><?php esc_html_e( 'Enable Customer Phone Number', 'pymntpl-paypal-woocommerce' ); ?></label>
                                 <div>
@@ -54,14 +54,14 @@
 									<?php printf( esc_html__( '%1$sEnable phone number instructions%2$s', '' ), '<a target="_blank" href="https://docs.paymentplugins.com/wc-paypal/config/#/billing_phone">', '</a>' ) ?>
                                 </div>
                             </li>
-                            <li>
-                                <label><?php esc_html_e( 'Enable Billing Address', 'pymntpl-paypal-woocommerce' ); ?></label>
+                            <!--<li>
+                                <label><?php /*esc_html_e( 'Enable Billing Address', 'pymntpl-paypal-woocommerce' ); */?></label>
                                 <div>
-									<?php esc_html_e( 'If you sell digital goods that don\'t require shipping, we recommend you enable the billing address option. When enabled on your account, the customer\'s billing address will be provided by PayPal. This
-			                        allows the plugin to auto-populate your checkout page billing address fields.', 'pymntp-paypal-woocommerce' ); ?>
-									<?php printf( esc_html__( '%1$sEnable billing address instructions%2$s', '' ), '<a target="_blank" href="https://docs.paymentplugins.com/wc-paypal/config/#/billing_address_request">', '</a>' ) ?>
+									<?php /*esc_html_e( 'If you sell digital goods that don\'t require shipping, we recommend you enable the billing address option. When enabled on your account, the customer\'s billing address will be provided by PayPal. This
+			                        allows the plugin to auto-populate your checkout page billing address fields.', 'pymntp-paypal-woocommerce' ); */?>
+									<?php /*printf( esc_html__( '%1$sEnable billing address instructions%2$s', '' ), '<a target="_blank" href="https://docs.paymentplugins.com/wc-paypal/config/#/billing_address_request">', '</a>' ) */?>
                                 </div>
-                            </li>
+                            </li>-->
                         </ul>
                     </div>
                 </article>

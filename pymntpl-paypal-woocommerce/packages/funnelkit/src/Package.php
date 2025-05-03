@@ -4,6 +4,7 @@ namespace PaymentPlugins\PPCP\FunnelKit;
 
 use PaymentPlugins\PayPalSDK\PayPalClient;
 use PaymentPlugins\PPCP\FunnelKit\Checkout\FieldMappings;
+use PaymentPlugins\PPCP\FunnelKit\Upsell\PaymentGateways\CreditCard;
 use PaymentPlugins\PPCP\FunnelKit\Upsell\PaymentGatewaysController;
 use PaymentPlugins\WooCommerce\PPCP\Assets\AssetsApi;
 use PaymentPlugins\WooCommerce\PPCP\Cache\CacheHandler;
@@ -64,6 +65,9 @@ class Package extends AbstractPackage {
 		} );
 		$this->container->register( PayPal::class, function ( $container ) {
 			return new PayPal( $container->get( self::ASSETS ), $container->get( PaymentHandler::class ), WFOCU_Core()->log );
+		} );
+		$this->container->register( CreditCard::class, function ( $container ) {
+			return new CreditCard( $container->get( self::ASSETS ), $container->get( PaymentHandler::class ), WFOCU_Core()->log );
 		} );
 	}
 

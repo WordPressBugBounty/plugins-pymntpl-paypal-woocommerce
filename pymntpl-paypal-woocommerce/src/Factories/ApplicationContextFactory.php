@@ -36,12 +36,17 @@ class ApplicationContextFactory extends AbstractFactory {
 				'order_key'      => $this->order->get_order_key(),
 				'payment_method' => 'ppcp'
 			], WC()->api_request_url( 'ppcp_order_return' ) ) );
-			$context->setCancelUrl( wc_get_checkout_url() );
+			$context->setCancelUrl( add_query_arg( [
+				'ppcp_action' => 'canceled',
+				'order_id'    => $this->order->get_id(),
+			], wc_get_checkout_url() ) );
 		} else {
 			$context->setReturnUrl( add_query_arg( [
 				'_checkoutnonce' => wp_create_nonce( 'checkout-nonce' )
 			], WC()->api_request_url( 'ppcp_checkout_return' ) ) );
-			$context->setCancelUrl( wc_get_checkout_url() );
+			$context->setCancelUrl( add_query_arg( [
+				'ppcp_action' => 'canceled'
+			], wc_get_checkout_url() ) );
 		}
 		$context->setBrandName( substr( $this->settings->get_option( 'display_name' ), 0, 127 ) );
 

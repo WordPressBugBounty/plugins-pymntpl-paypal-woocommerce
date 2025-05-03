@@ -3,6 +3,8 @@
 
 namespace PaymentPlugins\PPCP\Blocks\Payments\Gateways;
 
+use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\AdvancedSettings;
+
 /**
  * Class PayPalGateway
  *
@@ -13,10 +15,20 @@ class PayPalGateway extends AbstractGateway {
 	protected $name = 'ppcp';
 
 	public function get_payment_method_script_handles() {
-		$this->assets_api->register_script( 'wc-ppcp-blocks-commons', 'build/blocks-commons.js' );
-		$this->assets_api->register_script( 'wc-ppcp-blocks-paypal', 'build/paypal.js', [ 'wc-ppcp-blocks-commons' ] );
-		$this->assets_api->register_script( 'wc-ppcp-blocks-checkout', 'build/checkout-block.js', [ 'wc-ppcp-blocks-commons' ] );
+		/**
+		 * @var AdvancedSettings $advanced_settings
+		 */
+		$advanced_settings = wc_ppcp_get_container()->get( AdvancedSettings::class );
+		$vault_enabled     = \wc_string_to_bool( $advanced_settings->get_option( 'vault_enabled', 'yes' ) );
+
+		if ( $vault_enabled ) {
+			$this->assets_api->register_script( 'wc-ppcp-blocks-paypal', 'build/paypal.js', [ 'wc-ppcp-blocks-commons' ] );
+		} else {
+			$this->assets_api->register_script( 'wc-ppcp-blocks-paypal', 'build/legacy/paypal.js', [ 'wc-ppcp-blocks-legacy-commons' ] );
+		}
+
 		wp_enqueue_style( 'wc-ppcp-blocks-styles' );
+		wp_enqueue_style( 'wc-ppcp-style' );
 
 		return [ 'wc-ppcp-blocks-paypal', 'wc-ppcp-blocks-checkout' ];
 	}

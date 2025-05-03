@@ -4,7 +4,7 @@ Tags: paypal, paylater, venmo, credit cards
 Requires at least: 4.7
 Tested up to: 6.8
 Requires PHP: 7.1
-Stable tag: 1.0.56
+Stable tag: 1.1.0
 Copyright: Payment Plugins
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -17,6 +17,8 @@ merchants can configure the plugin to suit their business needs.
 In order to process payments online, you will need a PayPal Business Account.
 
 = Supports =
+- Fastlane
+- Advanced Credit and Debit Card Payments (ACDC)
 - WooCommerce Subscriptions
 - WooCommerce Pre-Orders
 - WooCommerce Blocks
@@ -47,9 +49,13 @@ Our documentation has a step-by-step guide on how to connect the plugin to your 
 Payment Plugins is the team behind several of the highest reviewed and installed Payment integrations for WooCommerce.
 
 == Changelog ==
-= 1.0.56 - 04/24/25 = 
-* Updated - WC tested up to 9.8
-= 1.0.55 - 02/11/25 =
+= 1.1.0 - 05/03/25 =
+* Added - Advanced Credit and Debit Card Payments (ACDC) is now supported. Settings can be accessed via the PayPal Card Settings page within the PayPal plugin. If you encounter any permissions issues,
+we recommend reconnecting via the API Settings page to ensure all permissions are applied to the PayPal account connection.
+* Added - Fastlane By PayPal integration. It can be enabled on the new PayPal Card Settings page.
+* Added - Manual renewals now supported for WooCommerce Subscriptions
+* Added - The dispute created webhook is now optional and the order status assigned when a dispute is opened can be configured.
+= 1.0.55 - 02/11/24 =
 * Fixed - Tagline option not working for PayPal buttons on checkout block
 * Fixed - PayLater messaging not showing on checkout block
 * Added - action "wc_ppcp_cart_order_created". This action is triggered when a PayPal order is created by clicking the PayPal smartbutton.

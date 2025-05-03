@@ -8,8 +8,11 @@ abstract class AbstractResolver {
 
 	private $callback;
 
-	public function __construct( $value ) {
-		$this->callback = $value;
+	protected $singleton;
+
+	public function __construct( $value, $singleton ) {
+		$this->callback  = $value;
+		$this->singleton = $singleton;
 	}
 
 	public function resolve( $container ) {
@@ -19,4 +22,5 @@ abstract class AbstractResolver {
 	}
 
 	public abstract function get( $container );
+
 }

@@ -22,7 +22,8 @@ class BaseServiceFactory extends AbstractServiceFactory {
 		'webhooks'               => WebhookService::class,
 		'paymentTokens'          => PaymentTokenService::class,
 		'paymentTokensV3'        => PaymentTokenServiceV3::class,
-		'tracking'               => TrackingService::class
+		'tracking'               => TrackingService::class,
+		'setupTokens'            => SetupTokenService::class
 	);
 
 	public function getClass( $classname ) {

@@ -6,35 +6,22 @@ namespace PaymentPlugins\WooCommerce\PPCP;
 
 use PaymentPlugins\PayPalSDK\Capture;
 use PaymentPlugins\PayPalSDK\Order;
-use PaymentPlugins\PayPalSDK\OrderApplicationContext;
 use PaymentPlugins\PayPalSDK\PatchRequest;
+use PaymentPlugins\PayPalSDK\PaymentSource;
 use PaymentPlugins\PayPalSDK\PurchaseUnit;
 use PaymentPlugins\PayPalSDK\ShippingAddress;
+use PaymentPlugins\PayPalSDK\Token;
 use PaymentPlugins\WooCommerce\PPCP\Cache\CacheInterface;
 use PaymentPlugins\WooCommerce\PPCP\Exception\RetryException;
 use PaymentPlugins\WooCommerce\PPCP\Factories\CoreFactories;
+use PaymentPlugins\WooCommerce\PPCP\Legacy\LegacyPaymentHandler;
 use PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\AbstractGateway;
 use PaymentPlugins\WooCommerce\PPCP\Utilities\NumberUtil;
 use PaymentPlugins\WooCommerce\PPCP\Utilities\OrderFilterUtil;
 use PaymentPlugins\WooCommerce\PPCP\Utilities\OrderLock;
 use PaymentPlugins\WooCommerce\PPCP\Utilities\PayPalFee;
 
-class PaymentHandler {
-
-	public $client;
-
-	private $factories;
-
-	private $cache;
-
-	/**
-	 * @var AbstractGateway
-	 */
-	protected $payment_method;
-
-	private $current_status = [];
-
-	private $use_billing_agreement = false;
+class PaymentHandler extends LegacyPaymentHandler {
 
 	public function __construct( WPPayPalClient $client, CoreFactories $factories, CacheInterface $cache ) {
 		$this->client    = $client;
@@ -51,64 +38,64 @@ class PaymentHandler {
 	}
 
 	public function process_payment( \WC_Order $order ) {
+		if ( $this->payment_method->supports( 'billing_agreement' ) ) {
+			return parent::process_payment( $order );
+		}
 		$this->set_processing( 'payment' );
-		$this->factories->initialize( $order );
+		$this->factories->initialize( $order, $this->payment_method );
 		$paypal_order = null;
 		$needs_update = false;
+		$this->payment_method->set_save_payment_method( ! empty( $_POST["{$this->payment_method->id}_save_payment"] ) );
 		try {
-			if ( $this->use_billing_agreement ) {
-				$args = $this->get_create_order_params( $order );
-				$this->payment_method->logger->info(
-					sprintf( 'Creating PayPal order with billing agreement via %s. Order ID: %s. Args: %s', __METHOD__, $order->get_id(), print_r( $args->toArray(), true ) ),
-					'payment'
-				);
-
-				$paypal_order = $this->client->orderMode( $order )->orders->create( $args );
-			} else {
-				$paypal_order_id = $this->get_paypal_order_id_from_request();
+			$paypal_order_id = $this->get_paypal_order_id_from_request();
+			if ( ! $paypal_order_id || $this->use_billing_agreement ) {
+				$paypal_order_id = $this->cache->get( sprintf( '%s_%s', $this->payment_method->id, Constants::PAYPAL_ORDER_ID ) );
+				// If there isn't an existing PayPal order ID, create a PayPal order.
 				if ( ! $paypal_order_id ) {
-					$paypal_order_id = $this->cache->get( Constants::PAYPAL_ORDER_ID );
-					// If there isn't an existing PayPal order ID button, create a PayPal order.
-					if ( ! $paypal_order_id ) {
-						$args = $this->get_create_order_params( $order );
+					$args = $this->get_create_order_params( $order );
 
-						$this->payment_method->logger->info(
-							sprintf( 'Creating PayPal order via %s. Order ID: %s. Args: %s', __METHOD__, $order->get_id(), print_r( $args->toArray(), true ) ),
-							'payment'
-						);
+					$this->payment_method->logger->info(
+						sprintf(
+							'Creating PayPal order via %s. Order ID: %s. Args: %s',
+							__METHOD__, $order->get_id(), print_r( $args->toArray(), true )
+						),
+						'payment'
+					);
 
-						$paypal_order = $this->client->orderMode( $order )->orders->create( $args );
-					}
+					$paypal_order = $this->client->orderMode( $order )->orders->create( $args );
 				}
-				if ( ! $paypal_order ) {
-					$needs_update = true;
-					$paypal_order = $this->client->orderMode( $order )->orders->retrieve( $paypal_order_id );
-					$this->validate_paypal_order( $paypal_order, $order );
-				}
+			}
+			if ( ! $paypal_order ) {
+				$needs_update = true;
+				$paypal_order = $this->client->orderMode( $order )->orders->retrieve( $paypal_order_id );
+				$this->validate_paypal_order( $paypal_order, $order );
 			}
 			if ( is_wp_error( $paypal_order ) ) {
 				throw new \Exception( $paypal_order->get_error_message() );
 			}
 			$paypal_order_id = $paypal_order->getId();
+
 			if ( ! $paypal_order->isComplete() ) {
-				if ( ! $this->use_billing_agreement && $needs_update ) {
+				if ( $needs_update ) {
 					// update the order, so it has the most recent order data.
 					$response = $this->client->orders->update( $paypal_order->getId(), $this->get_update_order_params( $order, $paypal_order ) );
 					if ( is_wp_error( $response ) ) {
 						throw new \Exception( $response->get_error_message() );
 					}
 				}
-				// only try to process payment if this order is the result of a billing agreement (subscription, pre-order etc)
-				// or the order has been approved.
-				if ( ( $this->use_billing_agreement && $paypal_order->isCreated() ) || $paypal_order->getStatus() === Order::APPROVED ) {
-					if ( Order::CAPTURE === $paypal_order->intent ) {
+				/**
+				 * 1. If an order has status approved, then it can be captured or authorized.
+				 * 2. If an order has status created and it has a payment source, then that means
+				 * 3DS was triggered and it can be captured or authorized.
+				 */
+				if ( $paypal_order->isApproved() || ( $paypal_order->isCreated() && $paypal_order->getPaymentSource() ) ) {
+					if ( Order::CAPTURE === $paypal_order->getIntent() ) {
 						$this->payment_method->logger->info( sprintf( 'Capturing payment for PayPal order %s via %s. Order ID: %s', $paypal_order->getId(), __METHOD__, $order->get_id() ), 'payment' );
 						OrderLock::set_order_lock( $order );
-						$paypal_order = $this->client->orders->capture( $paypal_order->getId(), $this->get_payment_source( $order ) );
+						$paypal_order = $this->client->orders->capture( $paypal_order->getId() );
 					} else {
 						$this->payment_method->logger->info( sprintf( 'Authorizing payment for PayPal order %s via %s. Order ID: %s', $paypal_order->getId(), __METHOD__, $order->get_id() ), 'payment' );
-
-						$paypal_order = $this->client->orders->authorize( $paypal_order->getId(), $this->get_payment_source( $order ) );
+						$paypal_order = $this->client->orders->authorize( $paypal_order->getId(), );
 					}
 				}
 			}
@@ -143,21 +130,14 @@ class PaymentHandler {
 		}
 	}
 
-	public function get_payment_source( \WC_Order $order ) {
-		if ( $this->use_billing_agreement ) {
-			$this->factories->initialize( $order );
-
-			return [ 'payment_source' => $this->factories->paymentSource->from_order() ];
-		}
-
-		return [];
-	}
-
 	/**
 	 * @param \WC_Order     $order
 	 * @param PaymentResult $result
 	 */
 	public function payment_complete( \WC_Order $order, PaymentResult $result ) {
+		$this->payment_method->add_payment_complete_note( $order, $result );
+		$this->save_order_meta_data( $order, $result->get_paypal_order() );
+
 		if ( $result->is_captured() ) {
 			PayPalFee::add_fee_to_order( $order, $result->get_capture()->getSellerReceivableBreakdown(), false );
 			$capture = $result->get_capture();
@@ -172,30 +152,30 @@ class PaymentHandler {
 			}
 		} else {
 			$order->update_meta_data( Constants::AUTHORIZATION_ID, $result->get_authorization_id() );
-			$order->set_status( apply_filters( 'wc_ppcp_authorized_order_status', $this->payment_method->get_option( 'authorize_status', 'on-hold' ), $order, $result->get_paypal_order(), $this ) );
+			$order->update_status( apply_filters( 'wc_ppcp_authorized_order_status', $this->payment_method->get_option( 'authorize_status', 'on-hold' ), $order, $result->get_paypal_order(), $this ) );
 		}
-		$this->add_payment_complete_message( $order, $result );
-		$this->save_order_meta_data( $order, $result->paypal_order );
+
 		do_action( 'wc_ppcp_order_payment_complete', $order, $result, $this );
 	}
 
 	public function add_payment_complete_message( \WC_Order $order, PaymentResult $result ) {
-		$order->add_order_note( sprintf( __( 'PayPal order %s created. %s', 'pymntpl-paypal-woocommerce' ),
-			$result->paypal_order->id, $result->is_captured() ? sprintf( __( 'Capture ID: %s', 'pymntpl-paypal-woocommerce' ), $result->get_capture_id() ) : sprintf( __( 'Authorization ID: %s', 'pymntpl-paypal-woocommerce' ), $result->get_authorization_id() ) ) );
+		$this->payment_method->add_payment_complete_note( $order, $result );
 	}
 
 	public function save_order_meta_data( \WC_Order $order, Order $paypal_order ) {
-		$token = $this->get_payment_method_token_from_paypal_order( $paypal_order );
-		$order->set_payment_method_title( $token->get_payment_method_title() );
-		$order->update_meta_data( Constants::ORDER_ID, $paypal_order->id );
-		$order->update_meta_data( Constants::PPCP_ENVIRONMENT, $this->client->getEnvironment() );
-		$order->update_meta_data( Constants::PAYER_ID, $paypal_order->payer->payer_id );
 		try {
-			do_action( 'wc_ppcp_save_order_meta_data', $order, $paypal_order, $this->payment_method );
+			$token = $this->get_payment_method_token_from_paypal_order( $paypal_order );
+			$token->set_environment( wc_ppcp_get_order_mode( $order ) );
+			$order->set_payment_method_title( $token->get_payment_method_title() );
+			$order->update_meta_data( Constants::ORDER_ID, $paypal_order->id );
+			$order->update_meta_data( Constants::PPCP_ENVIRONMENT, $this->client->getEnvironment() );
+
+			do_action( 'wc_ppcp_save_order_meta_data', $order, $paypal_order, $this->payment_method, $token );
 		} catch ( \Exception $e ) {
 			$this->payment_method->logger->info( sprintf( 'Error saving order data. Error: %s', $e->getMessage() ) );
+		} finally {
+			$order->save();
 		}
-		$order->save();
 	}
 
 	public function get_paypal_order_id_from_request() {
@@ -211,7 +191,7 @@ class PaymentHandler {
 	 * @return \PaymentPlugins\PayPalSDK\Order
 	 */
 	public function get_create_order_params( \WC_Order $order ) {
-		$this->factories->initialize( $order );
+		$this->factories->initialize( $order, $this->payment_method );
 		$paypal_order = $this->factories->order->from_order( $this->payment_method->get_option( 'intent' ) );
 		OrderFilterUtil::filter_order( $paypal_order );
 		/**
@@ -221,6 +201,26 @@ class PaymentHandler {
 		if ( ! $purchase_unit->getAmount()->amountEqualsBreakdown() ) {
 			unset( $purchase_unit->getAmount()->breakdown );
 			unset( $purchase_unit->items );
+		}
+
+		if ( $this->payment_method->supports( 'vault' ) ) {
+			if ( $this->payment_method->should_use_saved_payment_method() ) {
+				$id             = $this->payment_method->get_saved_payment_method_token_id_from_request( $order );
+				$payment_source = ( new PaymentSource() )
+					->setToken( ( new Token() )->setId( $id )->setType( Token::PAYMENT_METHOD_TOKEN ) );
+				$paypal_order->setPaymentSource( $payment_source );
+				$this->payment_method->set_payment_token_id( $id );
+				$order->update_meta_data( Constants::PAYMENT_METHOD_TOKEN, $this->payment_method->get_payment_token_id() );
+			} else {
+				$paypal_order->setPaymentSource( $this->factories->paymentSource->from_checkout() );
+			}
+		} else {
+			if ( $this->use_billing_agreement ) {
+				$id             = $order->get_meta( Constants::BILLING_AGREEMENT_ID );
+				$payment_source = ( new PaymentSource() )
+					->setToken( ( new Token() )->setId( $id )->setType( Token::BILLING_AGREEMENT ) );
+				$paypal_order->setPaymentSource( $payment_source );
+			}
 		}
 
 		return apply_filters( 'wc_ppcp_create_order_params', $paypal_order, $order, $this );
@@ -355,7 +355,7 @@ class PaymentHandler {
 			if ( $authorization->isCreated() ) {
 				$result = $this->client->orderMode( $order )->authorizations->void( $authorization_id );
 				if ( is_wp_error( $result ) ) {
-					throw new \Exception( $authorization->get_error_message() );
+					throw new \Exception( $result->get_error_message() );
 				}
 				if ( ! $order->has_status( 'cancelled' ) ) {
 					$this->set_processing( 'void' );
@@ -415,7 +415,12 @@ class PaymentHandler {
 
 	protected function get_payment_method_token_from_paypal_order( Order $order ) {
 		$token = $this->payment_method->get_payment_method_token_instance();
-		$token->initialize_from_payer( $order->payer );
+		$token->initialize_from_paypal_order( $order );
+		if ( ! $token->get_token() && $this->payment_method->supports( 'vault' ) ) {
+			if ( $this->payment_method->get_payment_token_id() ) {
+				$token->set_token( $this->payment_method->get_payment_token_id() );
+			}
+		}
 
 		return $token;
 	}
@@ -434,21 +439,7 @@ class PaymentHandler {
 		// Only validate orders with a CREATED status because that means they haven't been approved yet.
 		// An order with an APPROVED status means the customer clicked complete payment in the PayPal popup
 		if ( $paypal_order instanceof Order && $paypal_order->isCreated() ) {
-			$this->factories->initialize( $order );
-			$new_order           = $this->factories->order->from_order( $this->payment_method->get_option( 'intent' ) );
-			$shipping_preference = $this->cache->get( Constants::SHIPPING_PREFERENCE );
-			/**
-			 * If the shipping preference is GET_FROM_FILE then we know the PayPal order was created using the PayPal buttons.
-			 * But if the PayPal order created from the WC_Order has shipping preference SET_PROVIDED_ADDRESS, then a new order
-			 * should be created. This ensures the shipping address can't be edited on the PayPal redirect based payment page.
-			 */
-			if ( $shipping_preference === OrderApplicationContext::GET_FROM_FILE ) {
-				if ( $new_order->getApplicationContext()->getShippingPreference() === OrderApplicationContext::SET_PROVIDED_ADDRESS ) {
-					$this->cache->delete( Constants::PAYPAL_ORDER_ID );
-					$this->cache->delete( Constants::SHIPPING_PREFERENCE );
-					throw new RetryException( 'Create new order' );
-				}
-			}
+			$this->payment_method->validate_paypal_order( $paypal_order, $order );
 		}
 	}
 

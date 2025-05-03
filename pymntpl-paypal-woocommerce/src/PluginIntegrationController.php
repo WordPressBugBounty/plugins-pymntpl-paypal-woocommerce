@@ -29,26 +29,7 @@ class PluginIntegrationController {
 
 	private function register_integrations() {
 		$this->plugins = apply_filters( 'wc_ppcp_plugin_integrations', [
-			[
-				WooCommerceSubscriptions::class,
-				function ( $container ) {
-					return new WooCommerceSubscriptions(
-						$container->get( PayPalClient::class ),
-						$container->get( CoreFactories::class ),
-						$container->get( Logger::class )
-					);
-				}
-			],
-			[
-				WooCommercePreOrders::class,
-				function ( $container ) {
-					return new WooCommercePreOrders(
-						$container->get( PayPalClient::class ),
-						$container->get( CoreFactories::class ),
-						$container->get( Logger::class )
-					);
-				}
-			]
+
 		], $this, $this->container );
 		foreach ( $this->plugins as $entry ) {
 			$this->container->register( ...$entry );

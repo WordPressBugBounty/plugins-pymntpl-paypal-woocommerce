@@ -34,6 +34,8 @@ class WPPayPalClient extends \PaymentPlugins\PayPalSDK\PayPalClient {
 
 	private $partner_id = 'PaymentPlugins_PCP';
 
+	private $response_headers;
+
 	/**
 	 * WPPayPalClient constructor.
 	 *
@@ -59,7 +61,9 @@ class WPPayPalClient extends \PaymentPlugins\PayPalSDK\PayPalClient {
 
 	public function request( $method, $path, $responseClass = null, $params = null, $options = [] ) {
 		try {
-			return parent::request( $method, $path, $responseClass, $params, $options );
+			$response = parent::request( $method, $path, $responseClass, $params, $options );
+
+			return $response;
 		} catch ( ApiException $e ) {
 			$this->logger->error( sprintf( 'API error: %s', print_r( [
 				'url'         => $this->getRequestUrl( $path ),
@@ -167,8 +171,9 @@ class WPPayPalClient extends \PaymentPlugins\PayPalSDK\PayPalClient {
 		if ( \is_wp_error( $response ) ) {
 			throw new BadRequestException( 400, [ 'message' => $response->get_error_message() ] );
 		} else {
-			$status = \wp_remote_retrieve_response_code( $response );
-			$body   = \wp_remote_retrieve_body( $response );
+			$status                 = \wp_remote_retrieve_response_code( $response );
+			$body                   = \wp_remote_retrieve_body( $response );
+			$this->response_headers = \wp_remote_retrieve_headers( $response );
 		}
 
 		return [ $status, $body ];

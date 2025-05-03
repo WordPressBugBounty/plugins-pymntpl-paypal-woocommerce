@@ -3,9 +3,17 @@
 
 namespace PaymentPlugins\WooCommerce\PPCP\Payments\Gateways;
 
+use PaymentPlugins\PayPalSDK\OrderApplicationContext;
+use PaymentPlugins\WooCommerce\PPCP\Cache\CacheHandler;
+use PaymentPlugins\WooCommerce\PPCP\Constants;
+use PaymentPlugins\WooCommerce\PPCP\Exception\RetryException;
+use PaymentPlugins\WooCommerce\PPCP\Factories\CoreFactories;
 use PaymentPlugins\WooCommerce\PPCP\PayPalQueryParams;
 use PaymentPlugins\WooCommerce\PPCP\ProductSettings;
 use PaymentPlugins\WooCommerce\PPCP\Tokens\PayPalToken;
+use PaymentPlugins\WooCommerce\PPCP\Traits\BillingAgreementTrait;
+use PaymentPlugins\WooCommerce\PPCP\Traits\TokenizationTrait;
+use PaymentPlugins\WooCommerce\PPCP\Traits\VaultTokenTrait;
 use PaymentPlugins\WooCommerce\PPCP\Utils;
 
 /**
@@ -15,6 +23,10 @@ use PaymentPlugins\WooCommerce\PPCP\Utils;
  */
 class PayPalGateway extends AbstractGateway {
 
+	use TokenizationTrait;
+	use VaultTokenTrait;
+	use BillingAgreementTrait;
+
 	public $id = 'ppcp';
 
 	protected $template = 'paypal.php';
@@ -22,6 +34,8 @@ class PayPalGateway extends AbstractGateway {
 	protected $token_class = PayPalToken::class;
 
 	protected $tab_label_priority = 30;
+
+	protected $payment_method_type = 'paypal';
 
 	public function __construct( ...$args ) {
 		parent::__construct( ...$args );
@@ -378,8 +392,14 @@ class PayPalGateway extends AbstractGateway {
 	}
 
 	public function get_checkout_script_handles() {
-		if ( ! $this->is_place_order_button() ) {
-			$this->assets->register_script( 'wc-ppcp-checkout-gateway', 'build/js/paypal-checkout.js' );
+		if ( ! $this->is_place_order_button() || is_add_payment_method_page() ) {
+			if ( $this->supports( 'billing_agreement' ) ) {
+				$this->assets->register_script( 'wc-ppcp-checkout-gateway', 'build/legacy/paypal-checkout.js', [ 'wc-ppcp-legacy-commons' ] );
+			} else {
+				$this->assets->register_script( 'wc-ppcp-checkout-gateway', 'build/js/paypal-checkout.js', [ 'wc-ppcp-frontend-commons' ] );
+			}
+
+			$this->tokenization_script();
 
 			return [ 'wc-ppcp-checkout-gateway' ];
 		}
@@ -388,25 +408,41 @@ class PayPalGateway extends AbstractGateway {
 	}
 
 	public function get_express_checkout_script_handles() {
-		$this->assets->register_script( 'wc-ppcp-checkout-express', 'build/js/paypal-express-checkout.js' );
+		if ( $this->supports( 'billing_agreement' ) ) {
+			$this->assets->register_script( 'wc-ppcp-checkout-express', 'build/legacy/paypal-express-checkout.js', [ 'wc-ppcp-legacy-commons' ] );
+		} else {
+			$this->assets->register_script( 'wc-ppcp-checkout-express', 'build/js/paypal-express-checkout.js', [ 'wc-ppcp-frontend-commons' ] );
+		}
 
 		return [ 'wc-ppcp-checkout-express' ];
 	}
 
 	public function get_cart_script_handles() {
-		$this->assets->register_script( 'wc-ppcp-cart-gateway', 'build/js/paypal-cart.js' );
+		if ( $this->supports( 'billing_agreement' ) ) {
+			$this->assets->register_script( 'wc-ppcp-cart-gateway', 'build/legacy/paypal-cart.js', [ 'wc-ppcp-legacy-commons' ] );
+		} else {
+			$this->assets->register_script( 'wc-ppcp-cart-gateway', 'build/js/paypal-cart.js', [ 'wc-ppcp-frontend-commons' ] );
+		}
 
 		return [ 'wc-ppcp-cart-gateway' ];
 	}
 
 	public function get_minicart_script_handles() {
-		$this->assets->register_script( 'wc-ppcp-minicart-gateway', 'build/js/paypal-minicart.js' );
+		if ( $this->supports( 'billing_agreement' ) ) {
+			$this->assets->register_script( 'wc-ppcp-minicart-gateway', 'build/legacy/paypal-minicart.js', [ 'wc-ppcp-legacy-commons' ] );
+		} else {
+			$this->assets->register_script( 'wc-ppcp-minicart-gateway', 'build/js/paypal-minicart.js', [ 'wc-ppcp-frontend-commons' ] );
+		}
 
 		return [ 'wc-ppcp-minicart-gateway' ];
 	}
 
 	public function get_product_script_handles() {
-		$this->assets->register_script( 'wc-ppcp-product-gateway', 'build/js/paypal-product.js' );
+		if ( $this->supports( 'billing_agreement' ) ) {
+			$this->assets->register_script( 'wc-ppcp-product-gateway', 'build/legacy/paypal-product.js', [ 'wc-ppcp-legacy-commons' ] );
+		} else {
+			$this->assets->register_script( 'wc-ppcp-product-gateway', 'build/js/paypal-product.js', [ 'wc-ppcp-frontend-commons' ] );
+		}
 
 		return [ 'wc-ppcp-product-gateway' ];
 	}
@@ -428,6 +464,7 @@ class PayPalGateway extends AbstractGateway {
 	 */
 	public function get_payment_method_data( $context ) {
 		$data = [
+			'needsSetupToken'      => $context->is_add_payment_method(),
 			'funding'              => array_values( array_filter( $this->get_funding_types(), function ( $source ) {
 				if ( $source === 'paypal' ) {
 					return true;
@@ -466,11 +503,11 @@ class PayPalGateway extends AbstractGateway {
 					'height' => (int) $this->get_option( 'button_height' )
 				]
 			],
-			'paypal_sections'      => array_merge( $this->get_option( 'sections', [] ), [ 'checkout' ] ),
+			'paypal_sections'      => array_merge( $this->get_option( 'sections', [] ), [ 'checkout', 'add_payment_method' ] ),
 			'paylater_sections'    => $this->get_option( 'paylater_sections', [] ),
 			'credit_card_sections' => $this->get_option( 'credit_card_sections', [] ),
 			'venmo_sections'       => $this->get_option( 'venmo_sections', [] ),
-			'placeOrderEnabled'    => $this->is_place_order_button()
+			'placeOrderEnabled'    => $this->is_place_order_button() && ! $context->is_add_payment_method()
 		];
 		if ( $context->is_product() ) {
 			$settings                        = new ProductSettings( Utils::get_queried_product_id() );
@@ -546,11 +583,6 @@ class PayPalGateway extends AbstractGateway {
 	}
 
 	public function validate_fields() {
-		/*if ( ! isset( $_POST[ $this->id . '_paypal_order_id' ] ) ) {
-			if ( function_exists( 'wc_add_notice' ) ) {
-				wc_add_notice( sprintf( __( 'There was an error processing your payment. Reason: %s', 'pymntpl-paypal-woocommerce' ), 'A PayPal order ID was not provided.' ), 'error' );
-			}
-		}*/
 	}
 
 	protected function get_payment_section_options( $type = 'paypal' ) {
@@ -583,7 +615,6 @@ class PayPalGateway extends AbstractGateway {
 				$query_params->intent = $setting->get_option( 'intent' );
 			} else {
 				$query_params->intent = $this->get_option( 'intent' );
-				$query_params->vault  = 'false';
 				if ( wc_string_to_bool( $this->get_option( "venmo_enabled" ) ) ) {
 					$query_params->add_enabled_funding( 'venmo' );
 				}
@@ -616,6 +647,32 @@ class PayPalGateway extends AbstractGateway {
 		}
 
 		return $text;
+	}
+
+	/**
+	 * @param \PaymentPlugins\PayPalSDK\Order $paypal_order
+	 * @param \WC_Order                       $order
+	 *
+	 * @return void
+	 */
+	public function validate_paypal_order( $paypal_order, $order ) {
+		$factories = wc_ppcp_get_container()->get( CoreFactories::class );
+		$factories->initialize( $order );
+		$cache               = wc_ppcp_get_container()->get( CacheHandler::class );
+		$new_order           = $factories->order->from_order( $this->get_option( 'intent' ) );
+		$shipping_preference = $cache->get( Constants::SHIPPING_PREFERENCE );
+		/**
+		 * If the shipping preference is GET_FROM_FILE then we know the PayPal order was created using the PayPal buttons.
+		 * But if the PayPal order created from the WC_Order has shipping preference SET_PROVIDED_ADDRESS, then a new order
+		 * should be created. This ensures the shipping address can't be edited on the PayPal redirect based payment page.
+		 */
+		if ( $shipping_preference === OrderApplicationContext::GET_FROM_FILE ) {
+			if ( $new_order->getApplicationContext()->getShippingPreference() === OrderApplicationContext::SET_PROVIDED_ADDRESS ) {
+				$cache->delete( sprintf( '%s_%s', $this->payment_method->id, Constants::PAYPAL_ORDER_ID ) );
+				$cache->delete( Constants::SHIPPING_PREFERENCE );
+				throw new RetryException( 'Create new order' );
+			}
+		}
 	}
 
 }

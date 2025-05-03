@@ -27,6 +27,11 @@ abstract class AbstractFactory {
 	 */
 	protected $order;
 
+	/**
+	 * @var \PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\AbstractGateway
+	 */
+	protected $payment_method;
+
 	protected $currency;
 
 	public function __construct( CoreFactories $factories ) {
@@ -59,6 +64,15 @@ abstract class AbstractFactory {
 	 */
 	public function set_customer( $customer ): void {
 		$this->customer = $customer;
+	}
+
+	/**
+	 * @param mixed $payment_method
+	 *
+	 * @return void
+	 */
+	public function set_payment_method( $payment_method ): void {
+		$this->payment_method = $payment_method;
 	}
 
 	/**

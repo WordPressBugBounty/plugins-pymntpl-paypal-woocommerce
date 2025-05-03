@@ -5,6 +5,7 @@ namespace PaymentPlugins\PayPalSDK\Service;
 
 
 use PaymentPlugins\PayPalSDK\Order;
+use PaymentPlugins\PayPalSDK\Utils;
 
 /**
  * Service class that wraps all API calls to the Orders API.
@@ -24,6 +25,9 @@ class OrderService extends BaseService {
 	 * @return Order
 	 */
 	public function create( $params, $options = array() ) {
+		$requestId = md5( 'post' . '-' . json_encode( $params ) . time() . rand( 0, 10000 ) );
+		$options   = Utils::deepMerge( $options, [ 'headers' => [ 'PayPal-Request-Id' => $requestId ] ] );
+
 		return $this->post( $this->buildPath( '/orders' ), Order::class, $params, $options );
 	}
 

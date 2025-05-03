@@ -55,7 +55,7 @@ class WooCommercePPCPAngellEYE extends GeneralPayPalPlugin {
 	}
 
 
-	private function get_customer_id( $user_id ) {
+	public function get_customer_id( $user_id ) {
 		if ( $user_id > 0 ) {
 			$key = 'angelleye_ppcp_paypal_customer_id';
 			if ( wc_ppcp_get_container()->get( APISettings::class )->is_sandbox() ) {

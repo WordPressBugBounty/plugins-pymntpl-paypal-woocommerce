@@ -18,9 +18,11 @@ use PaymentPlugins\WooCommerce\PPCP\Assets\AssetDataApi;
 use PaymentPlugins\WooCommerce\PPCP\Cache\CacheHandler;
 use PaymentPlugins\WooCommerce\PPCP\Cache\CacheInterface;
 use PaymentPlugins\WooCommerce\PPCP\Factories\CoreFactories;
+use PaymentPlugins\WooCommerce\PPCP\Fastlane\FastlaneController;
 use PaymentPlugins\WooCommerce\PPCP\Integrations\PluginIntegrationsRegistry;
 use PaymentPlugins\WooCommerce\PPCP\Package\PackageController;
 use PaymentPlugins\WooCommerce\PPCP\Package\PackageRegistry;
+use PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\CreditCardGateway;
 use PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\PayPalGateway;
 use PaymentPlugins\WooCommerce\PPCP\Payments\PaymentGateways;
 use PaymentPlugins\WooCommerce\PPCP\Assets\AssetsApi;
@@ -85,7 +87,6 @@ class Main {
 	public function initialize() {
 		$this->container->get( PaymentGateways::class );
 		$this->container->get( RestApi::class );
-		$this->container->get( PluginIntegrationController::class );
 		$this->container->get( OrderStatusController::class );
 		$this->container->get( PaymentButtonController::class );
 		$this->container->get( Conversion\Controller::class );
@@ -97,6 +98,9 @@ class Main {
 		$this->container->get( AjaxFrontendHandler::class );
 		$this->container->get( ShortCodesController::class );
 		$this->container->get( Messages::class );
+		$this->container->get( CustomerController::class );
+		$this->container->get( PaymentMethodController::class );
+		$this->container->get( FastlaneController::class )->initialize();
 
 		if ( is_admin() ) {
 			$this->container->get( SettingsApi::class );
@@ -153,7 +157,11 @@ class Main {
 		$this->container->register( PluginIntegrationController::class, function ( $container ) {
 			return new PluginIntegrationController(
 				$container->get( PluginIntegrationsRegistry::class ),
-				$container );
+				$container
+			);
+		} );
+		$this->container->register( FastlaneController::class, function ( $container ) {
+			return new FastlaneController( $container->get( PayPalClient::class ) );
 		} );
 		$this->container->register( PayPalClient::class, function ( $container ) {
 			return new WPPayPalClient( $container->get( APISettings::class ), $container->get( Logger::class ) );
@@ -168,13 +176,20 @@ class Main {
 				$container->get( AssetsApi::class ),
 				$container->get( TemplateLoader::class ) );
 		} );
+		$this->container->register( CreditCardGateway::class, function ( $container ) {
+			return new CreditCardGateway(
+				$container->get( PaymentHandler::class ),
+				$container->get( Logger::class ),
+				$container->get( AssetsApi::class ),
+				$container->get( TemplateLoader::class ) );
+		} );
 		$this->container->register( PaymentHandler::class, function ( $container ) {
 			return new PaymentHandler(
 				$container->get( PayPalClient::class ),
 				$container->get( CoreFactories::class ),
 				$container->get( CacheHandler::class )
 			);
-		} );
+		}, false );
 		$this->container->register( SettingsApi::class, function ( $container ) {
 			return new SettingsApi( $container->get( SettingsRegistry::class ), $container->get( 'adminAssets' ), $container->get( 'adminData' ) );
 		} );
@@ -285,6 +300,21 @@ class Main {
 				$container->get( TemplateLoader::class )
 			);
 		} );
+		$this->container->register( CustomerController::class, function ( $container ) {
+			$instance = new CustomerController();
+			$instance->initialize();
+
+			return $instance;
+		} );
+		$this->container->register( PaymentMethodController::class, function ( $container ) {
+			$instance = new PaymentMethodController(
+				$container->get( PayPalClient::class ),
+				$container->get( Logger::class )
+			);
+			$instance->initialize();
+
+			return $instance;
+		} );
 	}
 
 	/**
@@ -359,6 +389,12 @@ class Main {
 		$this->container->register( \PaymentPlugins\PPCP\SW_WAPF\Package::class, function ( $container ) {
 			return new \PaymentPlugins\PPCP\SW_WAPF\Package( $container, $this->version );
 		} );
+		$this->container->register( \PaymentPlugins\PPCP\WooCommerceSubscriptions\Package::class, function ( $container ) {
+			return new \PaymentPlugins\PPCP\WooCommerceSubscriptions\Package( $container, $this->version );
+		} );
+		$this->container->register( \PaymentPlugins\PPCP\WooCommercePreOrders\Package::class, function ( $container ) {
+			return new \PaymentPlugins\PPCP\WooCommercePreOrders\Package( $container, $this->version );
+		} );
 
 
 		$this->container->register( PackageRegistry::class, function ( $container ) {
@@ -377,7 +413,9 @@ class Main {
 				\PaymentPlugins\PPCP\WooCommerceShipStation\Package::class,
 				\PaymentPlugins\PPCP\WooCommerceGermanized\Package::class,
 				\PaymentPlugins\PPCP\WooCommerceProductAddons\Package::class,
-				\PaymentPlugins\PPCP\SW_WAPF\Package::class
+				\PaymentPlugins\PPCP\SW_WAPF\Package::class,
+				\PaymentPlugins\PPCP\WooCommerceSubscriptions\Package::class,
+				\PaymentPlugins\PPCP\WooCommercePreOrders\Package::class
 			] );
 
 			return $package_controller;
@@ -407,15 +445,15 @@ class Main {
 	}
 
 	private function declare_features() {
-		if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
-			add_action( 'before_woocommerce_init', function () {
+		add_action( 'before_woocommerce_init', function () {
+			if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
 				try {
 					\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', $this->file, true );
 					\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', $this->file, true );
 				} catch ( \Exception $e ) {
 				}
-			} );
-		}
+			}
+		} );
 	}
 
 	public function version() {

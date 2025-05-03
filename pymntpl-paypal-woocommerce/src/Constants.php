@@ -72,4 +72,8 @@ class Constants {
 	 */
 	const CAPTURE_STATUS = '_paypal_capture_status';
 
+	const PAYMENT_METHOD_TOKEN = '_payment_method_token';
+
+	const CUSTOMER_ID = '_ppcp_customer_id';
+
 }

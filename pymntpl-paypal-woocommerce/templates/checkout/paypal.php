@@ -5,15 +5,21 @@
  * @var bool                                                             $connected
  * @since 1.0.0
  */
-
 ?>
-<div class="wc-ppcp-payment-method__container">
+<?php
+if ( $gateway->supports( 'vault' ) && is_checkout() ) {
+	$gateway->saved_payment_methods();
+}
+?>
+<div class="wc-ppcp-payment-method__container wc-payment-form">
 	<?php if ( $connected ): ?>
 		<?php if ( $gateway->is_show_popup_icon_enabled() ): ?>
             <div class="wc-ppcp-popup__container">
                 <img src="<?php echo esc_url( $assets->assets_url( 'assets/img/popup.svg' ) ) ?>"/>
                 <p>
-					<?php if ( $gateway->is_place_order_button() ): ?>
+					<?php if ( is_add_payment_method_page() ): ?>
+						<?php esc_html_e( 'Click the PayPal button to add your payment method.', 'pymntpl-paypal-woocommerce' ) ?>
+					<?php elseif ( $gateway->is_place_order_button() ): ?>
 						<?php printf( esc_html__( 'After clicking "%s", you will be redirected to PayPal to complete your purchase securely.', 'pymntpl-paypal-woocommerce' ), esc_html( $gateway->get_order_button_text() ) ) ?>
 					<?php else: ?>
 					<?php esc_html_e( 'Click the PayPal button below to process your order.', 'pymntpl-paypal-woocommerce' ) ?>

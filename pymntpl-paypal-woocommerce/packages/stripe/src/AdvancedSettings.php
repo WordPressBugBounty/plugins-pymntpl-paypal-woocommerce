@@ -13,6 +13,10 @@ class AdvancedSettings {
 	}
 
 	public function get_form_fields( $fields ) {
+		$fields['stripe_title']   = [
+			'title' => __( 'Stripe Options', 'pymntpl-paypal-woocommerce' ),
+			'type'  => 'title'
+		];
 		$fields['stripe_express'] = [
 			'title'       => __( 'Stripe Express Buttons', 'pymntpl-paypal-woocommerce' ),
 			'type'        => 'checkbox',

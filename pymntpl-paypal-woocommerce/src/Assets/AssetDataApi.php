@@ -68,7 +68,7 @@ class AssetDataApi {
 	 * Outputs all asset data
 	 */
 	public function do_asset_data() {
-		if ( wp_script_is( $this->handle, 'enqueued' ) ) {
+		if ( ! empty( $this->data ) ) {
 			foreach ( $this->get_default_values() as $key => $data ) {
 				$this->add( $key, $data );
 			}

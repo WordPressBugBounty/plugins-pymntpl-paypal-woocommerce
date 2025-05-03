@@ -24,6 +24,15 @@ class AdvancedSettings extends AbstractSettings {
 				'type'  => 'title',
 				'title' => __( 'Advanced Settings', 'pymntpl-paypal-woocommerce' ),
 			],
+			'vault_enabled'                      => [
+				'type'        => 'checkbox',
+				'title'       => __( 'PayPal Vault Enabled', 'pymntpl-paypal-woocommerce' ),
+				'value'       => 'yes',
+				'default'     => 'yes',
+				'description' => sprintf( __( 'When enabled, the plugin will use the PayPal Vault instead of billing agreements and reference transactions when saving a customer\'s payment method. It is recommended to enabled vaulting rather than use billing agreements.
+				If you encounter any permission issues, we recommend reconnecting the plugin to your PayPal account via the %1$sAPI Setting page%2$s.', 'pymntpl-paypal-woocommerce' ), '<a target="_blank" href="' . admin_url( 'admin.php?page=wc-settings&tab=checkout&section=ppcp_api' ) . '">',
+					'</a>' )
+			],
 			'display_name'                       => [
 				'title'       => __( 'Display Name', 'pymntpl-paypal-woocommerce' ),
 				'type'        => 'text',
@@ -109,8 +118,42 @@ class AdvancedSettings extends AbstractSettings {
 				'default'     => 'no',
 				'desc_tip'    => true,
 				'description' => __( 'If enabled, the customer will not be able to change their shipping address in the PayPal popup. This option has no effect on express checkout on the checkout page.', 'pymntpl-paypal-woocommerce' )
-			]
+			],
+			'disputes'                           => [
+				'title' => __( 'Dispute Settings', 'pymntpl-paypal-woocommerce' ),
+				'type'  => 'title'
+			],
+			'dispute_created'                    => [
+				'title'       => __( 'Dispute Created', 'pymntpl-paypal-woocommerce' ),
+				'type'        => 'checkbox',
+				'default'     => 'yes',
+				'description' => __( 'If enabled, the plugin will listen for the <strong>dispute.created</strong> webhook event and set the order\'s status to on-hold by default.',
+					'pymntpl-paypal-woocommerce' )
+			],
+			'dispute_created_status'             => [
+				'title'             => __( 'Dispute Created Order Status', 'pymntpl-paypal-woocommerce' ),
+				'type'              => 'select',
+				'default'           => 'wc-on-hold',
+				'options'           => function_exists( 'wc_get_order_statuses' ) ? wc_get_order_statuses() : [],
+				'description'       => __( 'The status assigned to an order when a dispute is created.', 'pymntpl-paypal-woocommerce' ),
+				'custom_attributes' => [
+					'data-show-if' => 'dispute_created=true'
+				]
+			],
+			'dispute_resolved'                   => [
+				'title'       => __( 'Dispute Resolved', 'pymntpl-paypal-woocommerce' ),
+				'type'        => 'checkbox',
+				'default'     => 'yes',
+				'description' => __( 'If enabled, the plugin will listen for the <strong>dispute.closed</strong> webhook event and set the order\'s status back to the status before the dispute was opened.',
+					'pymntpl-paypal-woocommerce' )
+			],
 		];
+	}
+
+	public function get_admin_script_dependencies() {
+		$this->assets->register_script( 'wc-ppcp-advanced-settings', 'build/js/advanced-settings.js' );
+
+		return [ 'wc-ppcp-advanced-settings' ];
 	}
 
 	public function is_refund_on_cancel() {
@@ -182,6 +225,10 @@ class AdvancedSettings extends AbstractSettings {
 		}
 
 		return $data;
+	}
+
+	public function is_vault_enabled() {
+		return wc_string_to_bool( $this->get_option( 'vault_enabled', 'yes' ) );
 	}
 
 }

@@ -7,6 +7,8 @@ namespace PaymentPlugins\PPCP\Blocks\Payments;
 use Automattic\WooCommerce\Blocks\Assets\AssetDataRegistry;
 use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
 use PaymentPlugins\PPCP\Blocks\Package;
+use PaymentPlugins\PPCP\Blocks\Payments\Gateways\CreditCardGateway;
+use PaymentPlugins\PPCP\Blocks\Payments\Gateways\FastlaneGateway;
 use PaymentPlugins\PPCP\Blocks\Payments\Gateways\PayPalExpressGateway;
 use PaymentPlugins\PPCP\Blocks\Payments\Gateways\PayPalGateway;
 use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\APISettings;
@@ -41,12 +43,12 @@ class Api {
 		add_filter( 'woocommerce_payment_gateways', [ $this, 'add_payment_gateways' ] );
 		add_action( 'woocommerce_rest_checkout_process_payment_with_context', array( $this, 'payment_with_context' ), 10 );
 		add_filter( 'rest_dispatch_request', [ $this, 'process_rest_dispatch_request' ], 10, 2 );
-
-		$this->register_assets();
 	}
 
 	public function register_payment_gateways( PaymentMethodRegistry $registry ) {
 		$registry->register( $this->container->get( PayPalGateway::class ) );
+		$registry->register( $this->container->get( CreditCardGateway::class ) );
+		$registry->register( $this->container->get( FastlaneGateway::class ) );
 	}
 
 	public function add_cart_payment_method_data() {
@@ -69,10 +71,6 @@ class Api {
 			];
 			$this->data_api->add( 'ppcpGeneralData', $this->rest_controller->add_asset_data( $data ) );
 		}
-	}
-
-	public function register_assets() {
-		$this->container->get( Package::ASSETS_API )->register_style( 'wc-ppcp-blocks-styles', 'build/styles.css' );
 	}
 
 	public function dequeue_cart_scripts() {

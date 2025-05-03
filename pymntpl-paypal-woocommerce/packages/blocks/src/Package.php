@@ -4,7 +4,11 @@
 namespace PaymentPlugins\PPCP\Blocks;
 
 use Automattic\WooCommerce\Blocks\Assets\AssetDataRegistry;
+use Automattic\WooCommerce\StoreApi\Schemas\ExtendSchema;
+use Automattic\WooCommerce\StoreApi\StoreApi;
 use PaymentPlugins\PayPalSDK\PayPalClient;
+use PaymentPlugins\PPCP\Blocks\Payments\Gateways\CreditCardGateway;
+use PaymentPlugins\PPCP\Blocks\Payments\Gateways\FastlaneGateway;
 use PaymentPlugins\PPCP\Blocks\Payments\Gateways\PayPalGateway;
 use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\APISettings;
 use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\PayLaterMessageSettings;
@@ -50,6 +54,18 @@ class Package extends AbstractPackage {
 				$container->get( self::ASSETS_API )
 			);
 		} );
+		$this->container->register( CreditCardGateway::class, function ( $container ) {
+			return new CreditCardGateway(
+				$container->get( PayPalClient::class ),
+				$container->get( self::ASSETS_API )
+			);
+		} );
+		$this->container->register( FastlaneGateway::class, function ( $container ) {
+			return new FastlaneGateway(
+				$container->get( PayPalClient::class ),
+				$container->get( self::ASSETS_API )
+			);
+		} );
 		$this->container->register( PayLaterMessaging::class, function ( $container ) {
 			$instance = new PayLaterMessaging(
 				$container->get( PayLaterMessageSettings::class ),
@@ -72,6 +88,12 @@ class Package extends AbstractPackage {
 		$this->container->register( Rest\Controller::class, function () {
 			return new Rest\Controller();
 		} );
+		$this->container->register( SchemaController::class, function () {
+			return new SchemaController( StoreApi::container()->get( ExtendSchema::class ) );
+		} );
+		$this->container->register( FrontendScripts::class, function ( $container ) {
+			return new FrontendScripts( $container->get( self::ASSETS_API ) );
+		} );
 	}
 
 	public function initialize() {
@@ -79,6 +101,8 @@ class Package extends AbstractPackage {
 		$this->container->get( PayLaterMessaging::class );
 		$this->container->get( QueryParams::class );
 		$this->container->get( Rest\Controller::class );
+		$this->container->get( SchemaController::class )->initialize();
+		$this->container->get( FrontendScripts::class )->initialize();
 	}
 
 	public function is_active() {

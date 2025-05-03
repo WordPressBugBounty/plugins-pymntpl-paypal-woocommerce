@@ -115,9 +115,26 @@ class ContextHandler {
 		return \in_array( $this->context, $contexts );
 	}
 
-	public function get_order_from_query(){
+	public function get_order_from_query() {
 		global $wp;
-		return wc_get_order( absint( $wp->query_vars['order-pay'] ));
+
+		return wc_get_order( absint( $wp->query_vars['order-pay'] ) );
+	}
+
+	/**
+	 * @return array|false|mixed|string|\WC_Product|\WC_Product_Variable|null
+	 */
+	public function get_product_id() {
+		return Utils::get_queried_product_id();
+	}
+
+	public function is_checkout_block() {
+		$id = get_queried_object_id();
+
+		return $this->is_checkout()
+		       && \is_int( $id )
+		       && class_exists( '\WC_Blocks_Utils' )
+		       && \WC_Blocks_Utils::has_block_in_page( $id, 'woocommerce/checkout' );
 	}
 
 }

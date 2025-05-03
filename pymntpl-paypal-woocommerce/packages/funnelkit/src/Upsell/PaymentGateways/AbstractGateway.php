@@ -9,6 +9,8 @@ use PaymentPlugins\PayPalSDK\Item;
 use PaymentPlugins\PayPalSDK\Money;
 use PaymentPlugins\PayPalSDK\Order;
 use PaymentPlugins\PayPalSDK\OrderApplicationContext;
+use PaymentPlugins\PayPalSDK\PaymentSource;
+use PaymentPlugins\PayPalSDK\Token;
 use PaymentPlugins\PayPalSDK\PurchaseUnit;
 use PaymentPlugins\PayPalSDK\Refund;
 use PaymentPlugins\PayPalSDK\Shipping;
@@ -16,7 +18,6 @@ use PaymentPlugins\WooCommerce\PPCP\Assets\AssetsApi;
 use PaymentPlugins\WooCommerce\PPCP\Constants;
 use PaymentPlugins\WooCommerce\PPCP\Factories\CoreFactories;
 use PaymentPlugins\WooCommerce\PPCP\FeeCalculation;
-use PaymentPlugins\WooCommerce\PPCP\Main;
 use PaymentPlugins\WooCommerce\PPCP\PaymentHandler;
 use PaymentPlugins\WooCommerce\PPCP\PaymentResult;
 use PaymentPlugins\WooCommerce\PPCP\Utilities\NumberUtil;
@@ -47,11 +48,15 @@ class AbstractGateway extends \WFOCU_Gateway {
 	}
 
 	public static function get_instance() {
-		return Main::container()->get( static::class );
+		return wc_ppcp_get_container()->get( static::class );
 	}
 
 	public function get_payment_method_script_handles() {
 		return [];
+	}
+
+	public function supports_payment_method_vaulting() {
+		return true;
 	}
 
 	public function process_charge( $order ) {
@@ -63,19 +68,20 @@ class AbstractGateway extends \WFOCU_Gateway {
 			if ( $this->is_processing_redirect() ) {
 				$paypal_order = $this->paypal_order;
 			} else {
-				$this->payment_handler->set_use_billing_agreement( true );
 				$paypal_order = $client->orders->create( $this->get_create_order_params( $order ) );
 				if ( is_wp_error( $paypal_order ) ) {
 					throw new \Exception( $paypal_order->get_error_message() );
 				}
 			}
-			if ( Order::CAPTURE == $paypal_order->intent ) {
-				OrderLock::set_order_lock( $order );
-				$response = $client->orders->capture( $paypal_order->id, $this->payment_handler->get_payment_source( $order ) );
-			} else {
-				$response = $client->orders->authorize( $paypal_order->id, $this->payment_handler->get_payment_source( $order ) );
+			if ( $paypal_order->isApproved() || $paypal_order->isCreated() ) {
+				if ( Order::CAPTURE == $paypal_order->intent ) {
+					OrderLock::set_order_lock( $order );
+					$paypal_order = $client->orders->capture( $paypal_order->id );
+				} else {
+					$paypal_order = $client->orders->authorize( $paypal_order->id );
+				}
 			}
-			$result = new PaymentResult( $response, $order, $payment_method );
+			$result = new PaymentResult( $paypal_order, $order, $payment_method );
 			if ( $result->success() ) {
 				WFOCU_Core()->data->set( '_transaction_id', $result->get_capture_id() );
 				$this->update_order_fee( $result, $order );
@@ -103,9 +109,14 @@ class AbstractGateway extends \WFOCU_Gateway {
 	 * @return \PaymentPlugins\PayPalSDK\Order
 	 */
 	public function get_create_order_params( $order ) {
-		$currency       = $order->get_currency();
-		$package        = WFOCU_Core()->data->get( '_upsell_package' );
-		$paypal_order   = $this->payment_handler->get_create_order_params( $order );
+		$currency     = $order->get_currency();
+		$package      = WFOCU_Core()->data->get( '_upsell_package' );
+		$paypal_order = $this->payment_handler->client->orderMode( $order )->orders->retrieve( $order->get_meta( Constants::ORDER_ID ) );
+
+		if ( is_wp_error( $paypal_order ) ) {
+			throw new \Exception( $paypal_order->get_error_message() );
+		}
+
 		$current_offer  = WFOCU_Core()->data->get( 'current_offer' );
 		$item_total     = array_reduce( $package['products'], function ( $total, $product ) {
 			return $total + $product['price'];
@@ -142,20 +153,44 @@ class AbstractGateway extends \WFOCU_Gateway {
 			->setInvoiceId( sprintf( '%s-%s', $order->get_id(), $current_offer ? $current_offer : 'wfocu' ) )
 			->setCustomId( sprintf( '%1$s_%2$s', 'wfocu', $order->get_id() ) );
 
-		if ( \in_array( $paypal_order->getApplicationContext()->getShippingPreference(), [ OrderApplicationContext::GET_FROM_FILE, OrderApplicationContext::SET_PROVIDED_ADDRESS ] ) ) {
+		$needs_shipping = false;
+		//if ( \in_array( $paypal_order->getApplicationContext()->getShippingPreference(), [ OrderApplicationContext::GET_FROM_FILE, OrderApplicationContext::SET_PROVIDED_ADDRESS ] ) ) {
+		if ( isset( $paypal_order->getPurchaseUnits()->get( 0 )->shipping ) ) {
+			$needs_shipping = true;
 			$purchase_unit->setShipping( ( new Shipping() )
 				->setName( $paypal_order->getPurchaseUnits()->get( 0 )->getShipping()->getName() )
 				->setAddress( $paypal_order->getPurchaseUnits()->get( 0 )->getShipping()->getAddress() ) );
 		}
+		//}
 
-		Main::container()->get( CoreFactories::class )->purchaseUnit->filter_purchase_unit( $purchase_unit, $purchase_unit->getAmount()->getValue() );
+		/**
+		 * @var CoreFactories $factories
+		 */
+		$factories = wc_ppcp_get_container()->get( CoreFactories::class );
+		$factories->purchaseUnit->filter_purchase_unit( $purchase_unit, $purchase_unit->getAmount()->getValue() );
 		$purchase_units->add( $purchase_unit );
 
-		return ( new Order() )
+		$application_context = $factories->applicationContext->get( $needs_shipping, true );
+
+		$result = ( new Order() )
 			->setIntent( $paypal_order->getIntent() )
 			->setPayer( $paypal_order->getPayer() )
-			->setApplicationContext( $paypal_order->getApplicationContext() )
+			->setApplicationContext( $application_context )
 			->setPurchaseUnits( $purchase_units );
+
+		if ( $order->get_meta( Constants::PAYMENT_METHOD_TOKEN ) ) {
+			$result->setPaymentSource( ( new PaymentSource() )
+				->setToken( ( new Token() )
+					->setId( $order->get_meta( Constants::PAYMENT_METHOD_TOKEN ) )
+					->setType( Token::PAYMENT_METHOD_TOKEN ) ) );
+		} elseif ( $order->get_meta( Constants::BILLING_AGREEMENT_ID ) ) {
+			$result->setPaymentSource( ( new PaymentSource() )
+				->setToken( ( new Token() )
+					->setId( $order->get_meta( Constants::BILLING_AGREEMENT_ID ) )
+					->setType( Token::BILLING_AGREEMENT ) ) );
+		}
+
+		return $result;
 	}
 
 	/**

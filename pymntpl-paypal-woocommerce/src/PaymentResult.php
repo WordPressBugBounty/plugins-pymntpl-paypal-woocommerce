@@ -151,13 +151,14 @@ class PaymentResult {
 	 * @return void
 	 */
 	public function needs_approval() {
-		if ( $this->success && $this->paypal_order && $this->paypal_order->isCreated() ) {
-			return true;
+		if ( $this->paypal_order ) {
+			return $this->paypal_order->isCreated() || $this->paypal_order->isActionRequired()
+			       || $this->paypal_order->getStatus() === 'ORDER_NOT_APPROVED';
+		} else {
+			return ! $this->success()
+			       && ( $this->error_code === 'PAYER_ACTION_REQUIRED'
+			            || $this->error_code === 'ORDER_NOT_APPROVED' );
 		}
-
-		return ! $this->success()
-		       && ( $this->error_code === 'PAYER_ACTION_REQUIRED'
-		            || $this->error_code === 'ORDER_NOT_APPROVED' );
 	}
 
 	/**
@@ -196,6 +197,10 @@ class PaymentResult {
 
 	public function set_environment( $env ) {
 		$this->environment = $env;
+	}
+
+	public function get_environment() {
+		return $this->environment;
 	}
 
 }

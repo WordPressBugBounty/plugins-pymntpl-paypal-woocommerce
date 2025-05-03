@@ -18,6 +18,9 @@ use PaymentPlugins\WooCommerce\PPCP\Utilities\PayPalFee;
 use PaymentPlugins\WooCommerce\PPCP\Utils;
 use PaymentPlugins\WooCommerce\PPCP\WPPayPalClient;
 
+/**
+ * @deprecated - Use PaymentPlugins\PPCP\WooCommercePreOrders\PreOrdersController
+ */
 class WooCommercePreOrders implements PluginIntegrationType {
 
 	public $id = 'woocommerce_preorders';
@@ -43,6 +46,7 @@ class WooCommercePreOrders implements PluginIntegrationType {
 		add_filter( 'wc_ppcp_process_payment_result', [ $this, 'process_payment' ], 10, 3 );
 		add_action( 'wc_pre_orders_process_pre_order_completion_payment_ppcp', [ $this, 'process_order_completion_payment' ] );
 		add_action( 'wc_ppcp_rest_handle_checkout_validation', [ $this, 'handle_checkout_validation' ] );
+		add_filter( 'wc_ppcp_show_card_save_checkbox', [ $this, 'show_card_save_checkbox' ] );
 	}
 
 	/**
@@ -184,6 +188,18 @@ class WooCommercePreOrders implements PluginIntegrationType {
 				}
 			}
 		}
+	}
+
+	public function show_card_save_checkbox( $bool ) {
+		if ( $bool ) {
+			if ( is_checkout() && ! is_checkout_pay_page() ) {
+				if ( \WC_Pre_Orders_Cart::cart_contains_pre_order() ) {
+					$bool = ! \WC_Pre_Orders_Product::product_is_charged_upon_release( \WC_Pre_Orders_Cart::get_pre_order_product() );
+				}
+			}
+		}
+
+		return $bool;
 	}
 
 }

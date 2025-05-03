@@ -3,9 +3,6 @@
 namespace PaymentPlugins\WooCommerce\PPCP\Conversion;
 
 use PaymentPlugins\PayPalSDK\PayPalClient;
-use PaymentPlugins\PayPalSDK\Token;
-use PaymentPlugins\WooCommerce\PPCP\Constants;
-use PaymentPlugins\WooCommerce\PPCP\PluginIntegrationController;
 
 abstract class GeneralPayPalPlugin {
 
@@ -103,6 +100,10 @@ abstract class GeneralPayPalPlugin {
 				$subscription->save();
 			}
 		}
+	}
+
+	public function get_customer_id( $user_id ) {
+		return null;
 	}
 
 }

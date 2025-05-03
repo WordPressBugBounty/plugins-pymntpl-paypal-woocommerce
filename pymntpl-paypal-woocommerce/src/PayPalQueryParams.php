@@ -2,6 +2,7 @@
 
 namespace PaymentPlugins\WooCommerce\PPCP;
 
+use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\AdvancedSettings;
 use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\APISettings;
 use PaymentPlugins\WooCommerce\PPCP\Assets\AssetDataApi;
 
@@ -21,9 +22,8 @@ class PayPalQueryParams {
 	private $params = [
 		'client-id'                   => 'sb',
 		'intent'                      => '',
-		'vault'                       => 'false',
 		'commit'                      => 'true',
-		'components'                  => [ 'buttons', 'messages' ],
+		'components'                  => [ 'buttons', 'messages', 'card-fields' ],
 		'currency'                    => '',
 		'enable-funding'              => [ 'paylater' ],
 		'data-partner-attribution-id' => 'PaymentPlugins_PCP'
@@ -85,8 +85,15 @@ class PayPalQueryParams {
 	 * @return mixed|string|void
 	 */
 	protected function initialize_paypal_flow() {
-		if ( $this->flow !== 'vault' ) {
-			$this->flow = apply_filters( 'wc_ppcp_get_paypal_flow', $this->flow, $this->context_handler );
+		/**
+		 * @var AdvancedSettings $advanced_settings
+		 */
+		$advanced_settings = wc_ppcp_get_container()->get( AdvancedSettings::class );
+
+		if ( ! $advanced_settings->is_vault_enabled() ) {
+			if ( $this->flow !== 'vault' ) {
+				$this->flow = apply_filters( 'wc_ppcp_get_paypal_flow', $this->flow, $this->context_handler );
+			}
 		}
 
 		return $this->flow;
@@ -106,13 +113,33 @@ class PayPalQueryParams {
 				$this->currency = $order->get_currency();
 			}
 		}
+		if ( $this->context_handler->is_checkout() || $this->context_handler->is_order_pay() ) {
+			$this->add_param( 'data-page-type', 'checkout' );
+		} elseif ( $this->context_handler->is_product() ) {
+			$this->add_param( 'data-page-type', 'product-details' );
+		} elseif ( $this->context_handler->is_cart() ) {
+			$this->add_param( 'data-page-type', 'cart' );
+		} elseif ( $this->context_handler->is_shop() ) {
+			$this->add_param( 'data-page-type', 'product-listing' );
+		}
 
-		if ( $this->flow == 'vault' ) {
-			$this->intent = 'tokenize';
-			$this->vault  = 'true';
+		/**
+		 * @var AdvancedSettings $advanced_settings
+		 */
+		$advanced_settings = wc_ppcp_get_container()->get( AdvancedSettings::class );
+
+		if ( ! $advanced_settings->is_vault_enabled() ) {
+			if ( $this->flow == 'vault' ) {
+				$this->intent = 'tokenize';
+				$this->vault  = 'true';
+			}
 		}
 
 		do_action( 'wc_ppcp_paypal_query_params', $this, $this->context_handler );
+	}
+
+	public function add_param( $key, $value ) {
+		$this->params[ $key ] = $value;
 	}
 
 	protected function prepare_query_params() {

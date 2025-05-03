@@ -11,9 +11,9 @@ class Container {
 	 */
 	private $registry = [];
 
-	public function register( $id, $value ) {
+	public function register( $id, $value, $singleton = true ) {
 		if ( empty( $this->registry[ $id ] ) ) {
-			$this->registry[ $id ] = new BaseResolver( $value );
+			$this->registry[ $id ] = new BaseResolver( $value, $singleton );
 		}
 	}
 

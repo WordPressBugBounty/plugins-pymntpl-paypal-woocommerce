@@ -86,7 +86,7 @@ class CartOrder extends AbstractCart {
 				}
 				throw new \Exception( $result->get_error_message() );
 			}
-			$this->cache->set( Constants::PAYPAL_ORDER_ID, $result->id );
+			$this->cache->set( sprintf( '%s_%s', 'ppcp', Constants::PAYPAL_ORDER_ID ), $result->id );
 			$this->cache->set( Constants::SHIPPING_PREFERENCE, $order->getApplicationContext()->getShippingPreference() );
 
 			$this->logger->info(
