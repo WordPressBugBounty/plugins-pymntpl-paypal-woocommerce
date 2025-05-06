@@ -4,7 +4,7 @@ Tags: paypal, paylater, venmo, credit cards
 Requires at least: 4.7
 Tested up to: 6.8
 Requires PHP: 7.1
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 Copyright: Payment Plugins
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -49,6 +49,15 @@ Our documentation has a step-by-step guide on how to connect the plugin to your 
 Payment Plugins is the team behind several of the highest reviewed and installed Payment integrations for WooCommerce.
 
 == Changelog ==
+= 1.1.1 - 05/06/25 =
+* Added - Option to enable Admin Only Mode so that PayPal is only visible to admin users on the frontend. This allows admins to test PayPal in sandbox mode on live sites and customers won't see PayPal as a payment option.
+* Updated - Expire Fastlane client token if environment changed
+* Updated - Add function_exists check when using function wcs_is_manual_renewal_required. The function exists check must be used because there are subscription plugins that exist
+that are copies of the WooCommerce Subscriptions plugin, but those copies don't define all the same functions. [https://wordpress.org/support/topic/cart-page-fatal-error-since-version-1-1-0/](https://wordpress.org/support/topic/cart-page-fatal-error-since-version-1-1-0/)
+* Updated - Improved utf-8 checks for product names to prevent json_encode errors
+* Fixed - PayLater messaging not showing on product page. [https://wordpress.org/support/topic/paylater-messaging-no-longer-showing-after-latest-update/](https://wordpress.org/support/topic/paylater-messaging-no-longer-showing-after-latest-update/)
+* Fixed - Card save checkbox on pay for order page was not working
+* Fixed - Don't show the Fastlane signup link on Add Payment Method page
 = 1.1.0 - 05/03/25 =
 * Added - Advanced Credit and Debit Card Payments (ACDC) is now supported. Settings can be accessed via the PayPal Card Settings page within the PayPal plugin. If you encounter any permissions issues,
 we recommend reconnecting via the API Settings page to ensure all permissions are applied to the PayPal account connection.

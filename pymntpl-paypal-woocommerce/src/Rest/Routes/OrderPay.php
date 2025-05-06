@@ -65,12 +65,21 @@ class OrderPay extends AbstractRoute {
 			if ( ! hash_equals( $order_key, $order->get_order_key() ) ) {
 				throw new \Exception( __( 'Invalid order key provided.', 'pymntpl-paypal-woocommerce' ) );
 			}
+			$payment_gateways = WC()->payment_gateways()->payment_gateways();
 			/**
 			 * @var \PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\AbstractGateway $payment_method
 			 */
-			$payment_method = WC()->payment_gateways()->payment_gateways()[ $request['payment_method'] ];
-			$intent         = $payment_method->get_option( 'intent' );
-			$paypal_order   = $this->factories->initialize( $order )->order->from_order( $intent );
+			$payment_method = $payment_gateways[ $request['payment_method'] ] ?? null;
+
+			if ( ! $payment_method ) {
+				throw new \Exception( __( 'Invalid payment method ID.', 'pymntpl-paypal-woocommerce' ) );
+			}
+
+			$payment_method->set_save_payment_method( ! empty( $request["{$payment_method->id}_save_payment"] ) );
+
+			$intent       = $payment_method->get_option( 'intent' );
+			$paypal_order = $this->factories->initialize( $order, $payment_method )->order->from_order( $intent );
+			$paypal_order->setPaymentSource( $this->factories->paymentSource->from_checkout() );
 			/**
 			 * @var PurchaseUnit $purchase_unit
 			 */

@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Payment Plugins for PayPal WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Payment Plugins for PayPal WooCommerce 1.1.0\n"
+"Project-Id-Version: Payment Plugins for PayPal WooCommerce 1.1.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pymntpl-paypal-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-05-03T20:44:57+00:00\n"
+"POT-Creation-Date: 2025-05-06T03:44:17+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: pymntpl-paypal-woocommerce\n"
@@ -87,7 +87,7 @@ msgid "Your card's security code is incomplete."
 msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:53
-#: packages/blocks/src/Payments/Gateways/FastlaneGateway.php:51
+#: packages/blocks/src/Payments/Gateways/FastlaneGateway.php:54
 #: src/Messages.php:26
 #: templates/checkout/paypal.php:35
 #: templates/fastlane/modal.php:16
@@ -96,7 +96,7 @@ msgid "Cancel"
 msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:54
-#: packages/blocks/src/Payments/Gateways/FastlaneGateway.php:52
+#: packages/blocks/src/Payments/Gateways/FastlaneGateway.php:55
 #: templates/fastlane/tokenized-card.php:15
 msgid "Change"
 msgstr ""
@@ -107,18 +107,18 @@ msgid "Sign up for"
 msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:56
-#: packages/blocks/src/Payments/Gateways/FastlaneGateway.php:53
+#: packages/blocks/src/Payments/Gateways/FastlaneGateway.php:56
 #: templates/fastlane/modal.php:13
 msgid "Continue"
 msgstr ""
 
-#: packages/blocks/src/Payments/Gateways/FastlaneGateway.php:54
-#: src/Fastlane/FastlaneController.php:104
+#: packages/blocks/src/Payments/Gateways/FastlaneGateway.php:57
+#: src/Fastlane/FastlaneController.php:111
 msgid "Please provide an email address before using Fastlane."
 msgstr ""
 
-#: packages/blocks/src/Payments/Gateways/FastlaneGateway.php:55
-#: src/Fastlane/FastlaneController.php:105
+#: packages/blocks/src/Payments/Gateways/FastlaneGateway.php:58
+#: src/Fastlane/FastlaneController.php:112
 msgid "Please enter a valid email address before using Fastlane."
 msgstr ""
 
@@ -892,60 +892,68 @@ msgid "Production Webhook ID"
 msgstr ""
 
 #: src/Admin/Settings/APISettings.php:170
+msgid "Admin Only Mode"
+msgstr ""
+
+#: src/Admin/Settings/APISettings.php:174
+msgid "When enabled, PayPal payment methods will only be visible to admin users with the manage_woocommerce permission. This allows admins to test PayPal on their live site without customers seeing it on the checkout page."
+msgstr ""
+
+#: src/Admin/Settings/APISettings.php:192
 msgid "Debug Enabled"
 msgstr ""
 
-#: src/Admin/Settings/APISettings.php:175
+#: src/Admin/Settings/APISettings.php:197
 msgid "When enabled, valuable debugging information will be captured and stored in the WooCommerce logs."
 msgstr ""
 
-#: src/Admin/Settings/APISettings.php:178
+#: src/Admin/Settings/APISettings.php:200
 msgid "Debug Payment Process"
 msgstr ""
 
-#: src/Admin/Settings/APISettings.php:183
+#: src/Admin/Settings/APISettings.php:205
 msgid "When enabled, detailed debug data for payments will be added to the log."
 msgstr ""
 
-#: src/Admin/Settings/APISettings.php:189
+#: src/Admin/Settings/APISettings.php:211
 msgid "Debug Webhook"
 msgstr ""
 
-#: src/Admin/Settings/APISettings.php:194
+#: src/Admin/Settings/APISettings.php:216
 msgid "When enabled, detailed debug data for webhooks will be added to the log."
 msgstr ""
 
-#: src/Admin/Settings/APISettings.php:206
-#: src/Admin/Settings/APISettings.php:212
+#: src/Admin/Settings/APISettings.php:228
+#: src/Admin/Settings/APISettings.php:234
 msgid "Status"
 msgstr ""
 
-#: src/Admin/Settings/APISettings.php:206
+#: src/Admin/Settings/APISettings.php:228
 msgid "Connected"
 msgstr ""
 
-#: src/Admin/Settings/APISettings.php:208
-#: src/Admin/Settings/APISettings.php:248
+#: src/Admin/Settings/APISettings.php:230
+#: src/Admin/Settings/APISettings.php:275
 msgid "Delete Connection"
 msgstr ""
 
-#: src/Admin/Settings/APISettings.php:213
+#: src/Admin/Settings/APISettings.php:235
 msgid "Created"
 msgstr ""
 
-#: src/Admin/Settings/APISettings.php:247
+#: src/Admin/Settings/APISettings.php:274
 msgid "Configuring connection to PayPal..."
 msgstr ""
 
-#: src/Admin/Settings/APISettings.php:249
+#: src/Admin/Settings/APISettings.php:276
 msgid "Press OK to continue deleting your connection data."
 msgstr ""
 
-#: src/Admin/Settings/APISettings.php:261
+#: src/Admin/Settings/APISettings.php:288
 msgid "Your PayPal account has been connected."
 msgstr ""
 
-#: src/Admin/Settings/APISettings.php:415
+#: src/Admin/Settings/APISettings.php:452
 msgid "The PayPal connect feature is not available at this time. Please manually enter your client ID and secret key."
 msgstr ""
 
@@ -1846,6 +1854,10 @@ msgstr ""
 
 #: src/Rest/Routes/OrderPay.php:66
 msgid "Invalid order key provided."
+msgstr ""
+
+#: src/Rest/Routes/OrderPay.php:75
+msgid "Invalid payment method ID."
 msgstr ""
 
 #: src/Rest/Routes/VaultPaymentTokensRoute.php:44

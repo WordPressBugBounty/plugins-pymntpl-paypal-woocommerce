@@ -851,23 +851,23 @@ class PayLaterMessageSettings extends AbstractSettings {
 	 */
 	public function add_script_handles( $handles, $assets_api, $context ) {
 		if ( $context->is_product() && $this->is_product_section_enabled() ) {
-			$assets_api->register_script( 'wc-ppcp-paylater-msg-product', 'build/js/paylater-message-product.js' );
+			$assets_api->register_script( 'wc-ppcp-paylater-msg-product', 'build/js/paylater-message-product.js', [ 'wc-ppcp-frontend-commons' ] );
 			$handles[] = 'wc-ppcp-paylater-msg-product';
 		} elseif ( $context->is_cart() && $this->is_cart_section_enabled() ) {
-			$assets_api->register_script( 'wc-ppcp-paylater-msg-cart', 'build/js/paylater-message-cart.js' );
+			$assets_api->register_script( 'wc-ppcp-paylater-msg-cart', 'build/js/paylater-message-cart.js', [ 'wc-ppcp-frontend-commons' ] );
 			$handles[] = 'wc-ppcp-paylater-msg-cart';
 		} elseif ( $context->is_checkout() && $this->is_checkout_section_enabled() ) {
-			$assets_api->register_script( 'wc-ppcp-paylater-msg-checkout', 'build/js/paylater-message-checkout.js' );
+			$assets_api->register_script( 'wc-ppcp-paylater-msg-checkout', 'build/js/paylater-message-checkout.js', [ 'wc-ppcp-frontend-commons' ] );
 			$handles[] = 'wc-ppcp-paylater-msg-checkout';
 		} elseif ( $context->is_shop() && $this->is_shop_section_enabled() ) {
-			$assets_api->register_script( 'wc-ppcp-paylater-msg-shop', 'build/js/paylater-message-shop.js' );
+			$assets_api->register_script( 'wc-ppcp-paylater-msg-shop', 'build/js/paylater-message-shop.js', [ 'wc-ppcp-frontend-commons' ] );
 			$handles[] = 'wc-ppcp-paylater-msg-shop';
 		}
 
 		if ( ! $context->is_cart() && ! $context->is_checkout() && ! $context->is_order_received() ) {
 			// if messaging on minicart is enabled
 			if ( wc_string_to_bool( $this->get_option( 'minicart_enabled' ) ) ) {
-				$assets_api->register_script( 'wc-ppcp-paylater-msg-minicart', 'build/js/paylater-message-minicart.js' );
+				$assets_api->register_script( 'wc-ppcp-paylater-msg-minicart', 'build/js/paylater-message-minicart.js', [ 'wc-ppcp-frontend-commons' ] );
 				$handles[] = 'wc-ppcp-paylater-msg-minicart';
 			}
 		}
@@ -925,7 +925,7 @@ class PayLaterMessageSettings extends AbstractSettings {
 			$location = $this->get_option( 'shop_location' );
 			$content  = '<div class="wc-ppcp-paylater-msg-shop-container" id="wc-ppcp-paylater-msg-' . $product->get_id() . '" style="display: none"></div>';
 			//phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
-            if ( doing_action( 'woocommerce_after_shop_loop_item_title' ) && $location === 'below_price' ) {
+			if ( doing_action( 'woocommerce_after_shop_loop_item_title' ) && $location === 'below_price' ) {
 				echo $content;
 			} elseif ( doing_action( 'woocommerce_after_shop_loop_item' ) && $location === 'below_add_to_cart' ) {
 				echo $content;

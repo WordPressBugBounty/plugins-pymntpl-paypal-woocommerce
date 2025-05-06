@@ -219,6 +219,19 @@ class PaymentGateways {
 	 * @return mixed
 	 */
 	public function get_available_payment_gateways( $gateways ) {
+		/**
+		 * @var APISettings $api_settings
+		 */
+		$api_settings = wc_ppcp_get_container()->get( APISettings::class );
+		if ( $api_settings->is_admin_only_mode() && ( ! is_admin() && ! wc()->is_rest_api_request() && ! defined( 'DOING_CRON' ) ) ) {
+			if ( ! current_user_can( 'manage_woocommerce' ) ) {
+				foreach ( $this->payment_method_registry->get_registered_integrations() as $integration ) {
+					unset( $gateways[ $integration->id ] );
+				}
+
+				return $gateways;
+			}
+		}
 		if ( is_add_payment_method_page() ) {
 			/**
 			 * @var AdvancedSettings $advanced_settings

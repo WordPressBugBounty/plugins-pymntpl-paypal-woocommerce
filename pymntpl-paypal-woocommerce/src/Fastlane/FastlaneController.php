@@ -3,6 +3,7 @@
 namespace PaymentPlugins\WooCommerce\PPCP\Fastlane;
 
 use PaymentPlugins\WooCommerce\PPCP\Assets\AssetsApi;
+use PaymentPlugins\WooCommerce\PPCP\Logger;
 use PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\CreditCardGateway;
 use PaymentPlugins\WooCommerce\PPCP\TemplateLoader;
 
@@ -10,8 +11,11 @@ class FastlaneController {
 
 	private $client;
 
-	public function __construct( \PaymentPlugins\PayPalSDK\PayPalClient $client ) {
+	private $log;
+
+	public function __construct( \PaymentPlugins\PayPalSDK\PayPalClient $client, Logger $log ) {
 		$this->client = $client;
+		$this->log    = $log;
 	}
 
 	public function initialize() {
@@ -19,6 +23,7 @@ class FastlaneController {
 		add_action( 'wc_ppcp_paypal_query_params', [ $this, 'add_paypal_query_params' ], 10, 2 );
 		add_action( 'woocommerce_checkout_fields', [ $this, 'update_checkout_fields_priority' ] );
 		add_action( 'wc_ppcp_before_card_container', [ $this, 'render_before_card_container' ] );
+		add_action( 'wc_ppcp_api_settings_saved', [ $this, 'process_api_settings' ] );
 	}
 
 	private function is_fastlane_enabled() {
@@ -63,6 +68,8 @@ class FastlaneController {
 				set_transient( 'wc_ppcp_client_token', $response->access_token, $expiration );
 				$access_token = $response->access_token;
 			} else {
+				$this->log->info( 'There was an error generating the client token used for Fastlane. Error: %s', $response->get_error_message() );
+
 				return; // Exit if error occurred
 			}
 		}
@@ -142,6 +149,13 @@ class FastlaneController {
 				wc_ppcp_load_template( 'fastlane/signup-link.php', [ 'logo_url' => $logo_url ] );
 			}
 		}
+	}
+
+	public function process_api_settings() {
+		/**
+		 * Delete client token in case environment was changed. This ensures the token generated matches the current environment.
+		 */
+		delete_transient( 'wc_ppcp_client_token' );
 	}
 
 }

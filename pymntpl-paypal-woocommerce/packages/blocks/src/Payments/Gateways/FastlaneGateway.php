@@ -2,6 +2,7 @@
 
 namespace PaymentPlugins\PPCP\Blocks\Payments\Gateways;
 
+use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\APISettings;
 use PaymentPlugins\WooCommerce\PPCP\Assets\AssetsApi;
 
 class FastlaneGateway extends AbstractGateway {
@@ -29,7 +30,9 @@ class FastlaneGateway extends AbstractGateway {
 	public function enqueue_checkout_scripts() {
 		if ( \wc_string_to_bool( $this->get_setting( 'enabled' ) ) ) {
 			if ( \wc_string_to_bool( $this->get_setting( 'fastlane_enabled', 'no' ) ) ) {
-				wp_enqueue_script( 'wc-ppcp-blocks-fastlane' );
+				if ( ! wc_ppcp_get_container()->get( APISettings::class )->is_admin_only_mode() ) {
+					wp_enqueue_script( 'wc-ppcp-blocks-fastlane' );
+				}
 			}
 		}
 	}

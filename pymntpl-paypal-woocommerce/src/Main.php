@@ -161,7 +161,10 @@ class Main {
 			);
 		} );
 		$this->container->register( FastlaneController::class, function ( $container ) {
-			return new FastlaneController( $container->get( PayPalClient::class ) );
+			return new FastlaneController(
+				$container->get( PayPalClient::class ),
+				$container->get( Logger::class )
+			);
 		} );
 		$this->container->register( PayPalClient::class, function ( $container ) {
 			return new WPPayPalClient( $container->get( APISettings::class ), $container->get( Logger::class ) );
