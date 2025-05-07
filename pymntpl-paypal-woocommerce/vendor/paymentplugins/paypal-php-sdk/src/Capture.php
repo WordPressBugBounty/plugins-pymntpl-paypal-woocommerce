@@ -219,4 +219,28 @@ class Capture extends AbstractObject {
 		return $this;
 	}
 
+	public function isCompleted() {
+		return $this->status === self::COMPLETED;
+	}
+
+	public function isDeclined() {
+		return $this->status === self::DECLINED;
+	}
+
+	public function isFailed() {
+		return $this->status === self::FAILED;
+	}
+
+	public function isPartiallyRefunded() {
+		return $this->status === self::PARTIALLY_REFUNDED;
+	}
+
+	public function isPending() {
+		return $this->status === self::PENDING;
+	}
+
+	public function isRefunded() {
+		return $this->status === self::REFUNDED;
+	}
+
 }

@@ -4,8 +4,11 @@
 namespace PaymentPlugins\WooCommerce\PPCP;
 
 
+use PaymentPlugins\PayPalSDK\Authorization;
+use PaymentPlugins\PayPalSDK\Capture;
 use PaymentPlugins\PayPalSDK\Order;
 use PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\AbstractGateway;
+use PaymentPlugins\WooCommerce\PPCP\Utilities\MessageUtils;
 
 class PaymentResult {
 
@@ -49,17 +52,47 @@ class PaymentResult {
 	public function initialize( $paypal_order, $error_message = '' ) {
 		if ( is_wp_error( $paypal_order ) ) {
 			$this->success       = false;
+			$this->paypal_order  = $paypal_order;
 			$this->error_message = $paypal_order->get_error_message();
 			$this->error_code    = $paypal_order->get_error_code();
 		} elseif ( $paypal_order === false ) {
 			$this->success       = false;
 			$this->error_message = $error_message;
+			$this->error_code    = 'unknown_error';
 		} else {
-			$this->success      = true;
 			$this->paypal_order = $paypal_order;
 			if ( $paypal_order ) {
+				$this->determine_success( $paypal_order );
 				$this->paypal_order_id = $paypal_order->getId();
 			}
+		}
+	}
+
+	/**
+	 * @param $paypal_order
+	 *
+	 * @return void
+	 * @siince 1.1.2
+	 */
+	private function determine_success( $paypal_order ) {
+		if ( $this->is_captured() && $this->has_payments() ) {
+			$this->success = \in_array( $this->get_capture_status(), [ Capture::COMPLETED, Capture::PENDING ] );
+			if ( $this->has_payments() && $this->get_capture()->getProcessorResponse() ) {
+				if ( ! $this->success && $this->get_capture()->getProcessorResponse()->getResponseCode() !== '0000' ) {
+					$this->error_code    = $this->get_capture()->getProcessorResponse()->getResponseCode();
+					$this->error_message = MessageUtils::get_process_code_message( $this->get_capture()->getProcessorResponse()->getResponseCode() );
+				}
+			}
+		} elseif ( $this->is_authorized() && $this->has_payments() ) {
+			$this->success = \in_array( $this->get_authorization_status(), [ Authorization::CREATED, Authorization::PENDING ] );
+			if ( $this->get_authorization() && $this->get_authorization()->getProcessorResponse() ) {
+				if ( ! $this->success && $this->get_authorization()->getProcessorResponse()->getResponseCode() !== '0000' ) {
+					$this->error_code    = $this->get_authorization()->getProcessorResponse()->getResponseCode();
+					$this->error_message = MessageUtils::get_process_code_message( $this->get_authorization()->getProcessorResponse()->getResponseCode() );
+				}
+			}
+		} else {
+			$this->success = false;
 		}
 	}
 
@@ -68,7 +101,11 @@ class PaymentResult {
 	}
 
 	public function is_captured() {
-		return $this->paypal_order->intent === 'CAPTURE';
+		return $this->paypal_order->intent === Order::CAPTURE;
+	}
+
+	public function is_authorized() {
+		return $this->paypal_order->intent === Order::AUTHORIZE;
 	}
 
 	/**
@@ -80,6 +117,10 @@ class PaymentResult {
 		return $this->paypal_order->purchase_units[0]->payments->captures[0]->id;
 	}
 
+	private function has_payments() {
+		return $this->paypal_order->purchase_units[0]->payments !== null;
+	}
+
 	/**
 	 * @return \PaymentPlugins\PayPalSDK\Capture
 	 */
@@ -88,12 +129,35 @@ class PaymentResult {
 	}
 
 	/**
+	 * @return \PaymentPlugins\PayPalSDK\Authorization
+	 */
+	public function get_authorization() {
+		return $this->paypal_order->purchase_units[0]->payments->authorizations[0];
+	}
+
+	/**
 	 * Returns the ID of the authorization
 	 *
 	 * @return string
 	 */
 	public function get_authorization_id() {
-		return $this->paypal_order->purchase_units[0]->payments->authorizations[0]->id;
+		return $this->get_authorization()->getId();
+	}
+
+	/**
+	 * @since 1.1.2
+	 * @return mixed
+	 */
+	private function get_authorization_status() {
+		return $this->get_authorization()->getStatus();
+	}
+
+	/**
+	 * @since 1.1.2
+	 * @return mixed
+	 */
+	private function get_capture_status() {
+		return $this->get_capture()->getStatus();
 	}
 
 	public function get_error_message() {
@@ -102,7 +166,7 @@ class PaymentResult {
 
 	/**
 	 * @since 1.0.24
-	 * @return \PaymentPlugins\PayPalSDK\Order
+	 * @return \PaymentPlugins\PayPalSDK\Order|\WP_Error
 	 */
 	public function get_paypal_order() {
 		return $this->paypal_order;
@@ -151,7 +215,7 @@ class PaymentResult {
 	 * @return void
 	 */
 	public function needs_approval() {
-		if ( $this->paypal_order ) {
+		if ( $this->paypal_order && $this->paypal_order instanceof Order ) {
 			return $this->paypal_order->isCreated() || $this->paypal_order->isActionRequired()
 			       || $this->paypal_order->getStatus() === 'ORDER_NOT_APPROVED';
 		} else {
@@ -201,6 +265,14 @@ class PaymentResult {
 
 	public function get_environment() {
 		return $this->environment;
+	}
+
+	/**
+	 * @since 1.1.2
+	 * @return bool
+	 */
+	public function is_wp_error() {
+		return \is_wp_error( $this->paypal_order );
 	}
 
 }

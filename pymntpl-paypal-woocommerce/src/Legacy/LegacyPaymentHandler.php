@@ -126,9 +126,21 @@ class LegacyPaymentHandler {
 						$result->initialize( $paypal_order );
 						$this->payment_complete( $order, $result );
 					} else {
-						$order->update_status( 'failed' );
-						$order->add_order_note( sprintf( __( 'Error processing payment. Reason: %s', 'pymntpl-paypal-woocommerce' ),
-							$result->get_error_message() ) );
+						if ( $result->is_wp_error() ) {
+							$order->update_status(
+								'failed',
+								sprintf( __( 'Error processing payment. Reason: %s', 'pymntpl-paypal-woocommerce' ),
+									$result->get_error_message()
+								)
+							);
+						} else {
+							$order->update_status(
+								'failed',
+								sprintf( __( 'Error processing payment. Reason: %s', 'pymntpl-paypal-woocommerce' ),
+									$result->get_error_message()
+								)
+							);
+						}
 					}
 				}
 			}

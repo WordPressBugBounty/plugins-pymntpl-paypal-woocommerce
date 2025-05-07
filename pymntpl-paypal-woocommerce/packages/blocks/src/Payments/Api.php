@@ -61,12 +61,18 @@ class Api {
 
 	public function add_payment_method_data( $context ) {
 		if ( ! $this->data_api->exists( 'ppcpGeneralData' ) ) {
+			$admin_only = false;
+			if ( wc_ppcp_get_container()->get( APISettings::class )->is_admin_only_mode() ) {
+				if ( ! current_user_can( 'manage_woocommerce' ) ) {
+					$admin_only = true;
+				}
+			}
 			$data = [
 				'clientId'      => $this->api_settings->get_client_id(),
 				'environment'   => $this->api_settings->get_environment(),
 				'context'       => $context,
 				'isAdmin'       => current_user_can( 'manage_woocommerce' ),
-				'adminOnly'     => wc_ppcp_get_container()->get( APISettings::class )->is_admin_only_mode(),
+				'adminOnly'     => $admin_only,
 				'blocksVersion' => \Automattic\WooCommerce\Blocks\Package::get_version(),
 				'i18n'          => wc_ppcp_get_container()->get( Messages::class )->get_messages()
 			];

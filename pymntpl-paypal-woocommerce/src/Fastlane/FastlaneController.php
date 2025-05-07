@@ -2,6 +2,7 @@
 
 namespace PaymentPlugins\WooCommerce\PPCP\Fastlane;
 
+use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\APISettings;
 use PaymentPlugins\WooCommerce\PPCP\Assets\AssetsApi;
 use PaymentPlugins\WooCommerce\PPCP\Logger;
 use PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\CreditCardGateway;
@@ -27,7 +28,17 @@ class FastlaneController {
 	}
 
 	private function is_fastlane_enabled() {
+		/**
+		 * @var APISettings $api_settings
+		 */
+		$api_settings = wc_ppcp_get_container()->get( APISettings::class );
 		$card_gateway = wc_ppcp_get_container()->get( CreditCardGateway::class );
+
+		if ( $api_settings->is_admin_only_mode() ) {
+			if ( ! current_user_can( 'manage_woocommerce' ) ) {
+				return false;
+			}
+		}
 
 		return wc_string_to_bool( $card_gateway->enabled ) && $card_gateway->is_fastlane_enabled();
 	}

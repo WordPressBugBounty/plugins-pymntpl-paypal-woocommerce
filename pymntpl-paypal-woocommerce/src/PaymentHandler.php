@@ -113,9 +113,21 @@ class PaymentHandler extends LegacyPaymentHandler {
 						$result->initialize( $paypal_order );
 						$this->payment_complete( $order, $result );
 					} else {
-						$order->update_status( 'failed' );
-						$order->add_order_note( sprintf( __( 'Error processing payment. Reason: %s', 'pymntpl-paypal-woocommerce' ),
-							$result->get_error_message() ) );
+						if ( $result->is_wp_error() ) {
+							$order->update_status(
+								'failed',
+								sprintf( __( 'Error processing payment. Reason: %s', 'pymntpl-paypal-woocommerce' ),
+									$result->get_error_message()
+								)
+							);
+						} else {
+							$order->update_status(
+								'failed',
+								sprintf( __( 'Error processing payment. Reason: %s', 'pymntpl-paypal-woocommerce' ),
+									$result->get_error_message()
+								)
+							);
+						}
 					}
 				}
 			}
@@ -141,7 +153,7 @@ class PaymentHandler extends LegacyPaymentHandler {
 		if ( $result->is_captured() ) {
 			PayPalFee::add_fee_to_order( $order, $result->get_capture()->getSellerReceivableBreakdown(), false );
 			$capture = $result->get_capture();
-			if ( $capture->getStatus() === Capture::PENDING ) {
+			if ( $capture->isPending() ) {
 				$order->update_meta_data( Constants::CAPTURE_STATUS, Capture::PENDING );
 				$order->set_transaction_id( $capture->getId() );
 				$order->update_status( apply_filters( 'wc_ppcp_capture_pending_order_status', 'on-hold', $order, $result ),

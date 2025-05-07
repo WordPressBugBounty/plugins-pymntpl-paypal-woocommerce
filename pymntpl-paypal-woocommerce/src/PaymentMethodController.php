@@ -5,6 +5,7 @@ namespace PaymentPlugins\WooCommerce\PPCP;
 use PaymentPlugins\PayPalSDK\PaymentSource;
 use PaymentPlugins\PayPalSDK\PaymentToken;
 use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\AdvancedSettings;
+use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\APISettings;
 use PaymentPlugins\WooCommerce\PPCP\Tokens\AbstractToken;
 use PaymentPlugins\WooCommerce\PPCP\Tokens\CreditCardToken;
 use PaymentPlugins\WooCommerce\PPCP\Tokens\PayPalToken;
@@ -115,12 +116,25 @@ class PaymentMethodController {
 		/**
 		 * @var AdvancedSettings $settings
 		 */
-		$settings = wc_ppcp_get_container()->get( AdvancedSettings::class );
-		if ( ! $settings->is_vault_enabled() ) {
-			$tokens = \array_filter( $tokens, function ( $token ) {
-				return ! $token instanceof AbstractToken;
-			} );
-		}
+		$advanced_settings = wc_ppcp_get_container()->get( AdvancedSettings::class );
+		/**
+		 * @var APISettings $api_settings
+		 */
+		$api_settings  = wc_ppcp_get_container()->get( APISettings::class );
+		$vault_enabled = $advanced_settings->is_vault_enabled();
+		$mode          = $api_settings->get_environment();
+
+		$tokens = \array_filter( $tokens, function ( $token ) use ( $mode, $vault_enabled ) {
+			if ( $token instanceof AbstractToken ) {
+				if ( ! $vault_enabled ) {
+					return false;
+				}
+
+				return $token->get_environment() === $mode;
+			}
+
+			return true;
+		} );
 
 		return $tokens;
 	}

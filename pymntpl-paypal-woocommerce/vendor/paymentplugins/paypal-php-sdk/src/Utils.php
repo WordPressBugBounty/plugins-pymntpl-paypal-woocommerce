@@ -49,7 +49,8 @@ class Utils {
 			'receivable_amount'           => Money::class,
 			'tracker_identifiers'         => Tracker::class,
 			'payment_tokens'              => Token::class,
-			'customer'                    => Customer::class
+			'customer'                    => Customer::class,
+			'processor_response'          => ProcessorResponse::class
 		);
 
 	public static function isList( $value ) {

@@ -4,7 +4,7 @@ Tags: paypal, paylater, venmo, credit cards
 Requires at least: 4.7
 Tested up to: 6.8
 Requires PHP: 7.1
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 Copyright: Payment Plugins
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -49,6 +49,10 @@ Our documentation has a step-by-step guide on how to connect the plugin to your 
 Payment Plugins is the team behind several of the highest reviewed and installed Payment integrations for WooCommerce.
 
 == Changelog ==
+= 1.1.2 - 05/07/25 =
+* Fixed - Issue with new credit card gateway where declined cards where being treated as a successful payment.
+* Added - Compatibility between the cart and checkout block with the new Admin Only Mode option. This option allows admins to hide PayPal payment methods from customers so they can perform testing on a live site.
+* Updated - Only show saved payment method for the environment that's enabled. For example, if sandbox mode is enabled, only show sandbox payment methods.
 = 1.1.1 - 05/06/25 =
 * Added - Option to enable Admin Only Mode so that PayPal is only visible to admin users on the frontend. This allows admins to test PayPal in sandbox mode on live sites and customers won't see PayPal as a payment option.
 * Updated - Expire Fastlane client token if environment changed

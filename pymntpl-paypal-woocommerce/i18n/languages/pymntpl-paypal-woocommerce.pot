@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Payment Plugins for PayPal WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Payment Plugins for PayPal WooCommerce 1.1.1\n"
+"Project-Id-Version: Payment Plugins for PayPal WooCommerce 1.1.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pymntpl-paypal-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-05-06T03:44:17+00:00\n"
+"POT-Creation-Date: 2025-05-07T08:17:10+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: pymntpl-paypal-woocommerce\n"
@@ -113,12 +113,12 @@ msgid "Continue"
 msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/FastlaneGateway.php:57
-#: src/Fastlane/FastlaneController.php:111
+#: src/Fastlane/FastlaneController.php:122
 msgid "Please provide an email address before using Fastlane."
 msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/FastlaneGateway.php:58
-#: src/Fastlane/FastlaneController.php:112
+#: src/Fastlane/FastlaneController.php:123
 msgid "Please enter a valid email address before using Fastlane."
 msgstr ""
 
@@ -1217,67 +1217,69 @@ msgstr ""
 msgid "Reconciliation"
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:130
-#: src/PaymentHandler.php:117
+#: src/Legacy/LegacyPaymentHandler.php:132
+#: src/Legacy/LegacyPaymentHandler.php:139
+#: src/PaymentHandler.php:119
+#: src/PaymentHandler.php:126
 msgid "Error processing payment. Reason: %s"
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:168
-#: src/PaymentHandler.php:148
+#: src/Legacy/LegacyPaymentHandler.php:180
+#: src/PaymentHandler.php:160
 msgid "PayPal capture status is pending. Reason: %1$s. Payment will complete when capture.completed webhook is received."
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:183
+#: src/Legacy/LegacyPaymentHandler.php:195
 #: src/Payments/Gateways/AbstractGateway.php:434
 msgid "PayPal order %s created. %s"
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:184
+#: src/Legacy/LegacyPaymentHandler.php:196
 #: src/Payments/Gateways/AbstractGateway.php:436
 #: src/Payments/Gateways/CreditCardGateway.php:385
 msgid "Capture ID: %s"
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:184
+#: src/Legacy/LegacyPaymentHandler.php:196
 #: src/Payments/Gateways/AbstractGateway.php:436
 #: src/Payments/Gateways/CreditCardGateway.php:387
 msgid "Authorization ID: %s"
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:275
-#: src/PaymentHandler.php:275
+#: src/Legacy/LegacyPaymentHandler.php:287
+#: src/PaymentHandler.php:287
 msgid "To process a refund, there must be a transaction id associated with the order."
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:278
-#: src/PaymentHandler.php:278
+#: src/Legacy/LegacyPaymentHandler.php:290
+#: src/PaymentHandler.php:290
 msgid "This payment has a status of Authorize. Only captured payments can be refunded."
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:312
-#: src/PaymentHandler.php:312
+#: src/Legacy/LegacyPaymentHandler.php:324
+#: src/PaymentHandler.php:324
 msgid "Error capturing payment. Reason: %s"
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:316
-#: src/PaymentHandler.php:316
+#: src/Legacy/LegacyPaymentHandler.php:328
+#: src/PaymentHandler.php:328
 msgid "Payment captured in PayPal. Capture ID: %s Amount: %s"
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:348
-#: src/PaymentHandler.php:348
+#: src/Legacy/LegacyPaymentHandler.php:360
+#: src/PaymentHandler.php:360
 msgid "A valid authorization ID is required to perform a void."
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:362
-#: src/Legacy/LegacyPaymentHandler.php:392
-#: src/PaymentHandler.php:362
-#: src/PaymentHandler.php:392
+#: src/Legacy/LegacyPaymentHandler.php:374
+#: src/Legacy/LegacyPaymentHandler.php:404
+#: src/PaymentHandler.php:374
+#: src/PaymentHandler.php:404
 msgid "PayPal authorization cancelled. Authorization ID: %s"
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:386
-#: src/PaymentHandler.php:386
+#: src/Legacy/LegacyPaymentHandler.php:398
+#: src/PaymentHandler.php:398
 msgid "Order cancellation"
 msgstr ""
 
@@ -1931,6 +1933,610 @@ msgstr ""
 #: src/Traits/TokenizationTrait.php:38
 #: src/Traits/TokenizationTrait.php:41
 msgid "Invalid payment method ID provided."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:12
+msgid "Approved"
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:13
+msgid "CVV2 failure. Please try again with the correct CVV."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:14
+msgid "Referral required. Please contact your card issuer."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:15
+msgid "Account not found. Please check your card details."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:16
+#: src/Utilities/MessageUtils.php:42
+msgid "Transaction declined. Please try another payment method."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:17
+msgid "Unauthorized transaction. Please contact your card issuer."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:18
+msgid "Bad response. Reversal required."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:19
+msgid "Cryptographic failure. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:20
+msgid "Unacceptable PIN. Please try again with the correct PIN."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:21
+msgid "System malfunction. Please try again later."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:22
+msgid "Payment cancelled. Please try again or use another payment method."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:23
+msgid "Partial authorization. Please use additional payment for the remaining amount."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:24
+msgid "Issuer rejected the transaction. Please try another payment method."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:25
+msgid "Invalid data format. Please check your payment details."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:26
+msgid "Invalid amount. Please check your payment amount."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:27
+msgid "Invalid transaction card issuer/acquirer. Please try another card."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:28
+msgid "Invalid capture date. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:29
+msgid "Invalid currency code. Please select a supported currency."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:30
+msgid "Invalid account. Please check your card details."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:31
+msgid "Invalid account for recurring payment. Please use another card."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:32
+msgid "Invalid terminal. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:33
+msgid "Invalid merchant. Please contact support."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:34
+msgid "Restricted or inactive account. Please contact your card issuer."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:35
+msgid "Bad processing code. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:36
+msgid "Invalid MCC. Please contact support."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:37
+msgid "Invalid expiration date. Please check your card details."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:38
+msgid "Invalid card verification value. Please check your CVV."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:39
+msgid "Invalid life cycle of transaction. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:40
+msgid "Invalid order. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:41
+msgid "Transaction cannot be completed. Please try another payment method."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:43
+msgid "CVV2 failure. Please check your CVV and try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:44
+msgid "Insufficient funds. Please use another card or payment method."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:45
+msgid "Invalid PIN. Please try again with the correct PIN."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:46
+msgid "PIN try exceeded. Please contact your card issuer."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:47
+msgid "Card closed. Please use another card."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:48
+msgid "Card pickup requested. Please use another card."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:49
+msgid "Unauthorized user. Please contact your card issuer."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:50
+#: src/Utilities/MessageUtils.php:97
+msgid "Address verification failed. Please check your billing address."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:51
+msgid "Invalid or restricted card. Please use another card."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:52
+msgid "Address verification soft failure. Please check your billing address."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:53
+msgid "Duplicate transaction. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:54
+msgid "Invalid transaction. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:55
+msgid "Expired card. Please use another card."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:56
+msgid "Incorrect PIN. Please re-enter your PIN."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:57
+msgid "Strong customer authentication required. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:58
+msgid "Transaction not permitted. Please use another payment method."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:59
+msgid "Transaction attempts exceed limit. Please try again later."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:60
+msgid "Reversal rejected. Please contact support."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:61
+msgid "Invalid issue. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:62
+msgid "Issuer not available. Please try again later."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:63
+msgid "Issuer temporarily not available. Please try again shortly."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:64
+msgid "Card not activated. Please activate your card and try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:65
+msgid "Updated card issued. Please use your new card."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:66
+msgid "Account not on file. Please check your card details."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:67
+msgid "Approved but not captured. No action needed."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:68
+msgid "3DS authentication error. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:69
+msgid "Authentication failed. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:70
+msgid "BIN error. Please try another card."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:71
+msgid "PIN error. Please try again with the correct PIN."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:72
+msgid "Processor system error. Please try again later."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:73
+msgid "Host key error. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:74
+msgid "Configuration error. Please contact support."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:75
+msgid "Unsupported operation. Please try another payment method."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:76
+msgid "Communication error. Please try again later."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:77
+msgid "Communication error. Please try again shortly."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:78
+msgid "System unavailable. Please try again later."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:79
+msgid "Transaction declined. Please retry."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:80
+msgid "Suspected fraud. Please use another payment method."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:81
+msgid "Security violation. Please contact your card issuer."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:82
+msgid "Card reported lost or stolen. Please use another card."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:83
+msgid "Hold - call center. Please contact your card issuer."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:84
+msgid "Card refused. Please use another payment method."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:85
+msgid "Unrecognized response code. Please try again later."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:86
+msgid "Contingencies not resolved. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:87
+#: src/Utilities/MessageUtils.php:100
+msgid "CVV verification failed. Please check your CVV."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:88
+msgid "Account closed. Please use another card."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:89
+msgid "Reattempt not permitted. Please use another payment method."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:90
+msgid "Billing address error. Please check your billing details."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:91
+msgid "Account blocked by issuer. Please contact your card issuer."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:92
+msgid "American Express card disabled. Please use another card."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:93
+msgid "Adult gaming not supported. Please use another payment method."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:94
+msgid "Amount incompatible. Please try a different amount."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:95
+msgid "Authorization result error. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:96
+msgid "MCC code error. Please contact support."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:98
+msgid "Amount exceeded. Please try a smaller amount."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:99
+msgid "Gaming transaction error. Please use another payment method."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:101
+msgid "Registration incomplete. Please complete registration."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:102
+msgid "Country error. Please try another payment method."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:103
+msgid "Credit error. Please try another payment method."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:104
+msgid "Card type not supported. Please use another card."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:105
+msgid "Invalid currency. Please select a supported currency."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:106
+msgid "3D Secure authentication error. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:107
+msgid "Dynamic currency conversion not supported. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:108
+msgid "Diners Club card rejected. Please use another card."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:109
+msgid "Authentication message error. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:110
+msgid "Decline threshold exceeded. Please try again later."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:111
+msgid "Funding instrument expired. Please use another payment method."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:112
+msgid "Frequency limit exceeded. Please try again later."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:113
+msgid "System error. Please try again later."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:114
+msgid "Expiry date error. Please check your card details."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:115
+msgid "Funding source already exists. Please use another payment method."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:116
+msgid "Invalid funding instrument. Please try another payment method."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:117
+msgid "Restricted funding instrument. Please try another payment method."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:118
+msgid "Field validation failed. Please check your payment details."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:119
+msgid "Gaming refund error. Please contact support."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:120
+#: src/Utilities/MessageUtils.php:129
+msgid "Processing error. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:121
+msgid "Idempotency failure. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:122
+msgid "Invalid input. Please check your payment details."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:123
+msgid "ID mismatch. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:124
+msgid "Invalid trace ID. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:125
+msgid "Late reversal. Please contact support."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:126
+msgid "Status code error. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:127
+msgid "Missing business rule or data. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:128
+msgid "Mastercard blocked. Please use another card."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:130
+msgid "Not supported. Please try another payment method."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:131
+msgid "Network frequency limit exceeded. Please try again later."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:132
+msgid "Merchant ID not found. Please contact support."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:133
+msgid "Network error. Please try again later."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:134
+msgid "Phone required for this transaction. Please update your details."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:135
+msgid "Invalid product. Please try another product."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:136
+msgid "Invalid payment method. Please try another payment method."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:137
+msgid "Quasi-cash not supported. Please use another payment method."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:138
+msgid "Refund not supported on pending transactions. Please try again later."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:139
+msgid "Invalid parent transaction status. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:140
+msgid "Merchant not registered. Please contact support."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:141
+msgid "Bank authorization mismatch. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:142
+msgid "Bank authorization already settled. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:143
+msgid "Bank authorization voided. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:144
+msgid "Bank authorization expired. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:145
+msgid "Currency mismatch. Please try again with the correct currency."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:146
+msgid "Credit card mismatch. Please check your card details."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:147
+msgid "Amount mismatch. Please try again with the correct amount."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:148
+msgid "Score error. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:149
+msgid "Status description error. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:150
+msgid "American Express declined. Please use another card."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:151
+msgid "Verification token expired. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:152
+msgid "Invalid trace reference. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:153
+msgid "Invalid transaction ID. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:154
+msgid "Verification token revoked. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:155
+msgid "Transaction type not supported. Please try another payment method."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:156
+msgid "Invalid verification token. Please try again."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:157
+msgid "User not authorized. Please contact support."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:158
+msgid "Currency not supported. Please select a supported currency."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:159
+msgid "Entity not supported. Please try another payment method."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:160
+msgid "Installment not supported. Please try another payment method."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:161
+msgid "POS flag not supported. Please try another payment method."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:162
+msgid "Reversal not supported. Please contact support."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:163
+msgid "Currency validation error. Please select a supported currency."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:164
+msgid "Validation error. Please check your payment details."
+msgstr ""
+
+#: src/Utilities/MessageUtils.php:165
+msgid "Virtual terminal not supported. Please try another payment method."
 msgstr ""
 
 #: src/Utilities/ShippingUtil.php:11
