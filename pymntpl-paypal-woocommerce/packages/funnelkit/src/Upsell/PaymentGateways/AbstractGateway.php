@@ -23,6 +23,7 @@ use PaymentPlugins\WooCommerce\PPCP\PaymentResult;
 use PaymentPlugins\WooCommerce\PPCP\Utilities\NumberUtil;
 use PaymentPlugins\WooCommerce\PPCP\Utilities\OrderLock;
 use PaymentPlugins\WooCommerce\PPCP\Utilities\PayPalFee;
+use PaymentPlugins\WooCommerce\PPCP\Utils;
 
 class AbstractGateway extends \WFOCU_Gateway {
 
@@ -109,18 +110,24 @@ class AbstractGateway extends \WFOCU_Gateway {
 	 * @return \PaymentPlugins\PayPalSDK\Order
 	 */
 	public function get_create_order_params( $order ) {
-		$currency     = $order->get_currency();
-		$package      = WFOCU_Core()->data->get( '_upsell_package' );
-		$paypal_order = $this->payment_handler->client->orderMode( $order )->orders->retrieve( $order->get_meta( Constants::ORDER_ID ) );
+		$payment_method = wc_get_payment_gateway_by_order( $order );
+		$currency       = $order->get_currency();
+		$package        = WFOCU_Core()->data->get( '_upsell_package' );
+		/**
+		 * @var CoreFactories $factories
+		 */
+		$factories = wc_ppcp_get_container()->get( CoreFactories::class );
+		$factories->initialize( $order );
 
-		if ( is_wp_error( $paypal_order ) ) {
-			throw new \Exception( $paypal_order->get_error_message() );
-		}
+		$current_offer = WFOCU_Core()->data->get( 'current_offer' );
+		list( $item_total, $needs_shipping ) = array_reduce( $package['products'], function ( $carry, $product ) {
+			$carry[0] = $carry[0] + $product['price'];
+			if ( isset( $product['data'] ) && $product['data']->needs_shipping() ) {
+				$carry[1] = true;
+			}
 
-		$current_offer  = WFOCU_Core()->data->get( 'current_offer' );
-		$item_total     = array_reduce( $package['products'], function ( $total, $product ) {
-			return $total + $product['price'];
-		}, 0 );
+			return $carry;
+		}, [ 0, false ] );
 		$purchase_units = new Collection();
 		$purchase_unit  = ( new PurchaseUnit() )
 			->setAmount( ( new Amount() )
@@ -153,28 +160,21 @@ class AbstractGateway extends \WFOCU_Gateway {
 			->setInvoiceId( sprintf( '%s-%s', $order->get_id(), $current_offer ? $current_offer : 'wfocu' ) )
 			->setCustomId( sprintf( '%1$s_%2$s', 'wfocu', $order->get_id() ) );
 
-		$needs_shipping = false;
-		//if ( \in_array( $paypal_order->getApplicationContext()->getShippingPreference(), [ OrderApplicationContext::GET_FROM_FILE, OrderApplicationContext::SET_PROVIDED_ADDRESS ] ) ) {
-		if ( isset( $paypal_order->getPurchaseUnits()->get( 0 )->shipping ) ) {
-			$needs_shipping = true;
-			$purchase_unit->setShipping( ( new Shipping() )
-				->setName( $paypal_order->getPurchaseUnits()->get( 0 )->getShipping()->getName() )
-				->setAddress( $paypal_order->getPurchaseUnits()->get( 0 )->getShipping()->getAddress() ) );
+		if ( $needs_shipping ) {
+			$purchase_unit->setShipping( $factories->shipping->from_order( 'shipping' ) );
+			if ( ! Utils::is_valid_address( $purchase_unit->getShipping()->getAddress(), 'shipping' ) ) {
+				unset( $purchase_unit->getShipping()->address );
+			}
 		}
-		//}
 
-		/**
-		 * @var CoreFactories $factories
-		 */
-		$factories = wc_ppcp_get_container()->get( CoreFactories::class );
 		$factories->purchaseUnit->filter_purchase_unit( $purchase_unit, $purchase_unit->getAmount()->getValue() );
 		$purchase_units->add( $purchase_unit );
 
 		$application_context = $factories->applicationContext->get( $needs_shipping, true );
 
 		$result = ( new Order() )
-			->setIntent( $paypal_order->getIntent() )
-			->setPayer( $paypal_order->getPayer() )
+			->setIntent( $payment_method->get_option( 'intent' ) )
+			->setPayer( $factories->payer->from_order() )
 			->setApplicationContext( $application_context )
 			->setPurchaseUnits( $purchase_units );
 

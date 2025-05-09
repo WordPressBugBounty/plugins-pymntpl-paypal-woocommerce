@@ -39,4 +39,12 @@ abstract class BaseRegistry implements RegistryInterface {
 		return isset( $this->registry[ $id ] ) ? $this->registry[ $id ] : null;
 	}
 
+	/**
+	 * @since 1.1.3
+	 * @return bool
+	 */
+	public function is_empty() {
+		return empty( $this->registry );
+	}
+
 }

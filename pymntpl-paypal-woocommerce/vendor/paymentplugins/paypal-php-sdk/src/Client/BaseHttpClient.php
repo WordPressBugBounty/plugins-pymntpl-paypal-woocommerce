@@ -83,7 +83,7 @@ abstract class BaseHttpClient extends AbstractClient {
 			if ( in_array( $statusCode, self::SUCCESS_RESPONSE_CODES ) ) {
 				$body = $this->decodeResponseBody( $body );
 				if ( $responseClass ) {
-					return Utils::convertResponseToObject( $responseClass, $body, $params );
+					return Utils::convertResponseToObject( $responseClass, $body, $params, $this->getEnvironment() );
 				}
 
 				return (object) $body;

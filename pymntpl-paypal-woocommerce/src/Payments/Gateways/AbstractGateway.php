@@ -249,7 +249,7 @@ abstract class AbstractGateway extends \WC_Payment_Gateway {
 				/**
 				 * @var \WC_Order_Refund $refund
 				 */
-				$refund = Main::container()->get( RefundsManager::class )->refund;
+				$refund = wc_ppcp_get_container()->get( RefundsManager::class )->refund;
 				if ( $refund ) {
 					$refund->update_meta_data( Constants::PAYPAL_REFUND, $result->id );
 				}

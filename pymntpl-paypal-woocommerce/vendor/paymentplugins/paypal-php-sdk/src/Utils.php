@@ -119,11 +119,17 @@ class Utils {
 		return $args;
 	}
 
-	public static function convertResponseToObject( $clazz, $response, $params = null ) {
+	public static function convertResponseToObject( $clazz, $response, $params = null, $environment = null ) {
 		if ( $clazz === \stdClass::class ) {
-			return (object) self::convertToPayPalObject( $response );
+			$object              = (object) self::convertToPayPalObject( $response );
+			$object->environment = $environment;
 		} else {
 			$object = new $clazz( $response );
+
+			if ( $object instanceof AbstractObject ) {
+				$object->setEnvironment( $environment );
+			}
+
 		}
 
 		return $object;

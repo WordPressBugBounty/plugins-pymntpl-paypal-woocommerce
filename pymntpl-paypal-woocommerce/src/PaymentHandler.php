@@ -177,9 +177,9 @@ class PaymentHandler extends LegacyPaymentHandler {
 	public function save_order_meta_data( \WC_Order $order, Order $paypal_order ) {
 		try {
 			$token = $this->get_payment_method_token_from_paypal_order( $paypal_order );
-			$token->set_environment( wc_ppcp_get_order_mode( $order ) );
+			$token->set_environment( $paypal_order->getEnvironment() );
 			$order->set_payment_method_title( $token->get_payment_method_title() );
-			$order->update_meta_data( Constants::ORDER_ID, $paypal_order->id );
+			$order->update_meta_data( Constants::ORDER_ID, $paypal_order->getId() );
 			$order->update_meta_data( Constants::PPCP_ENVIRONMENT, $this->client->getEnvironment() );
 
 			do_action( 'wc_ppcp_save_order_meta_data', $order, $paypal_order, $this->payment_method, $token );

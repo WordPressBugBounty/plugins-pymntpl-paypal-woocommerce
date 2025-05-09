@@ -14,7 +14,6 @@ class PaymentGatewaysController {
 
 	public function __construct( PaymentGatewaysRegistry $registry ) {
 		$this->registry = $registry;
-		add_action( 'init', [ $this->registry, 'initialize' ] );
 		add_filter( 'woocommerce_ppcp_funnelkit_gateways_registration', [ $this, 'register_gateways' ], 10, 2 );
 		add_filter( 'wfocu_wc_get_supported_gateways', [ $this, 'get_supported_gateways' ] );
 		add_filter( 'wfocu_subscriptions_get_supported_gateways', [ $this, 'get_subscription_gateways' ] );
@@ -22,6 +21,8 @@ class PaymentGatewaysController {
 		add_action( 'wfocu_footer_before_print_scripts', [ $this, 'enqueue_scripts' ] );
 		add_filter( 'wfocu_localized_data', [ $this, 'add_script_data' ] );
 		add_action( 'wfocu_subscription_created_for_upsell', [ $this, 'update_subscription_meta' ], 10, 3 );
+
+		$this->registry->initialize();
 	}
 
 	public function get_supported_gateways( $gateways ) {

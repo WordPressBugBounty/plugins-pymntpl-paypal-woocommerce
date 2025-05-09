@@ -56,9 +56,7 @@ class PaymentGateways {
 	public function register_payment_methods( PaymentMethodRegistry $registry, Container $container ) {
 		$this->payment_method_registry->register( $container->get( PayPalGateway::class ) );
 		$this->payment_method_registry->register( $container->get( CreditCardGateway::class ) );
-	}
 
-	public function initialize_gateways( $gateways = [] ) {
 		/**
 		 * @var AdvancedSettings $advanced_settings
 		 */
@@ -89,7 +87,11 @@ class PaymentGateways {
 			}
 
 			$payment_method->init_supports( \array_values( $supports ) );
+		}
+	}
 
+	public function initialize_gateways( $gateways = [] ) {
+		foreach ( $this->payment_method_registry->get_registered_integrations() as $payment_method ) {
 			$gateways[] = $payment_method;
 		}
 
@@ -122,7 +124,9 @@ class PaymentGateways {
 	}
 
 	public function get_minicart_payment_gateways() {
-		$this->initialize_gateways();
+		if ( $this->payment_method_registry->is_empty() ) {
+			$this->payment_method_registry->initialize();
+		}
 
 		return $this->payment_method_registry->get_minicart_payment_gateways();
 	}
@@ -147,6 +151,11 @@ class PaymentGateways {
 
 	public function load_scripts() {
 		$handles = [];
+
+		if ( $this->payment_method_registry->is_empty() ) {
+			$this->payment_method_registry->initialize();
+		}
+
 		if ( $this->context_handler->has_context( [ 'checkout', 'add_payment_method', 'order_pay' ] ) || apply_filters( 'wc_ppcp_checkout_scripts', false ) ) {
 			if ( $this->context_handler->is_checkout_block() ) {
 				return;
@@ -154,10 +163,8 @@ class PaymentGateways {
 			$handles = $this->payment_method_registry->add_checkout_script_dependencies();
 			$handles = array_merge( $handles, $this->payment_method_registry->add_express_checkout_script_dependencies() );
 		} elseif ( $this->context_handler->is_cart() ) {
-			$this->payment_method_registry->initialize();
 			$handles = $this->payment_method_registry->add_cart_script_dependencies();
 		} elseif ( $this->context_handler->is_product() ) {
-			$this->payment_method_registry->initialize();
 			$handles = $this->payment_method_registry->add_product_script_dependencies();
 		} elseif ( $this->context_handler->is_shop() ) {
 			$handles = $this->payment_method_registry->add_shop_script_dependencies();

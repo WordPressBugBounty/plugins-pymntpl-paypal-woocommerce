@@ -4,7 +4,7 @@ Tags: paypal, paylater, venmo, credit cards
 Requires at least: 4.7
 Tested up to: 6.8
 Requires PHP: 7.1
-Stable tag: 1.1.2
+Stable tag: 1.1.3
 Copyright: Payment Plugins
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -49,6 +49,11 @@ Our documentation has a step-by-step guide on how to connect the plugin to your 
 Payment Plugins is the team behind several of the highest reviewed and installed Payment integrations for WooCommerce.
 
 == Changelog ==
+= 1.1.3 - 05/09/25 =
+* Added - Credit Card gateway now supports FunnelKit Upsells. The FunnelKit team will be providing a necessary update in their next release which will make the Credit Card gateway available for upsells.
+* Fixed - Some merchants reported the PayPal button was unresponsive when a subscription product was in the cart. This was due to some 3rd party plugins loading gateways before the WooCommerce filter "woocommerce_payment_gateways" is triggered. This change ensures the gateways are setup regardless of load sequence.
+* Fixed - FunnelKit express checkout button issue resolved. Button was unresponsive if subscription product was in cart and an upsell funnel was triggered.
+* Updated - Made improvements to credit card UX when CVV field is invalid
 = 1.1.2 - 05/07/25 =
 * Fixed - Issue with new credit card gateway where declined cards where being treated as a successful payment.
 * Added - Compatibility between the cart and checkout block with the new Admin Only Mode option. This option allows admins to hide PayPal payment methods from customers so they can perform testing on a live site.

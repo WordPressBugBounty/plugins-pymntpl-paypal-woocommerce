@@ -6,6 +6,7 @@ use PaymentPlugins\PPCP\FunnelKit\Checkout\Compatibility\PayPal;
 use PaymentPlugins\WooCommerce\PPCP\Assets\AssetsApi;
 use PaymentPlugins\WooCommerce\PPCP\Main;
 use PaymentPlugins\WooCommerce\PPCP\PaymentButtonController;
+use PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\PayPalGateway;
 
 class ExpressIntegration {
 
@@ -34,8 +35,12 @@ class ExpressIntegration {
 	public function handle_checkout_page_found() {
 		$this->settings = \WFACP_Common::get_page_settings( \WFACP_Common::get_id() );
 		if ( $this->has_express_buttons() ) {
-			Main::container()->get( AssetsApi::class )->enqueue_script( 'wc-ppcp-checkout-express', 'build/js/paypal-express-checkout.js' );
-			$this->assets->enqueue_style( 'wc-ppcp-checkout-express', 'build/wc-ppcp-funnelkit-checkout-styles.css' );
+			$handles = wc_ppcp_get_container()->get( PayPalGateway::class )->get_express_checkout_script_handles();
+			if ( ! empty( $handles ) ) {
+				foreach ( $handles as $handle ) {
+					wp_enqueue_script( $handle );
+				}
+			}
 		}
 	}
 
@@ -72,7 +77,7 @@ class ExpressIntegration {
 			$buttons[ $this->id ] = [
 				'iframe' => true
 			];
-			remove_action( 'woocommerce_checkout_before_customer_details', [ Main::container()->get( PaymentButtonController::class ), 'render_express_buttons' ] );
+			remove_action( 'woocommerce_checkout_before_customer_details', [ wc_ppcp_get_container()->get( PaymentButtonController::class ), 'render_express_buttons' ] );
 		}
 
 		return $buttons;

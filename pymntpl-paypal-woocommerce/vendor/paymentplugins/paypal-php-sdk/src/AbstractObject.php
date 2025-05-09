@@ -17,6 +17,11 @@ abstract class AbstractObject implements \JsonSerializable, \ArrayAccess, \Itera
 	 */
 	private $patchRequest;
 
+	/**
+	 * @var string
+	 */
+	private $environment;
+
 	public function __construct( $props = [] ) {
 		$this->initProps( $props );
 	}
@@ -192,6 +197,22 @@ abstract class AbstractObject implements \JsonSerializable, \ArrayAccess, \Itera
 				unset( $this->{$key} );
 			}
 		}
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getEnvironment() {
+		return $this->environment;
+	}
+
+	/**
+	 * @param string $environment
+	 */
+	public function setEnvironment( $environment ) {
+		$this->environment = $environment;
 
 		return $this;
 	}

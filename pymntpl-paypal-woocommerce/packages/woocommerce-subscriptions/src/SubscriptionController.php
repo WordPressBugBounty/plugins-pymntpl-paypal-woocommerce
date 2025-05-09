@@ -74,7 +74,9 @@ class SubscriptionController {
 			if ( $payment_method->supports( 'vault' ) ) {
 				$result = $this->payment_controller->process_payment( $result, $order, $payment_method );
 			} else {
-				$result = $this->payment_controller->process_payment_for_billing_agreement( $result, $order, $payment_method );
+				if ( ! $this->is_manual_renewal_required() ) {
+					$result = $this->payment_controller->process_payment_for_billing_agreement( $result, $order, $payment_method );
+				}
 			}
 		}
 
@@ -118,7 +120,7 @@ class SubscriptionController {
 	 * @deprecated  - no longer need vault parameter
 	 */
 	public function get_paypal_flow( $flow, $context ) {
-		if ( $flow === Constants::VAULT ) {
+		if ( $flow === Constants::VAULT || $this->is_manual_renewal_required() ) {
 			return $flow;
 		}
 		if ( ! $context->is_order_pay() && ! $context->is_product() ) {
@@ -278,8 +280,7 @@ class SubscriptionController {
 
 	public function get_payment_method_save_required( $bool, AbstractGateway $payment_method ) {
 		if ( ! $bool && $payment_method->supports( 'subscriptions' ) ) {
-			$manual_renewal = function_exists( 'wcs_is_manual_renewal_required' ) && \wcs_is_manual_renewal_required();
-			if ( ! $manual_renewal ) {
+			if ( ! $this->is_manual_renewal_required() ) {
 				if ( \WC_Subscriptions_Cart::cart_contains_subscription() ) {
 					$bool = true;
 				} elseif ( wcs_cart_contains_renewal() ) {
@@ -300,8 +301,7 @@ class SubscriptionController {
 	 */
 	public function get_checkout_payment_method_save_required( $bool, AbstractGateway $payment_method, \WC_Order $order ) {
 		if ( ! $bool && $payment_method->supports( 'subscriptions' ) ) {
-			$manual_renewal = function_exists( 'wcs_is_manual_renewal_required' ) && \wcs_is_manual_renewal_required();
-			if ( ! $manual_renewal ) {
+			if ( ! $this->is_manual_renewal_required() ) {
 				if ( wcs_order_contains_subscription( $order ) ) {
 					$bool = true;
 				} elseif ( wcs_order_contains_renewal( $order ) ) {
@@ -321,8 +321,7 @@ class SubscriptionController {
 	 * @return void
 	 */
 	public function add_payment_method_data( $data, $context, $payment_method ) {
-		$manual_renewal = function_exists( 'wcs_is_manual_renewal_required' ) && \wcs_is_manual_renewal_required();
-		if ( ! $manual_renewal ) {
+		if ( ! $this->is_manual_renewal_required() ) {
 			if ( $context->is_checkout() || $context->is_cart() ) {
 				if ( \WC_Subscriptions_Cart::cart_contains_free_trial() && WC()->cart->get_total( 'edit' ) == 0 ) {
 					$data['needsSetupToken'] = true;
@@ -386,6 +385,14 @@ class SubscriptionController {
 		}
 
 		return $data;
+	}
+
+	/**
+	 * @since 1.1.3
+	 * @return bool
+	 */
+	private function is_manual_renewal_required() {
+		return function_exists( 'wcs_is_manual_renewal_required' ) && \wcs_is_manual_renewal_required();
 	}
 
 }
