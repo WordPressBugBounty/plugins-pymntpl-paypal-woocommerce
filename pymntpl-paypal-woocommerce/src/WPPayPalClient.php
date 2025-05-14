@@ -36,6 +36,8 @@ class WPPayPalClient extends \PaymentPlugins\PayPalSDK\PayPalClient {
 
 	private $response_headers;
 
+	private $retry_count = 0;
+
 	/**
 	 * WPPayPalClient constructor.
 	 *
@@ -59,9 +61,10 @@ class WPPayPalClient extends \PaymentPlugins\PayPalSDK\PayPalClient {
 		return parent::__get( $name );
 	}
 
-	public function request( $method, $path, $responseClass = null, $params = null, $options = [] ) {
+	public function request( $method, $path, $response_class = null, $params = null, $options = [] ) {
 		try {
-			$response = parent::request( $method, $path, $responseClass, $params, $options );
+			$response          = parent::request( $method, $path, $response_class, $params, $options );
+			$this->retry_count = 0;
 
 			return $response;
 		} catch ( ApiException $e ) {
@@ -72,6 +75,17 @@ class WPPayPalClient extends \PaymentPlugins\PayPalSDK\PayPalClient {
 				'request'     => print_r( $params instanceof AbstractObject ? $params->toArray() : $params, true ),
 				'error'       => $e->getData()
 			], true ) ) );
+
+			if ( $this->retry_count < 2 ) {
+				$retry_params = apply_filters( 'wc_ppcp_client_request_retry', false, $e, [ $method, $path, $response_class, $params, $options ] );
+				if ( $retry_params !== false ) {
+					$this->retry_count = $this->retry_count + 1;
+
+					return $this->request( $method, $path, $response_class, $retry_params, $options );
+				}
+			}
+
+			$this->retry_count = 0;
 
 			// return WP_Error object
 			return new \WP_Error(

@@ -57,37 +57,6 @@ class PaymentGateways {
 		$this->payment_method_registry->register( $container->get( PayPalGateway::class ) );
 		$this->payment_method_registry->register( $container->get( CreditCardGateway::class ) );
 
-		/**
-		 * @var AdvancedSettings $advanced_settings
-		 */
-		$advanced_settings = wc_ppcp_get_container()->get( AdvancedSettings::class );
-		$vault_enabled     = $advanced_settings->is_vault_enabled();
-
-		foreach ( $this->payment_method_registry->get_registered_integrations() as $payment_method ) {
-			$traits   = \class_uses( \get_class( $payment_method ) );
-			$supports = [];
-			foreach ( $traits as $trait ) {
-				switch ( $trait ) {
-					case 'PaymentPlugins\WooCommerce\PPCP\Traits\ThreeDSecureTrait':
-						$supports[] = '3ds';
-						break;
-					case 'PaymentPlugins\WooCommerce\PPCP\Traits\VaultTokenTrait':
-						$supports[] = 'vault';
-						break;
-					case 'PaymentPlugins\WooCommerce\PPCP\Traits\BillingAgreementTrait':
-						if ( ! $vault_enabled ) {
-							$supports[] = 'billing_agreement';
-						}
-						break;
-				}
-			}
-
-			if ( \in_array( 'billing_agreement', $supports ) ) {
-				unset( $supports[ array_search( 'vault', $supports ) ] );
-			}
-
-			$payment_method->init_supports( \array_values( $supports ) );
-		}
 	}
 
 	public function initialize_gateways( $gateways = [] ) {

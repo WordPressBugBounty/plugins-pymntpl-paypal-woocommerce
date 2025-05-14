@@ -101,6 +101,7 @@ class Main {
 		$this->container->get( CustomerController::class );
 		$this->container->get( PaymentMethodController::class );
 		$this->container->get( FastlaneController::class )->initialize();
+		$this->container->get( ClientRequestRetryController::class )->initialize();
 
 		if ( is_admin() ) {
 			$this->container->get( SettingsApi::class );
@@ -177,14 +178,16 @@ class Main {
 				$container->get( PaymentHandler::class ),
 				$container->get( Logger::class ),
 				$container->get( AssetsApi::class ),
-				$container->get( TemplateLoader::class ) );
+				$container->get( TemplateLoader::class )
+			);
 		} );
 		$this->container->register( CreditCardGateway::class, function ( $container ) {
 			return new CreditCardGateway(
 				$container->get( PaymentHandler::class ),
 				$container->get( Logger::class ),
 				$container->get( AssetsApi::class ),
-				$container->get( TemplateLoader::class ) );
+				$container->get( TemplateLoader::class )
+			);
 		} );
 		$this->container->register( PaymentHandler::class, function ( $container ) {
 			return new PaymentHandler(
@@ -317,6 +320,9 @@ class Main {
 			$instance->initialize();
 
 			return $instance;
+		} );
+		$this->container->register( ClientRequestRetryController::class, function ( $container ) {
+			return new ClientRequestRetryController();
 		} );
 	}
 

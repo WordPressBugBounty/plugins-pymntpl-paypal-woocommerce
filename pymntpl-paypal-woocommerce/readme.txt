@@ -4,7 +4,7 @@ Tags: paypal, paylater, venmo, credit cards
 Requires at least: 4.7
 Tested up to: 6.8
 Requires PHP: 7.1
-Stable tag: 1.1.3
+Stable tag: 1.1.4
 Copyright: Payment Plugins
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -49,6 +49,10 @@ Our documentation has a step-by-step guide on how to connect the plugin to your 
 Payment Plugins is the team behind several of the highest reviewed and installed Payment integrations for WooCommerce.
 
 == Changelog ==
+= 1.1.4 - 05/14/25 =
+* Updated - [https://wordpress.org/support/topic/refund-button-gone/](https://wordpress.org/support/topic/refund-button-gone/)
+* Updated - When Locale Setting is set to Site Language, explicitly set the locale on the application context
+* Fixed - When "Use place order button" enabled and billing agreement created, possible redirect loop
 = 1.1.3 - 05/09/25 =
 * Added - Credit Card gateway now supports FunnelKit Upsells. The FunnelKit team will be providing a necessary update in their next release which will make the Credit Card gateway available for upsells.
 * Fixed - Some merchants reported the PayPal button was unresponsive when a subscription product was in the cart. This was due to some 3rd party plugins loading gateways before the WooCommerce filter "woocommerce_payment_gateways" is triggered. This change ensures the gateways are setup regardless of load sequence.

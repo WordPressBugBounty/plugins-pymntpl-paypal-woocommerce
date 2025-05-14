@@ -19,6 +19,7 @@ use PaymentPlugins\WooCommerce\PPCP\RefundsManager;
 use PaymentPlugins\WooCommerce\PPCP\TemplateLoader;
 use PaymentPlugins\WooCommerce\PPCP\Tokens\AbstractToken;
 use PaymentPlugins\WooCommerce\PPCP\Tokens\CreditCardToken;
+use PaymentPlugins\WooCommerce\PPCP\Traits\FeaturesTrait;
 use PaymentPlugins\WooCommerce\PPCP\Traits\Settings as SettingsTrait;
 use PaymentPlugins\WooCommerce\PPCP\Utilities\OrderLock;
 use PaymentPlugins\WooCommerce\PPCP\Utilities\PayPalFee;
@@ -31,6 +32,7 @@ use PaymentPlugins\WooCommerce\PPCP\Utilities\PayPalFee;
 abstract class AbstractGateway extends \WC_Payment_Gateway {
 
 	use SettingsTrait;
+	use FeaturesTrait;
 
 	/**
 	 * @var PaymentHandler
@@ -78,6 +80,7 @@ abstract class AbstractGateway extends \WC_Payment_Gateway {
 		$this->init_form_fields();
 		$this->init_settings();
 		$this->init_hooks();
+		$this->init_supports();
 		$this->title       = $this->get_option( 'title_text' );
 		$this->description = $this->get_option( 'description' );
 	}
@@ -85,26 +88,6 @@ abstract class AbstractGateway extends \WC_Payment_Gateway {
 	protected function init_hooks() {
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, [ $this, 'process_admin_options' ] );
 		add_filter( 'wc_ppcp_admin_nav_tabs', [ $this, 'add_navigation_tab' ] );
-	}
-
-	public function init_supports( $params = [] ) {
-		$this->supports = array_merge( [
-			'tokenization',
-			'products',
-			'subscriptions',
-			'add_payment_method',
-			'subscription_cancellation',
-			'multiple_subscriptions',
-			'subscription_amount_changes',
-			'subscription_date_changes',
-			'default_credit_card_form',
-			'refunds',
-			'pre-orders',
-			'subscription_payment_method_change_admin',
-			'subscription_reactivation',
-			'subscription_suspension',
-			'subscription_payment_method_change_customer',
-		], $params );
 	}
 
 	public function get_admin_script_dependencies() {

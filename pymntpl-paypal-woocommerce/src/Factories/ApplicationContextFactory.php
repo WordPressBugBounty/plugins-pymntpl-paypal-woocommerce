@@ -4,6 +4,7 @@ namespace PaymentPlugins\WooCommerce\PPCP\Factories;
 
 use PaymentPlugins\PayPalSDK\OrderApplicationContext;
 use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\AdvancedSettings;
+use PaymentPlugins\WooCommerce\PPCP\Utilities\LocaleUtil;
 
 class ApplicationContextFactory extends AbstractFactory {
 
@@ -49,6 +50,13 @@ class ApplicationContextFactory extends AbstractFactory {
 			], wc_get_checkout_url() ) );
 		}
 		$context->setBrandName( substr( $this->settings->get_option( 'display_name' ), 0, 127 ) );
+
+		if ( $this->settings->is_site_locale() ) {
+			$locale = LocaleUtil::get_site_locale( true );
+			if ( LocaleUtil::is_locale_supported( $locale, true ) ) {
+				$context->setLocale( $locale );
+			}
+		}
 
 		return $context;
 	}

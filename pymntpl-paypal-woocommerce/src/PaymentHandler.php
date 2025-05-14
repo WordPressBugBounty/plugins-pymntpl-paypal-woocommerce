@@ -50,6 +50,7 @@ class PaymentHandler extends LegacyPaymentHandler {
 			$paypal_order_id = $this->get_paypal_order_id_from_request();
 			if ( ! $paypal_order_id || $this->use_billing_agreement ) {
 				$paypal_order_id = $this->cache->get( sprintf( '%s_%s', $this->payment_method->id, Constants::PAYPAL_ORDER_ID ) );
+
 				// If there isn't an existing PayPal order ID, create a PayPal order.
 				if ( ! $paypal_order_id ) {
 					$args = $this->get_create_order_params( $order );

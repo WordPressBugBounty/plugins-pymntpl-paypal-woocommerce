@@ -28,11 +28,13 @@ class OrderApplicationUrlHandler {
 			if ( $order_id ) {
 				$order           = wc_get_order( $order_id );
 				$token           = isset( $_GET['token'] ) ? \wc_clean( wp_unslash( $_GET['token'] ) ) : null;
+				$ba_token        = isset( $_GET['ba_token'] ) ? \wc_clean( wp_unslash( $_GET['ba_token'] ) ) : null;
 				$setup_token_id  = isset( $_GET['approval_token_id'] ) ? \wc_clean( wp_unslash( $_GET['approval_token_id'] ) ) : null;
 				$payment_gateway = $this->payment_gateways->get_gateway( $order->get_payment_method() );
 
 				// Set the order ID so it can be retrieved
 				$_POST["{$payment_gateway->id}_paypal_order_id"] = $token;
+				$_POST["{$payment_gateway->id}_billing_token"]   = $ba_token;
 
 				if ( $setup_token_id && $payment_gateway->supports( 'vault' ) ) {
 					/**
@@ -69,6 +71,7 @@ class OrderApplicationUrlHandler {
 		$order_key         = $_GET['order_key'] ?? null;
 		$payment_method_id = $_GET['payment_method'] ?? null;
 		$token             = isset( $_GET['token'] ) ? \wc_clean( \wp_unslash( $_GET['token'] ) ) : null;
+		$ba_token          = isset( $_GET['ba_token'] ) ? \wc_clean( \wp_unslash( $_GET['ba_token'] ) ) : null;
 		$setup_token_id    = isset( $_GET['approval_token_id'] ) ? \wc_clean( wp_unslash( $_GET['approval_token_id'] ) ) : null;
 
 		if ( $order_id && $order_key && $payment_method_id ) {
@@ -77,6 +80,7 @@ class OrderApplicationUrlHandler {
 				$payment_gateway = $this->payment_gateways->get_gateway( $payment_method_id );
 				// Set the order ID so it can be retrieved
 				$_POST["{$payment_gateway->id}_paypal_order_id"] = $token;
+				$_POST["{$payment_gateway->id}_billing_token"]   = $ba_token;
 
 				if ( $setup_token_id && $payment_gateway->supports( 'vault' ) ) {
 					/**

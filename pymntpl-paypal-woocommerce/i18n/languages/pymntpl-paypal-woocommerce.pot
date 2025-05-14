@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Payment Plugins for PayPal WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Payment Plugins for PayPal WooCommerce 1.1.3\n"
+"Project-Id-Version: Payment Plugins for PayPal WooCommerce 1.1.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pymntpl-paypal-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-05-09T05:38:19+00:00\n"
+"POT-Creation-Date: 2025-05-14T18:49:44+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: pymntpl-paypal-woocommerce\n"
@@ -509,7 +509,7 @@ msgid "Recurring payment failed. Reason: %s"
 msgstr ""
 
 #: packages/woocommerce-subscriptions/src/PaymentController.php:261
-#: src/Payments/Gateways/AbstractGateway.php:286
+#: src/Payments/Gateways/AbstractGateway.php:269
 msgid "A payment token ID is required when adding a payment method."
 msgstr ""
 
@@ -1219,67 +1219,67 @@ msgstr ""
 
 #: src/Legacy/LegacyPaymentHandler.php:132
 #: src/Legacy/LegacyPaymentHandler.php:139
-#: src/PaymentHandler.php:119
-#: src/PaymentHandler.php:126
+#: src/PaymentHandler.php:120
+#: src/PaymentHandler.php:127
 msgid "Error processing payment. Reason: %s"
 msgstr ""
 
 #: src/Legacy/LegacyPaymentHandler.php:180
-#: src/PaymentHandler.php:160
+#: src/PaymentHandler.php:161
 msgid "PayPal capture status is pending. Reason: %1$s. Payment will complete when capture.completed webhook is received."
 msgstr ""
 
 #: src/Legacy/LegacyPaymentHandler.php:195
-#: src/Payments/Gateways/AbstractGateway.php:434
+#: src/Payments/Gateways/AbstractGateway.php:417
 msgid "PayPal order %s created. %s"
 msgstr ""
 
 #: src/Legacy/LegacyPaymentHandler.php:196
-#: src/Payments/Gateways/AbstractGateway.php:436
+#: src/Payments/Gateways/AbstractGateway.php:419
 #: src/Payments/Gateways/CreditCardGateway.php:385
 msgid "Capture ID: %s"
 msgstr ""
 
 #: src/Legacy/LegacyPaymentHandler.php:196
-#: src/Payments/Gateways/AbstractGateway.php:436
+#: src/Payments/Gateways/AbstractGateway.php:419
 #: src/Payments/Gateways/CreditCardGateway.php:387
 msgid "Authorization ID: %s"
 msgstr ""
 
 #: src/Legacy/LegacyPaymentHandler.php:287
-#: src/PaymentHandler.php:287
+#: src/PaymentHandler.php:288
 msgid "To process a refund, there must be a transaction id associated with the order."
 msgstr ""
 
 #: src/Legacy/LegacyPaymentHandler.php:290
-#: src/PaymentHandler.php:290
+#: src/PaymentHandler.php:291
 msgid "This payment has a status of Authorize. Only captured payments can be refunded."
 msgstr ""
 
 #: src/Legacy/LegacyPaymentHandler.php:324
-#: src/PaymentHandler.php:324
+#: src/PaymentHandler.php:325
 msgid "Error capturing payment. Reason: %s"
 msgstr ""
 
 #: src/Legacy/LegacyPaymentHandler.php:328
-#: src/PaymentHandler.php:328
+#: src/PaymentHandler.php:329
 msgid "Payment captured in PayPal. Capture ID: %s Amount: %s"
 msgstr ""
 
 #: src/Legacy/LegacyPaymentHandler.php:360
-#: src/PaymentHandler.php:360
+#: src/PaymentHandler.php:361
 msgid "A valid authorization ID is required to perform a void."
 msgstr ""
 
 #: src/Legacy/LegacyPaymentHandler.php:374
 #: src/Legacy/LegacyPaymentHandler.php:404
-#: src/PaymentHandler.php:374
-#: src/PaymentHandler.php:404
+#: src/PaymentHandler.php:375
+#: src/PaymentHandler.php:405
 msgid "PayPal authorization cancelled. Authorization ID: %s"
 msgstr ""
 
 #: src/Legacy/LegacyPaymentHandler.php:398
-#: src/PaymentHandler.php:398
+#: src/PaymentHandler.php:399
 msgid "Order cancellation"
 msgstr ""
 
@@ -1311,25 +1311,25 @@ msgstr ""
 msgid "This merchant account is not permitted to create Merchant Initiated Billing Agreements. Please contact PayPal support and request reference transaction access."
 msgstr ""
 
-#: src/OrderApplicationUrlHandler.php:44
-#: src/OrderApplicationUrlHandler.php:88
+#: src/OrderApplicationUrlHandler.php:46
+#: src/OrderApplicationUrlHandler.php:92
 msgid "Error saving payment method. Reason: %s"
 msgstr ""
 
-#: src/Payments/Gateways/AbstractGateway.php:223
+#: src/Payments/Gateways/AbstractGateway.php:206
 msgid "There was an error processing your payment. Reason: %s"
 msgstr ""
 
-#: src/Payments/Gateways/AbstractGateway.php:244
+#: src/Payments/Gateways/AbstractGateway.php:227
 msgid "Error processing refund. Reason: %s"
 msgstr ""
 
-#: src/Payments/Gateways/AbstractGateway.php:260
+#: src/Payments/Gateways/AbstractGateway.php:243
 #: src/WebhookEventReceiver.php:131
 msgid "Order refunded in PayPal. Amount: %1$s. Refund ID: %2$s"
 msgstr ""
 
-#: src/Payments/Gateways/AbstractGateway.php:280
+#: src/Payments/Gateways/AbstractGateway.php:263
 msgid "You must be logged in to add a payment method."
 msgstr ""
 
