@@ -45,6 +45,7 @@ class PaymentGateways {
 		add_action( 'wp_print_scripts', [ $this, 'add_minicart_scripts' ] );
 		add_filter( 'woocommerce_available_payment_gateways', [ $this, 'get_available_payment_gateways' ] );
 		add_action( 'woocommerce_before_mini_cart', [ $this, 'add_minicart_scripts' ] );
+		add_action( 'wc_ppcp_admin_add_script_data', [ $this, 'add_admin_script_data' ] );
 
 		$this->payment_method_registry->initialize();
 	}
@@ -56,7 +57,6 @@ class PaymentGateways {
 	public function register_payment_methods( PaymentMethodRegistry $registry, Container $container ) {
 		$this->payment_method_registry->register( $container->get( PayPalGateway::class ) );
 		$this->payment_method_registry->register( $container->get( CreditCardGateway::class ) );
-
 	}
 
 	public function initialize_gateways( $gateways = [] ) {
@@ -118,6 +118,19 @@ class PaymentGateways {
 		return array_merge( $handles, $this->payment_method_registry->add_admin_script_dependencies( $section ) );
 	}
 
+	/**
+	 * @param \PaymentPlugins\WooCommerce\PPCP\Assets\AssetDataApi $asset_data
+	 *
+	 * @return void
+	 */
+	public function add_admin_script_data( AssetDataApi $asset_data ) {
+		foreach ( $this->payment_method_registry->get_registered_integrations() as $integration ) {
+			if ( ! $asset_data->exists( $integration->id ) ) {
+				$asset_data->add( $integration->id, $integration->get_admin_script_data() );
+			}
+		}
+	}
+
 	public function load_scripts() {
 		$handles = [];
 
@@ -165,8 +178,9 @@ class PaymentGateways {
 			//$this->assets->enqueue_style( 'wc-ppcp-style', 'build/css/styles.css' );
 
 
+			$this->asset_data->add( 'version', wc_ppcp_get_container()->get( 'VERSION' ) );
 			$this->asset_data->add( 'generalData', $this->get_general_asset_data() );
-			$this->asset_data->add( 'errorMessages', Main::container()->get( Messages::class )->get_messages() );
+			$this->asset_data->add( 'errorMessages', wc_ppcp_get_container()->get( Messages::class )->get_messages() );
 			$this->asset_data->add( 'i18n', [
 				'locale'        => wp_json_encode( WC()->countries->get_country_locale() ),
 				'locale_fields' => wp_json_encode( WC()->countries->get_country_locale_field_selectors() )
@@ -181,7 +195,8 @@ class PaymentGateways {
 			'environment' => $this->api_settings->get_environment(),
 			'partner_id'  => Constants::PARTNER_ID,
 			'page'        => $this->context_handler->get_context(),
-			'version'     => Main::container()->get( Config::class )->version()
+			'version'     => Main::container()->get( Config::class )->version(),
+			'is_admin'    => current_user_can( 'manage_woocommerce' )
 		] );
 	}
 

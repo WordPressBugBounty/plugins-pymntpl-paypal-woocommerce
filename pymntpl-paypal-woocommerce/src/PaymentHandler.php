@@ -451,7 +451,7 @@ class PaymentHandler extends LegacyPaymentHandler {
 	private function validate_paypal_order( $paypal_order, $order ) {
 		// Only validate orders with a CREATED status because that means they haven't been approved yet.
 		// An order with an APPROVED status means the customer clicked complete payment in the PayPal popup
-		if ( $paypal_order instanceof Order && $paypal_order->isCreated() ) {
+		if ( $paypal_order instanceof Order && ! $paypal_order->isComplete() ) {
 			$this->payment_method->validate_paypal_order( $paypal_order, $order );
 		}
 	}

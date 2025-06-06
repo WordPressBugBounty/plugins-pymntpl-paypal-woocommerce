@@ -4,7 +4,7 @@ Tags: paypal, paylater, venmo, credit cards
 Requires at least: 4.7
 Tested up to: 6.8
 Requires PHP: 7.1
-Stable tag: 1.1.4
+Stable tag: 1.1.5
 Copyright: Payment Plugins
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -49,6 +49,9 @@ Our documentation has a step-by-step guide on how to connect the plugin to your 
 Payment Plugins is the team behind several of the highest reviewed and installed Payment integrations for WooCommerce.
 
 == Changelog ==
+= 1.1.5 - 06/06/25 =
+* Added - Merchants can now configure 3DS settings to automatically accept or reject payments based on liability shift, enrollment status, and authentication results.
+* Added - Notice on the checkout page which displays if advanced card processing is unavailable.
 = 1.1.4 - 05/14/25 =
 * Updated - [https://wordpress.org/support/topic/refund-button-gone/](https://wordpress.org/support/topic/refund-button-gone/)
 * Updated - When Locale Setting is set to Site Language, explicitly set the locale on the application context

@@ -656,6 +656,9 @@ class PayPalGateway extends AbstractGateway {
 	 * @return void
 	 */
 	public function validate_paypal_order( $paypal_order, $order ) {
+		if ( ! $paypal_order->isCreated() ) {
+			return;
+		}
 		$factories = wc_ppcp_get_container()->get( CoreFactories::class );
 		$factories->initialize( $order );
 		$cache               = wc_ppcp_get_container()->get( CacheHandler::class );

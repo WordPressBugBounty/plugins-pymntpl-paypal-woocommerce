@@ -10,6 +10,7 @@ namespace PaymentPlugins\PayPalSDK;
  *
  * @property \PaymentPlugins\PayPalSDK\Token $token
  * @property \PaymentPlugins\PayPalSDK\Token $paypal
+ * @property \PaymentPlugins\PayPalSDK\CreditCard $card
  */
 class PaymentSource extends AbstractObject {
 
@@ -37,4 +38,19 @@ class PaymentSource extends AbstractObject {
 		return $this->paypal;
 	}
 
+	/**
+	 * @return CreditCard
+	 */
+	public function getCard() {
+		return $this->card;
+	}
+
+	/**
+	 * @param CreditCard $card
+	 */
+	public function setCard( $card ) {
+		$this->card = $card;
+
+		return $this;
+	}
 }

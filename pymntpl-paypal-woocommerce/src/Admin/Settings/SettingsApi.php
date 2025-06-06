@@ -42,10 +42,10 @@ class SettingsApi {
 	private function add_script_data() {
 		$data = [];
 		foreach ( $this->settings_registry->get_registered_integrations() as $settings ) {
-			$data[ $settings->id ] = $settings->get_settings_script_data();
+			$this->asset_data->add( $settings->id, $settings->get_settings_script_data() );
 		}
-		$this->asset_data->add( 'settings', $data );
 		$this->asset_data->add( 'adminAjaxUrl', add_query_arg( array( 'action' => 'wc_ppcp_admin_request', 'path' => '/$path' ), admin_url( 'admin-ajax.php' ) ) );
+		do_action( 'wc_ppcp_admin_add_script_data', $this->asset_data );
 	}
 
 	public function enqueue_scripts() {

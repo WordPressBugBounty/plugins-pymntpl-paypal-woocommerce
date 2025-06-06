@@ -50,7 +50,11 @@ class Utils {
 			'tracker_identifiers'         => Tracker::class,
 			'payment_tokens'              => Token::class,
 			'customer'                    => Customer::class,
-			'processor_response'          => ProcessorResponse::class
+			'processor_response'          => ProcessorResponse::class,
+			'card'                        => CreditCard::class,
+			'authentication_result'       => AuthenticationResult::class,
+			'bin_details'                 => BinDetails::class,
+			'three_d_secure'              => ThreeDSecure::class
 		);
 
 	public static function isList( $value ) {

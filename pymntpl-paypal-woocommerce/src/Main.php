@@ -125,6 +125,9 @@ class Main {
 		if ( ! $this->is_woocommerce_active() ) {
 			return;
 		}
+
+		$this->container->register( 'VERSION', $this->version() );
+
 		// Settings
 		$this->container->register( APISettings::class, function ( $container ) {
 			return new APISettings( $container->get( 'adminAssets' ), $container->get( Logger::class ) );

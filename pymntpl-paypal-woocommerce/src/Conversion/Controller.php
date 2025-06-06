@@ -19,6 +19,7 @@ class Controller {
 		add_action( 'wc_ppcp_loaded', [ $this->registry, 'initialize' ] );
 		add_action( 'woocommerce_ppcp_plugin_conversion_registration', [ $this, 'register_instances' ], 10, 2 );
 		add_filter( 'wc_ppcp_add_subscription_payment_meta', [ $this, 'add_subscription_payment_meta' ], 10, 2 );
+		add_filter( 'woocommerce_order_get_payment_method', [ $this, 'get_payment_method' ], 10, 2 );
 		add_filter( 'woocommerce_subscription_get_payment_method', [ $this, 'get_payment_method' ], 10, 2 );
 		add_filter( 'wc_ppcp_payment_source_from_order', [ $this, 'get_payment_source_from_order' ], 10, 2 );
 		add_action( 'wc_ppcp_renewal_payment_processed', [ $this, 'update_subscription_meta' ] );

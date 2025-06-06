@@ -40,20 +40,22 @@ class CreditCardGateway extends AbstractGateway {
 					'expiry' => __( 'MM / YY', 'pymntpl-paypal-woocommerce' )
 				],
 				'i18n'                  => [
-					'cardHolderLabel' => __( 'Cardholder name', 'pymntpl-paypal-woocommerce' ),
-					'cardNumberLabel' => __( 'Card number', 'pymntpl-paypal-woocommerce' ),
-					'cardExpiryLabel' => __( 'Expiration date', 'pymntpl-paypal-woocommerce' ),
-					'cardCvvLabel'    => __( 'Security code', 'pymntpl-paypal-woocommerce' ),
-					'incomplete_form' => __( 'The credit card form is incomplete.', 'pymntpl-paypal-woocommerce' ),
-					'error_codes'     => [
+					'cardHolderLabel'        => __( 'Cardholder name', 'pymntpl-paypal-woocommerce' ),
+					'cardNumberLabel'        => __( 'Card number', 'pymntpl-paypal-woocommerce' ),
+					'cardExpiryLabel'        => __( 'Expiration date', 'pymntpl-paypal-woocommerce' ),
+					'cardCvvLabel'           => __( 'Security code', 'pymntpl-paypal-woocommerce' ),
+					'incomplete_form'        => __( 'The credit card form is incomplete.', 'pymntpl-paypal-woocommerce' ),
+					'error_codes'            => [
 						'INVALID_NUMBER' => __( 'Your card number is incomplete', 'pymntpl-paypal-woocommerce' ),
 						'INVALID_EXPIRY' => __( 'Your card\'s expiration date is incomplete.', 'pymntpl-paypal-woocommerce' ),
 						'INVALID_CVV'    => __( 'Your card\'s security code is incomplete.', 'pymntpl-paypal-woocommerce' )
 					],
-					'cancel'          => __( 'Cancel', 'pymntpl-paypal-woocommerce' ),
-					'change'          => __( 'Change', 'pymntpl-paypal-woocommerce' ),
-					'fastlane_signup' => __( 'Sign up for', 'pymntpl-paypal-woocommerce' ),
-					'continue'        => __( 'Continue', 'pymntpl-paypal-woocommerce' ),
+					'cancel'                 => __( 'Cancel', 'pymntpl-paypal-woocommerce' ),
+					'change'                 => __( 'Change', 'pymntpl-paypal-woocommerce' ),
+					'fastlane_signup'        => __( 'Sign up for', 'pymntpl-paypal-woocommerce' ),
+					'continue'               => __( 'Continue', 'pymntpl-paypal-woocommerce' ),
+					'cardsNotAvailableAdmin' => __( 'Advanced card processing is not available. Login to developer.paypal.com > Apps & Credentials and click your application. Under "Features" check "Advanced Card Processing".', 'pymntpl-paypal-woocommerce' ),
+					'cardsNotAvailable'      => __( 'Credit card processing is not available. Please use another payment method.', 'pymntpl-paypal-woocommerce' )
 				],
 				'styles'                => [
 					'input'          => [

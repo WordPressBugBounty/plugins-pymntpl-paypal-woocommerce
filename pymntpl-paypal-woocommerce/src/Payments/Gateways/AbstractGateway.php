@@ -3,12 +3,7 @@
 
 namespace PaymentPlugins\WooCommerce\PPCP\Payments\Gateways;
 
-
-use PaymentPlugins\PayPalSDK\Order;
-use PaymentPlugins\PayPalSDK\PaymentSource;
-use PaymentPlugins\PayPalSDK\PaymentToken;
 use PaymentPlugins\WooCommerce\PPCP\Customer;
-use PaymentPlugins\WooCommerce\PPCP\Main;
 use PaymentPlugins\WooCommerce\PPCP\Assets\AssetsApi;
 use PaymentPlugins\WooCommerce\PPCP\Constants;
 use PaymentPlugins\WooCommerce\PPCP\Logger;
@@ -117,6 +112,9 @@ abstract class AbstractGateway extends \WC_Payment_Gateway {
 	 */
 	public function get_payment_method_data( $context ) {
 		return [];
+	}
+
+	public function get_admin_script_data() {
 	}
 
 	public function add_section_enabled( $key ) {
@@ -368,7 +366,7 @@ abstract class AbstractGateway extends \WC_Payment_Gateway {
 	 *
 	 * @return void
 	 */
-	public function validate_paypal_order( $paypal_order, $order ) {
+	public function validate_paypal_order( \PaymentPlugins\PayPalSDK\Order $paypal_order, \WC_Order $order ) {
 	}
 
 	/**
