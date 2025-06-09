@@ -40,7 +40,6 @@ class SettingsApi {
 	}
 
 	private function add_script_data() {
-		$data = [];
 		foreach ( $this->settings_registry->get_registered_integrations() as $settings ) {
 			$this->asset_data->add( $settings->id, $settings->get_settings_script_data() );
 		}

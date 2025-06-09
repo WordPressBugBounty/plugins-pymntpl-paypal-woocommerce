@@ -139,6 +139,13 @@ class PaymentHandler extends LegacyPaymentHandler {
 		} catch ( RetryException $e ) {
 			return $this->process_payment( $order );
 		} catch ( \Exception $e ) {
+			$order->update_status(
+				'failed',
+				sprintf( __( 'Error processing payment. Reason: %s', 'pymntpl-paypal-woocommerce' ),
+					$e->getMessage()
+				)
+			);
+
 			return new PaymentResult( false, $order, $this->payment_method, $e->getMessage() );
 		}
 	}

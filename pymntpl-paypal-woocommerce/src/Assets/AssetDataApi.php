@@ -72,11 +72,14 @@ class AssetDataApi {
 			foreach ( $this->get_default_values() as $key => $data ) {
 				$this->add( $key, $data );
 			}
-			/**
-			 * @var ContextHandler $context_handler
-			 */
-			$context_handler = Main::container()->get( ContextHandler::class );
-			do_action( 'wc_ppcp_add_script_data', $this, $context_handler );
+			if ( ! is_admin() ) {
+				/**
+				 * @var ContextHandler $context_handler
+				 */
+				$context_handler = wc_ppcp_get_container()->get( ContextHandler::class );
+				do_action( 'wc_ppcp_add_script_data', $this, $context_handler );
+			}
+
 			$this->print_data( 'wcPPCPSettings', $this->data );
 		}
 	}

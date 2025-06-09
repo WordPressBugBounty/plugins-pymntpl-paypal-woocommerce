@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Payment Plugins for PayPal WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Payment Plugins for PayPal WooCommerce 1.1.5\n"
+"Project-Id-Version: Payment Plugins for PayPal WooCommerce 1.1.6\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pymntpl-paypal-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-06-06T15:12:10+00:00\n"
+"POT-Creation-Date: 2025-06-09T16:04:45+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: pymntpl-paypal-woocommerce\n"
@@ -1233,11 +1233,12 @@ msgstr ""
 #: src/Legacy/LegacyPaymentHandler.php:139
 #: src/PaymentHandler.php:120
 #: src/PaymentHandler.php:127
+#: src/PaymentHandler.php:144
 msgid "Error processing payment. Reason: %s"
 msgstr ""
 
 #: src/Legacy/LegacyPaymentHandler.php:180
-#: src/PaymentHandler.php:161
+#: src/PaymentHandler.php:168
 msgid "PayPal capture status is pending. Reason: %1$s. Payment will complete when capture.completed webhook is received."
 msgstr ""
 
@@ -1259,39 +1260,39 @@ msgid "Authorization ID: %s"
 msgstr ""
 
 #: src/Legacy/LegacyPaymentHandler.php:287
-#: src/PaymentHandler.php:288
+#: src/PaymentHandler.php:295
 msgid "To process a refund, there must be a transaction id associated with the order."
 msgstr ""
 
 #: src/Legacy/LegacyPaymentHandler.php:290
-#: src/PaymentHandler.php:291
+#: src/PaymentHandler.php:298
 msgid "This payment has a status of Authorize. Only captured payments can be refunded."
 msgstr ""
 
 #: src/Legacy/LegacyPaymentHandler.php:324
-#: src/PaymentHandler.php:325
+#: src/PaymentHandler.php:332
 msgid "Error capturing payment. Reason: %s"
 msgstr ""
 
 #: src/Legacy/LegacyPaymentHandler.php:328
-#: src/PaymentHandler.php:329
+#: src/PaymentHandler.php:336
 msgid "Payment captured in PayPal. Capture ID: %s Amount: %s"
 msgstr ""
 
 #: src/Legacy/LegacyPaymentHandler.php:360
-#: src/PaymentHandler.php:361
+#: src/PaymentHandler.php:368
 msgid "A valid authorization ID is required to perform a void."
 msgstr ""
 
 #: src/Legacy/LegacyPaymentHandler.php:374
 #: src/Legacy/LegacyPaymentHandler.php:404
-#: src/PaymentHandler.php:375
-#: src/PaymentHandler.php:405
+#: src/PaymentHandler.php:382
+#: src/PaymentHandler.php:412
 msgid "PayPal authorization cancelled. Authorization ID: %s"
 msgstr ""
 
 #: src/Legacy/LegacyPaymentHandler.php:398
-#: src/PaymentHandler.php:399
+#: src/PaymentHandler.php:406
 msgid "Order cancellation"
 msgstr ""
 
