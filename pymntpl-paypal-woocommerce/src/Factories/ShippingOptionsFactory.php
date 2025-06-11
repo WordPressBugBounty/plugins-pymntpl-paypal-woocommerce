@@ -21,9 +21,9 @@ class ShippingOptionsFactory extends AbstractFactory {
 			foreach ( $package['rates'] as $method ) {
 				/**
 				 *
-				 * @var WC_Shipping_Rate $method
+				 * @var \WC_Shipping_Rate $method
 				 */
-				$amount   = $incl_tax ? $method->cost + $method->get_shipping_tax() : $method->cost;
+				$amount   = $incl_tax ? (float) $method->get_cost() + (float) $method->get_shipping_tax() : (float) $method->get_cost();
 				$selected = isset( $chosen_shipping_methods[ $i ] ) && $chosen_shipping_methods[ $i ] === $method->id;
 				$methods->add( $this->get_shipping_method_option( $amount, $method, $i, $selected ) );
 			}

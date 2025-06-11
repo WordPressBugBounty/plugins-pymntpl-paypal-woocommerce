@@ -24,9 +24,9 @@ class ItemsFactory extends AbstractFactory {
 			 * the per unit price since PayPal does their own unit_price * quantity.
 			 */
 			if ( $incl_tax ) {
-				$total = ( $cart_item['line_subtotal'] + $cart_item['line_subtotal_tax'] ) / (float) $cart_item['quantity'];
+				$total = ( (float) $cart_item['line_subtotal'] + (float) $cart_item['line_subtotal_tax'] ) / (float) $cart_item['quantity'];
 			} else {
-				$total = $cart_item['line_subtotal'] / (float) $cart_item['quantity'];
+				$total = (float) $cart_item['line_subtotal'] / (float) $cart_item['quantity'];
 			}
 			$qty  = $cart_item['quantity'];
 			$name = $cart_item['data']->get_name();
