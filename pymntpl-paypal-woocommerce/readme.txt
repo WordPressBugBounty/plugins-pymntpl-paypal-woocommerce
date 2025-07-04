@@ -4,7 +4,7 @@ Tags: paypal, paylater, venmo, credit cards
 Requires at least: 4.7
 Tested up to: 6.8
 Requires PHP: 7.1
-Stable tag: 1.1.7
+Stable tag: 1.1.8
 Copyright: Payment Plugins
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -49,6 +49,9 @@ Our documentation has a step-by-step guide on how to connect the plugin to your 
 Payment Plugins is the team behind several of the highest reviewed and installed Payment integrations for WooCommerce.
 
 == Changelog ==
+= 1.1.8 - 07/04/25 =
+* Updated - Added check for existence of recipient name for shipping address on legacy billing agreements due to bug in PayPal's API. [https://wordpress.org/support/topic/error-for-the-paypal-subscription/](https://wordpress.org/support/topic/error-for-the-paypal-subscription/)
+* Added - Validation on checkout block if place order button is clicked before PayPal button
 = 1.1.7 - 06/11/25 =
 * Updated - Cast shipping rate cost to float to ensure there are no PHP operand errors with WooCommerce 9.3.3.
 = 1.1.6 - 06/09/25 =
