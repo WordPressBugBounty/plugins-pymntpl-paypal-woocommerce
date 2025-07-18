@@ -64,6 +64,12 @@ class CartOrder extends AbstractCart {
 		$this->calculate_totals();
 		$order = $this->get_order_from_cart( $request );
 		try {
+			$payment_method = $this->get_payment_method_from_request( $request );
+
+			if ( ! $payment_method ) {
+				throw new \Exception( __( 'Invalid payment method provided.', 'pymntpl-paypal-woocommerce' ) );
+			}
+
 			if ( $this->is_checkout_initiated( $request ) ) {
 				if ( $this->is_checkout_validation_enabled( $request ) ) {
 					$this->validator->validate_checkout( $request );
@@ -86,7 +92,7 @@ class CartOrder extends AbstractCart {
 				}
 				throw new \Exception( $result->get_error_message() );
 			}
-			$this->cache->set( sprintf( '%s_%s', 'ppcp', Constants::PAYPAL_ORDER_ID ), $result->id );
+			$this->cache->set( sprintf( '%s_%s', $payment_method->id, Constants::PAYPAL_ORDER_ID ), $result->id );
 			$this->cache->set( Constants::SHIPPING_PREFERENCE, $order->getApplicationContext()->getShippingPreference() );
 
 			$this->logger->info(

@@ -160,6 +160,12 @@ class CartCheckout extends AbstractCart {
 	 * @return void
 	 */
 	private function prepare_request_params( $request ) {
+		$customer = WC()->customer;
+		if ( $customer && $customer->get_id() ) {
+			if ( empty( $request['billing_phone'] ) && $customer->get_billing_phone() ) {
+				$request['billing_phone'] = $customer->get_billing_phone();
+			}
+		}
 		if ( isset( $request['shipping_state'], $request['shipping_country'] ) ) {
 			$request['shipping_state'] = Utils::normalize_address_state( $request['shipping_state'], $request['shipping_country'] );
 		}

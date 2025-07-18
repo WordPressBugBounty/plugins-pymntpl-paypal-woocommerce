@@ -43,6 +43,12 @@ class CartItem extends AbstractCart {
 		WC()->cart->remove_cart_item( WC()->cart->generate_cart_id( $product_id, $variation_id, $variation ) );
 
 		try {
+			$payment_method = $this->get_payment_method_from_request( $request );
+
+			if ( ! $payment_method ) {
+				throw new \Exception( __( 'Invalid payment method provided.', 'pymntpl-paypal-woocommerce' ) );
+			}
+
 			// add item to the cart
 			if ( WC()->cart->add_to_cart( ...$cart_params ) === false ) {
 				throw new \Exception( $this->get_wc_notice( 'error', __( 'Error adding product to cart.', 'pymntpl-paypal-woocommerce' ) ) );
@@ -70,7 +76,7 @@ class CartItem extends AbstractCart {
 
 			$this->logger->info( sprintf( 'PayPal order %s created via %s', $result->id, __METHOD__ ), 'payment' );
 
-			$this->cache->set( sprintf( '%s_%s', 'ppcp', Constants::PAYPAL_ORDER_ID ), $result->id );
+			$this->cache->set( sprintf( '%s_%s', $payment_method->id, Constants::PAYPAL_ORDER_ID ), $result->id );
 
 			return $result->id;
 		} catch ( \Exception $e ) {

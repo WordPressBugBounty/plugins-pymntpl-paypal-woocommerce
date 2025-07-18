@@ -17,4 +17,8 @@ class RefundsManager {
 		$this->refund = $refund;
 	}
 
+	public function get_refund() {
+		return $this->refund;
+	}
+
 }

@@ -128,6 +128,14 @@ class AbstractGateway extends \WFOCU_Gateway {
 
 			return $carry;
 		}, [ 0, false ] );
+
+		$application_context = $factories->applicationContext->get( $needs_shipping, true );
+
+		$result = ( new Order() )
+			->setIntent( $payment_method->get_option( 'intent' ) )
+			->setPayer( $factories->payer->from_order() )
+			->setApplicationContext( $application_context );
+
 		$purchase_units = new Collection();
 		$purchase_unit  = ( new PurchaseUnit() )
 			->setAmount( ( new Amount() )
@@ -164,19 +172,17 @@ class AbstractGateway extends \WFOCU_Gateway {
 			$purchase_unit->setShipping( $factories->shipping->from_order( 'shipping' ) );
 			if ( ! Utils::is_valid_address( $purchase_unit->getShipping()->getAddress(), 'shipping' ) ) {
 				unset( $purchase_unit->getShipping()->address );
+				$billing_address = $factories->address->from_order( 'billing' );
+				if ( Utils::is_valid_address( $billing_address, 'shipping' ) ) {
+					$purchase_unit->getShipping()->setAddress( $billing_address );
+				}
 			}
 		}
 
 		$factories->purchaseUnit->filter_purchase_unit( $purchase_unit, $purchase_unit->getAmount()->getValue() );
 		$purchase_units->add( $purchase_unit );
 
-		$application_context = $factories->applicationContext->get( $needs_shipping, true );
-
-		$result = ( new Order() )
-			->setIntent( $payment_method->get_option( 'intent' ) )
-			->setPayer( $factories->payer->from_order() )
-			->setApplicationContext( $application_context )
-			->setPurchaseUnits( $purchase_units );
+		$result->setPurchaseUnits( $purchase_units );
 
 		if ( $order->get_meta( Constants::PAYMENT_METHOD_TOKEN ) ) {
 			$result->setPaymentSource( ( new PaymentSource() )

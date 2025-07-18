@@ -34,9 +34,10 @@ class AbstractGateway extends AbstractPaymentMethodType {
 
 	public function get_payment_method_data() {
 		return [
-			'title'    => $this->get_setting( 'title_text' ),
-			'features' => $this->get_supported_features(),
-			'icons'    => $this->get_payment_method_icons()
+			'title'       => $this->get_setting( 'title_text' ),
+			'description' => $this->get_setting( 'description', '' ),
+			'features'    => $this->get_supported_features(),
+			'icons'       => $this->get_payment_method_icons()
 		];
 	}
 

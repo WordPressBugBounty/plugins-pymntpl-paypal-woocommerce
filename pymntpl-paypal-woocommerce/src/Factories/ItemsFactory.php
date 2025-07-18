@@ -181,7 +181,7 @@ class ItemsFactory extends AbstractFactory {
 			}
 		}
 
-		return substr( mb_convert_encoding( wp_strip_all_tags( $name ), 'UTF-8', 'UTF-8' ), 0, 127 );
+		return substr( \mb_convert_encoding( wp_strip_all_tags( $name ), 'UTF-8', 'UTF-8' ), 0, 127 );
 	}
 
 }

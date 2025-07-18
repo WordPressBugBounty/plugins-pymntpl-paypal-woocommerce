@@ -35,7 +35,7 @@ class ApplicationContextFactory extends AbstractFactory {
 			$context->setReturnUrl( add_query_arg( [
 				'order_id'       => $this->order->get_id(),
 				'order_key'      => $this->order->get_order_key(),
-				'payment_method' => 'ppcp'
+				'payment_method' => $this->payment_method ? $this->payment_method->id : 'ppcp'
 			], WC()->api_request_url( 'ppcp_order_return' ) ) );
 			$context->setCancelUrl( add_query_arg( [
 				'ppcp_action' => 'canceled',
@@ -49,7 +49,11 @@ class ApplicationContextFactory extends AbstractFactory {
 				'ppcp_action' => 'canceled'
 			], wc_get_checkout_url() ) );
 		}
-		$context->setBrandName( substr( $this->settings->get_option( 'display_name' ), 0, 127 ) );
+
+		// The display name must have length of 1 or greater
+		if ( $this->settings->get_option( 'display_name' ) ) {
+			$context->setBrandName( substr( $this->settings->get_option( 'display_name' ), 0, 127 ) );
+		}
 
 		if ( $this->settings->is_site_locale() ) {
 			$locale = LocaleUtil::get_site_locale( true );

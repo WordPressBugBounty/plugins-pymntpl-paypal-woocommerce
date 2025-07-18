@@ -3,6 +3,7 @@
 
 namespace PaymentPlugins\PPCP\Blocks\Payments\Gateways;
 
+use PaymentPlugins\PPCP\Blocks\Utils\ActionUtils;
 use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\AdvancedSettings;
 
 /**
@@ -96,7 +97,10 @@ class PayPalGateway extends AbstractGateway {
 			}
 		}
 
-		return array_merge( parent::get_payment_method_data(), $data );
+		return ActionUtils::apply_payment_data_filter(
+			array_merge( parent::get_payment_method_data(), $data ),
+			$this
+		);
 	}
 
 	public function get_payment_method_icons() {

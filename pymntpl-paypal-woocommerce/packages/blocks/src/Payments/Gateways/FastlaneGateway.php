@@ -2,6 +2,7 @@
 
 namespace PaymentPlugins\PPCP\Blocks\Payments\Gateways;
 
+use PaymentPlugins\PPCP\Blocks\Utils\ActionUtils;
 use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\APISettings;
 use PaymentPlugins\WooCommerce\PPCP\Assets\AssetsApi;
 
@@ -44,11 +45,12 @@ class FastlaneGateway extends AbstractGateway {
 	}
 
 	public function get_payment_method_data() {
-		return [
+		$data = [
 			'features'              => $this->get_supported_features(),
 			'icon_url'              => wc_ppcp_get_container()->get( AssetsApi::class )->assets_url( 'assets/img/fastlane.svg' ),
 			'fastlane_flow'         => $this->get_setting( 'fastlane_flow', 'email_detection' ),
 			'fastlane_pageload'     => \wc_string_to_bool( $this->get_setting( 'fastlane_pageload', 'no' ) ),
+			'iconEnabled'           => \wc_string_to_bool( $this->get_setting( 'fastlane_icon_enabled', 'yes' ) ),
 			'emailDetectionEnabled' => $this->get_setting( 'fastlane_flow', 'email_detection' ) === 'email_detection',
 			'i18n'                  => [
 				'cancel'        => __( 'Cancel', 'pymntpl-paypal-woocommerce' ),
@@ -58,6 +60,8 @@ class FastlaneGateway extends AbstractGateway {
 				'email_invalid' => __( 'Please enter a valid email address before using Fastlane.', 'pymntpl-paypal-woocommerce' )
 			]
 		];
+
+		return ActionUtils::apply_payment_data_filter( $data, $this );
 	}
 
 }

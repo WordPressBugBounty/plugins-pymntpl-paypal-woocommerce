@@ -2,6 +2,7 @@
 
 namespace PaymentPlugins\PPCP\Blocks\Payments\Gateways;
 
+use PaymentPlugins\PPCP\Blocks\Utils\ActionUtils;
 use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\AdvancedSettings;
 
 class CreditCardGateway extends AbstractGateway {
@@ -17,19 +18,19 @@ class CreditCardGateway extends AbstractGateway {
 	}
 
 	public function get_payment_method_data() {
-		$base_url        = \plugins_url( 'assets/images/payment-methods/', WC_PLUGIN_FILE );
-		$card_gateway    = wc_ppcp_get_container()->get( \PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\CreditCardGateway::class );
-		$token           = $card_gateway->get_payment_method_token_instance();
-		$format          = $token->get_payment_method_format( $card_gateway->get_option( 'payment_format', 'type_ending_in' ) );
-		$email_detection = $this->get_setting( 'fastlane_flow' ) === 'email_detection';
-		$show_signup     = $email_detection && \wc_string_to_bool( $this->get_setting( 'fastlane_signup', 'yes' ) );
+		$base_url          = \plugins_url( 'assets/images/payment-methods/', WC_PLUGIN_FILE );
+		$card_gateway      = wc_ppcp_get_container()->get( \PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\CreditCardGateway::class );
+		$token             = $card_gateway->get_payment_method_token_instance();
+		$format            = $token->get_payment_method_format( $card_gateway->get_option( 'payment_format', 'type_ending_in' ) );
+		$email_detection   = $this->get_setting( 'fastlane_flow' ) === 'email_detection';
+		$show_signup       = $email_detection && \wc_string_to_bool( $this->get_setting( 'fastlane_signup', 'yes' ) );
+		$cardname_required = wc_string_to_bool( $this->get_setting( 'cardholder_name_required', 'no' ) ) && wc_string_to_bool( $this->get_setting( 'cardholder_name', 'no' ) );
 
-		return array_merge(
-			parent::get_payment_method_data(),
+		$data =
 			[
 				'fields'                => [
 					'name'   => [
-						'placeholder' => __( 'Cardholder name (optional)', 'pymntpl-paypal-woocommerce' )
+						'placeholder' => $cardname_required ? __( 'Cardholder name', 'pymntpl-paypal-woocommerce' ) : __( 'Cardholder name (optional)', 'pymntpl-paypal-woocommerce' ),
 					],
 					'number' => [
 						'placeholder' => __( 'Card number', 'pymntpl-paypal-woocommerce' )
@@ -40,12 +41,14 @@ class CreditCardGateway extends AbstractGateway {
 					'expiry' => __( 'MM / YY', 'pymntpl-paypal-woocommerce' )
 				],
 				'i18n'                  => [
+					'buttonLabel'            => esc_html( $this->get_order_button_text() ),
 					'cardHolderLabel'        => __( 'Cardholder name', 'pymntpl-paypal-woocommerce' ),
 					'cardNumberLabel'        => __( 'Card number', 'pymntpl-paypal-woocommerce' ),
 					'cardExpiryLabel'        => __( 'Expiration date', 'pymntpl-paypal-woocommerce' ),
 					'cardCvvLabel'           => __( 'Security code', 'pymntpl-paypal-woocommerce' ),
 					'incomplete_form'        => __( 'The credit card form is incomplete.', 'pymntpl-paypal-woocommerce' ),
 					'error_codes'            => [
+						'INVALID_NAME'   => __( 'Your card name is incomplete', 'pymntpl-paypal-woocommerce' ),
 						'INVALID_NUMBER' => __( 'Your card number is incomplete', 'pymntpl-paypal-woocommerce' ),
 						'INVALID_EXPIRY' => __( 'Your card\'s expiration date is incomplete.', 'pymntpl-paypal-woocommerce' ),
 						'INVALID_CVV'    => __( 'Your card\'s security code is incomplete.', 'pymntpl-paypal-woocommerce' )
@@ -79,6 +82,7 @@ class CreditCardGateway extends AbstractGateway {
 					]
 				],
 				'cardHolderNameEnabled' => wc_string_to_bool( $this->get_setting( 'cardholder_name', 'yes' ) ),
+				'cardNameRequired'      => $cardname_required,
 				'icon'                  => $this->get_payment_method_icons(),
 				'icons'                 => [
 					'amex'       => $base_url . 'amex.svg',
@@ -93,7 +97,11 @@ class CreditCardGateway extends AbstractGateway {
 				'fastlane_logo'         => $card_gateway->assets->assets_url( 'assets/img/fastlane.svg' ),
 				'showSignup'            => $show_signup,
 				'showSaveOption'        => $card_gateway->show_card_save_checkbox()
-			]
+			];
+
+		return ActionUtils::apply_payment_data_filter(
+			array_merge( parent::get_payment_method_data(), $data ),
+			$this
 		);
 	}
 
@@ -104,5 +112,12 @@ class CreditCardGateway extends AbstractGateway {
 			'alt' => 'Credit Cards'
 		];
 	}
+
+	private function get_order_button_text() {
+		$text = $this->get_setting( 'order_button_text', '' );
+
+		return $text;
+	}
+
 
 }

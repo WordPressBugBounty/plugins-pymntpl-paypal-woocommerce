@@ -102,14 +102,15 @@ class FastlaneController {
 			$base_url     = \plugins_url( 'assets/images/payment-methods/', WC_PLUGIN_FILE );
 
 			$data = [
-				'html'              => [
+				'html'                  => [
 					'modal'          => $templates->load_template_html( 'fastlane/modal.php' ),
 					'tokenized_card' => $templates->load_template_html( 'fastlane/tokenized-card.php' ),
 				],
-				'payment_format'    => $format,
-				'fastlane_flow'     => $card_gateway->get_option( 'fastlane_flow', 'express_button' ),
-				'fastlane_pageload' => \wc_string_to_bool( $card_gateway->get_option( 'fastlane_pageload', 'no' ) ),
-				'icons'             => [
+				'payment_format'        => $format,
+				'fastlane_flow'         => $card_gateway->get_option( 'fastlane_flow', 'express_button' ),
+				'fastlane_pageload'     => \wc_string_to_bool( $card_gateway->get_option( 'fastlane_pageload', 'no' ) ),
+				'fastlane_icon_enabled' => \wc_string_to_bool( $card_gateway->get_option( 'fastlane_icon_enabled', 'yes' ) ),
+				'icons'                 => [
 					'amex'       => $base_url . 'amex.svg',
 					'diners'     => $base_url . 'diners.svg',
 					'discover'   => $base_url . 'discover.svg',
@@ -118,7 +119,7 @@ class FastlaneController {
 					'mastercard' => $base_url . 'mastercard.svg',
 					'visa'       => $base_url . 'visa.svg'
 				],
-				'i18n'              => [
+				'i18n'                  => [
 					'email_empty'   => __( 'Please provide an email address before using Fastlane.', 'pymntpl-paypal-woocommerce' ),
 					'email_invalid' => __( 'Please enter a valid email address before using Fastlane.', 'pymntpl-paypal-woocommerce' )
 				]

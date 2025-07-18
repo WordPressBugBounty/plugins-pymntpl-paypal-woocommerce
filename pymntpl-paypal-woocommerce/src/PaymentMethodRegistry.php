@@ -150,7 +150,12 @@ class PaymentMethodRegistry extends Registry\BaseRegistry {
 
 	public function add_payment_method_data( AssetDataApi $asset_data, $context ) {
 		foreach ( $this->get_active_integrations() as $payment_method ) {
-			$data = apply_filters( 'wc_ppcp_add_payment_method_data', $payment_method->get_payment_method_data( $context ), $context, $payment_method );
+			$data = apply_filters(
+				'wc_ppcp_add_payment_method_data',
+				$payment_method->get_payment_method_data( $context ),
+				$context,
+				$payment_method
+			);
 			$asset_data->add( $payment_method->id . '_data', $data );
 		}
 	}

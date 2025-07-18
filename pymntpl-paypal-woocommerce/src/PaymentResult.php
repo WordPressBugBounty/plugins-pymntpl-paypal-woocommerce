@@ -242,6 +242,18 @@ class PaymentResult {
 	}
 
 	private function get_approval_url() {
+		if ( $this->paypal_order && $this->paypal_order instanceof Order ) {
+			if ( $this->paypal_order->isActionRequired() && $this->paypal_order->getLinks()->count() > 0 ) {
+				foreach ( $this->paypal_order->getLinks() as $link ) {
+					/**
+					 * @var \PaymentPlugins\PayPalSDK\Link $link
+					 */
+					if ( $link->getRel() === 'payer-action' ) {
+						return $link->getHref();
+					}
+				}
+			}
+		}
 		if ( $this->is_production() ) {
 			$base_url = self::PAYPAL_CHECKOUT_URL;
 		} else {

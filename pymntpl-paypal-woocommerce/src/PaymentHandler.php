@@ -131,6 +131,10 @@ class PaymentHandler extends LegacyPaymentHandler {
 						}
 					}
 				}
+			} else {
+				if ( $paypal_order ) {
+					$this->cache->set( sprintf( '%s_%s', $this->payment_method->id, Constants::PAYPAL_ORDER_ID ), $paypal_order->getId() );
+				}
 			}
 
 			OrderLock::release_order_lock( $order );
@@ -299,18 +303,10 @@ class PaymentHandler extends LegacyPaymentHandler {
 					'pymntpl-paypal-woocommerce' ) );
 			}
 		}
-		$refunds = $order->get_refunds();
-		/**
-		 * @var \WC_Order_Refund $a
-		 * @var \WC_Order_Refund $b
-		 */
-		if ( \is_array( $refunds ) ) {
-			usort( $refunds, function ( $a, $b ) {
-				return $a->get_id() < $b->get_id() ? 1 : - 1;
-			} );
-		}
+		$refund_manager = wc_ppcp_get_container()->get( RefundsManager::class );
+		$refund         = $refund_manager->get_refund();
 
-		return $this->client->orderMode( $order )->captures->refund( $id, $this->factories->refunds->from_refund( $refunds[0], $amount, $reason ) );
+		return $this->client->orderMode( $order )->captures->refund( $id, $this->factories->refunds->from_refund( $refund, $amount, $reason ) );
 	}
 
 	public function process_capture( \WC_Order $order, $amount = '' ) {

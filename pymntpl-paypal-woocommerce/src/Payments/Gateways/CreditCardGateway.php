@@ -38,7 +38,7 @@ class CreditCardGateway extends AbstractGateway {
 
 	public function init_form_fields() {
 		$this->form_fields = [
-			'enabled'            => [
+			'enabled'                  => [
 				'title'       => __( 'Enabled', 'pymntpl-paypal-woocommerce' ),
 				'type'        => 'checkbox',
 				'default'     => 'no',
@@ -46,21 +46,21 @@ class CreditCardGateway extends AbstractGateway {
 				'desc_tip'    => true,
 				'description' => __( 'Enable this option to offer PayPal on your site.', 'pymntpl-paypal-woocommerce' )
 			],
-			'title_text'         => [
+			'title_text'               => [
 				'title'       => __( 'Title', 'pymntpl-paypal-woocommerce' ),
 				'type'        => 'text',
 				'default'     => __( 'Credit/Debit Cards', 'pymntpl-paypal-woocommerce' ),
 				'desc_tip'    => true,
 				'description' => __( 'This is the title of the payment gateway which appears on the checkout page.', 'pymntpl-paypal-woocommerce' )
 			],
-			'description'        => [
+			'description'              => [
 				'title'       => __( 'Description', 'pymntpl-paypal-woocommerce' ),
 				'type'        => 'text',
 				'default'     => '',
 				'desc_tip'    => true,
 				'description' => __( 'This is the description that appears when the payment gateway is selected on the checkout page.', 'pymntpl-paypal-woocommerce' )
 			],
-			'intent'             => [
+			'intent'                   => [
 				'type'        => 'select',
 				'class'       => 'wc-enhanced-select',
 				'title'       => __( 'Transaction Type', 'pymntpl-paypal-woocommerce' ),
@@ -76,7 +76,7 @@ class CreditCardGateway extends AbstractGateway {
 					'pymntpl-paypal-woocommerce'
 				),
 			],
-			'authorize_status'   => [
+			'authorize_status'         => [
 				'type'              => 'select',
 				'class'             => 'wc-enhanced-select',
 				'title'             => __( 'Authorized Order Status', 'pymntpl-paypal-woocommerce' ),
@@ -98,7 +98,7 @@ class CreditCardGateway extends AbstractGateway {
 				'desc_tip'          => true,
 				'description'       => __( 'If the transaction is authorized, this is the status applied to the order.', 'pymntpl-paypal-woocommerce' )
 			],
-			'order_button_text'  => [
+			'order_button_text'        => [
 				'title'       => __( 'Button Text', 'pymntpl-paypal-woocommerce' ),
 				'type'        => 'text',
 				'default'     => '',
@@ -107,7 +107,7 @@ class CreditCardGateway extends AbstractGateway {
 					'pymntpl-paypal-woocommerce' )
 
 			],
-			'payment_format'     => [
+			'payment_format'           => [
 				'title'       => __( 'Payment Method Format', 'pymntpl-paypal-woocommerce' ),
 				'type'        => 'select',
 				'default'     => 'type_ending_in',
@@ -115,7 +115,7 @@ class CreditCardGateway extends AbstractGateway {
 				'desc_tip'    => true,
 				'description' => __( 'This option controls how the PayPal payment method appears on the frontend.', 'pymntpl-paypal-woocommerce' )
 			],
-			'card_icons'         => [
+			'card_icons'               => [
 				'title'       => __( 'Card Icons', 'pymntpl-paypal-woocommerce' ),
 				'type'        => 'multiselect',
 				'class'       => 'wc-enhanced-select stripe-accepted-cards',
@@ -131,11 +131,11 @@ class CreditCardGateway extends AbstractGateway {
 				'desc_tip'    => true,
 				'description' => __( 'These are the icons that show next to the payment method title.', 'pymntpl-paypal-woocommerce' )
 			],
-			'card_options'       => [
+			'card_options'             => [
 				'type'  => 'title',
 				'title' => __( 'Card Form Options', 'pymntpl-paypal-woocommerce' ),
 			],
-			'card_save_enabled'  => [
+			'card_save_enabled'        => [
 				'title'       => __( 'Card Save Enabled', 'pymntpl-paypal-woocommerce' ),
 				'type'        => 'checkbox',
 				'default'     => 'yes',
@@ -143,7 +143,7 @@ class CreditCardGateway extends AbstractGateway {
 				'desc_tip'    => true,
 				'description' => __( 'When enabled, customers will have the option to save their credit card on the checkout page. If you don\'t have vaulting enabled on the Advanced Settings page, this option will be disabled.', 'pymntpl-paypal-woocommerce' )
 			],
-			'cardholder_name'    => [
+			'cardholder_name'          => [
 				'title'       => __( 'Enable Cardholder Name', 'pymntpl-paypal-woocommerce' ),
 				'type'        => 'checkbox',
 				'default'     => 'yes',
@@ -151,11 +151,22 @@ class CreditCardGateway extends AbstractGateway {
 				'desc_tip'    => true,
 				'description' => __( 'When enabled, the credit card form will show a cardholder name input field.', 'pymntpl-paypal-woocommerce' )
 			],
-			'3ds_title'          => [
+			'cardholder_name_required' => [
+				'title'             => __( 'Cardholder Name Required', 'pymntpl-paypal-woocommerce' ),
+				'type'              => 'checkbox',
+				'default'           => 'no',
+				'value'             => 'yes',
+				'desc_tip'          => true,
+				'description'       => __( 'When enabled, the cardholder name field will be required rather than optional.', 'pymntpl-paypal-woocommerce' ),
+				'custom_attributes' => [
+					'data-show-if' => 'cardholder_name=true'
+				],
+			],
+			'3ds_title'                => [
 				'type'  => 'title',
 				'title' => __( '3D Secure Options', 'pymntpl-paypal-woocommerce' ),
 			],
-			'3ds_enabled'        => [
+			'3ds_enabled'              => [
 				'title'       => __( 'Enable 3DS', 'pymntpl-paypal-woocommerce' ),
 				'type'        => 'checkbox',
 				'default'     => 'yes',
@@ -163,7 +174,7 @@ class CreditCardGateway extends AbstractGateway {
 				'desc_tip'    => true,
 				'description' => __( 'When enabled, 3DS will be triggered when required.', 'pymntpl-paypal-woocommerce' )
 			],
-			'3ds_forced'         => [
+			'3ds_forced'               => [
 				'title'             => __( 'Force 3DS', 'pymntpl-paypal-woocommerce' ),
 				'type'              => 'checkbox',
 				'default'           => 'no',
@@ -174,7 +185,7 @@ class CreditCardGateway extends AbstractGateway {
 					'data-show-if' => '3ds_enabled=true'
 				],
 			],
-			'3ds_config'         => [
+			'3ds_config'               => [
 				'type'              => 'configure_3ds',
 				'label'             => __( 'Configure 3DS', 'pymntpl-paypal-woocommerce' ),
 				'default'           => $this->get_3ds_actions(),
@@ -182,18 +193,18 @@ class CreditCardGateway extends AbstractGateway {
 					return ! is_array( $value ) ? [] : array_map( 'wc_clean', array_map( 'stripslashes', $value ) );
 				}
 			],
-			'fastlane_title'     => [
+			'fastlane_title'           => [
 				'type'  => 'title',
 				'title' => __( 'Fastlane by PayPal', 'pymntpl-paypal-woocommerce' ),
 			],
-			'fastlane_enabled'   => [
+			'fastlane_enabled'         => [
 				'title'       => __( 'Fastlane Enabled', 'pymntpl-paypal-woocommerce' ),
 				'type'        => 'checkbox',
 				'default'     => 'no',
 				'value'       => 'yes',
 				'description' => __( 'Available for US PayPal Business accounts. When enabled, Fastlane by PayPal will be available on the checkout page.', 'pymntpl-paypal-woocommerce' )
 			],
-			'fastlane_flow'      => [
+			'fastlane_flow'            => [
 				'title'       => __( 'Fastlane Type', 'pymntpl-paypal-woocommerce' ),
 				'type'        => 'select',
 				'default'     => 'email_detection',
@@ -206,7 +217,7 @@ class CreditCardGateway extends AbstractGateway {
 				email detection to render the Fastlane payment flow.', 'pymntpl-paypal-woocommerce' )
 
 			],
-			'fastlane_signup'    => [
+			'fastlane_signup'          => [
 				'title'             => __( 'Fastlane Signup Link', 'pymntpl-paypal-woocommerce' ),
 				'type'              => 'checkbox',
 				'default'           => 'yes',
@@ -216,14 +227,21 @@ class CreditCardGateway extends AbstractGateway {
 					'data-show-if' => 'fastlane_flow=email_detection'
 				],
 			],
-			'fastlane_pageload'  => [
+			'fastlane_pageload'        => [
 				'title'       => __( 'Authenticate On Page Load', 'pymntpl-paypal-woocommerce' ),
 				'type'        => 'checkbox',
 				'default'     => 'no',
 				'value'       => 'yes',
 				'description' => __( 'If enabled and the billing email is populated, the plugin will attempt to authenticate the user when the checkout page loads.', 'pymntpl-paypal-woocommerce' )
 			],
-			'fastlane_email_top' => [
+			'fastlane_icon_enabled'    => [
+				'title'       => __( 'Fastlane Icon Enabled', 'pymntpl-paypal-woocommerce' ),
+				'type'        => 'checkbox',
+				'default'     => 'yes',
+				'value'       => 'yes',
+				'description' => __( 'If enabled, a PayPal Fastlane icon will render below the checkout page email field.', 'pymntpl-paypal-woocommerce' )
+			],
+			'fastlane_email_top'       => [
 				'title'       => __( 'Email At Top', 'pymntpl-paypal-woocommerce' ),
 				'type'        => 'checkbox',
 				'default'     => 'yes',
@@ -275,11 +293,13 @@ class CreditCardGateway extends AbstractGateway {
 	}
 
 	public function get_payment_method_data( $context ) {
-		$data = [
-			'needsSetupToken' => $context->is_add_payment_method(),
-			'fields'          => [
+		$cardname_required = wc_string_to_bool( $this->get_option( 'cardholder_name_required', 'no' ) ) && wc_string_to_bool( $this->get_option( 'cardholder_name', 'no' ) );
+		$data              = [
+			'needsSetupToken'  => $context->is_add_payment_method(),
+			'cardNameRequired' => $cardname_required,
+			'fields'           => [
 				'nameField'   => [
-					'placeholder' => __( 'Cardholder name (optional)', 'pymntpl-paypal-woocommerce' )
+					'placeholder' => $cardname_required ? __( 'Cardholder name', 'pymntpl-paypal-woocommerce' ) : __( 'Cardholder name (optional)', 'pymntpl-paypal-woocommerce' ),
 				],
 				'numberField' => [
 					'placeholder' => __( 'Card number', 'pymntpl-paypal-woocommerce' )
@@ -289,16 +309,18 @@ class CreditCardGateway extends AbstractGateway {
 				],
 				'expiryField' => __( 'MM / YY', 'pymntpl-paypal-woocommerce' )
 			],
-			'i18n'            => [
-				'error_codes'         => [
+			'i18n'             => [
+				'error_codes'          => [
+					'INVALID_NAME'   => __( 'Your card name is incomplete', 'pymntpl-paypal-woocommerce' ),
 					'INVALID_NUMBER' => __( 'Your card number is incomplete', 'pymntpl-paypal-woocommerce' ),
 					'INVALID_EXPIRY' => __( 'Your card\'s expiration date is incomplete.', 'pymntpl-paypal-woocommerce' ),
 					'INVALID_CVV'    => __( 'Your card\'s security code is incomplete.', 'pymntpl-paypal-woocommerce' )
 				],
-				'not_available_admin' => __( 'Advanced card processing is not available. Login to developer.paypal.com > Apps & Credentials and click your application. Under "Features" check "Advanced Card Processing".', 'pymntpl-paypal-woocommerce' ),
-				'not_available'       => __( 'Credit card processing is not available. Please use another payment method.', 'pymntpl-paypal-woocommerce' )
+				'not_available_admin'  => __( 'Advanced card processing is not available. Login to developer.paypal.com > Apps & Credentials and click your application. Under "Features" check "Advanced Card Processing".', 'pymntpl-paypal-woocommerce' ),
+				'not_available'        => __( 'Credit card processing is not available. Please use another payment method.', 'pymntpl-paypal-woocommerce' ),
+				'incomplete_card_form' => __( 'The credit card form is incomplete', 'pymntpl-paypal-woocommerce' )
 			],
-			'styles'          => [
+			'styles'           => [
 				'input'          => [
 					'padding'       => '0.75rem',
 					'border'        => '1px solid #e6e6e6',

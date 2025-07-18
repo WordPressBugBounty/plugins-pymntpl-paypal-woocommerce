@@ -17,6 +17,7 @@ do_action( 'wc_ppcp_before_card_container', $gateway );
 						<?php esc_html_e( 'Cardholder name', 'pymntpl-paypal-woocommerce' ) ?>
                     </label>
                     <div id="ppcp-card-name"></div>
+                    <div class="ppcp-card-field-error" data-parent="ppcp-card-name"></div>
                 </div>
             </div>
 		<?php endif; ?>
