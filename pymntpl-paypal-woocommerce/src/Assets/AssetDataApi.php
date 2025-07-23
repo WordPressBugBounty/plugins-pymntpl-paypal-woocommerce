@@ -77,6 +77,13 @@ class AssetDataApi {
 				 * @var ContextHandler $context_handler
 				 */
 				$context_handler = wc_ppcp_get_container()->get( ContextHandler::class );
+
+				/**
+				 * Add script data that's output to frontend pages.
+				 *
+				 * @param \PaymentPlugins\WooCommerce\PPCP\Assets\AssetDataApi $this
+				 * @param ContextHandler                                       $context_handler
+				 */
 				do_action( 'wc_ppcp_add_script_data', $this, $context_handler );
 			}
 

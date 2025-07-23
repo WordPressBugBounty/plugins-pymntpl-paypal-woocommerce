@@ -40,9 +40,6 @@ class Api {
 		add_action( 'woocommerce_blocks_cart_enqueue_data', [ $this, 'add_cart_payment_method_data' ] );
 		add_action( 'woocommerce_blocks_enqueue_cart_block_scripts_after', [ $this, 'dequeue_cart_scripts' ] );
 		add_action( 'woocommerce_blocks_enqueue_checkout_block_scripts_before', [ $this, 'dequeue_cart_scripts' ] );
-		add_filter( 'woocommerce_payment_gateways', [ $this, 'add_payment_gateways' ] );
-		add_action( 'woocommerce_rest_checkout_process_payment_with_context', array( $this, 'payment_with_context' ), 10 );
-		add_filter( 'rest_dispatch_request', [ $this, 'process_rest_dispatch_request' ], 10, 2 );
 	}
 
 	public function register_payment_gateways( PaymentMethodRegistry $registry ) {
@@ -84,39 +81,12 @@ class Api {
 		wp_dequeue_script( 'wc-ppcp-minicart-gateway' );
 	}
 
-	public function add_payment_gateways( $gateways ) {
-		if ( ! is_admin() && $this->is_rest_request() ) {
-			$gateways['paymentplugins_ppcp_express'] = new PayPalExpressGateway();
-		}
-
-		return $gateways;
-	}
-
 	private function is_rest_request() {
 		if ( method_exists( WC(), 'is_rest_api_request' ) ) {
 			return WC()->is_rest_api_request();
 		}
 
 		return false;
-	}
-
-	/**
-	 * @param \Automattic\WooCommerce\StoreApi\Payments\PaymentContext $payment_context
-	 */
-	public function payment_with_context( $payment_context ) {
-		if ( $payment_context->get_payment_method_instance() instanceof PayPalExpressGateway ) {
-			$payment_context->set_payment_method( 'ppcp' );
-		}
-	}
-
-	public function process_rest_dispatch_request( $value, $request ) {
-		if ( isset( $request['payment_method'] ) ) {
-			if ( $request['payment_method'] === 'paymentplugins_ppcp_express' ) {
-				$request->set_param( 'payment_method', 'ppcp' );
-			}
-		}
-
-		return $value;
 	}
 
 }

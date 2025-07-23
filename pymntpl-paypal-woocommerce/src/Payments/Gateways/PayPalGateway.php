@@ -41,7 +41,7 @@ class PayPalGateway extends AbstractGateway {
 		parent::__construct( ...$args );
 		$this->method_title       = __( 'PayPal Gateway By Payment Plugins', 'pymntpl-paypal-woocommerce' );
 		$this->tab_label          = __( 'PayPal Settings', 'pymntpl-paypal-woocommerce' );
-		$this->icon               = $this->assets->assets_url( 'assets/img/paypal_logo.svg' );
+		$this->icon               = $this->assets->assets_url( "assets/img/{$this->get_option('icon', 'paypal_logo')}.svg" );
 		$this->method_description = __( 'Offer PayPal, PayLater, Venmo, and Credit Cards', 'pymntpl-paypal-woocommerce' );
 		$this->order_button_text  = $this->get_option( 'order_button_text' );
 	}
@@ -113,6 +113,17 @@ class PayPalGateway extends AbstractGateway {
 				],
 				'desc_tip'          => true,
 				'description'       => __( 'If the transaction is authorized, this is the status applied to the order.', 'pymntpl-paypal-woocommerce' )
+			],
+			'icon'                          => [
+				'title'       => __( 'Icon', 'pymntpl-paypal-woocommerce' ),
+				'type'        => 'select',
+				'default'     => 'paypal_logo',
+				'options'     => [
+					'paypal_logo'     => __( 'Logo V1', 'pymntpl-paypal-woocommerce' ),
+					'paypal_logo_v2'  => __( 'Black Logo V2', 'pymntpl-paypal-woocommerce' ),
+					'paypal_monogram' => __( 'Monogram', 'pymntpl-paypal-woocommerce' ),
+				],
+				'description' => __( 'This is the PayPal icon which appears next to the payment method title on the checkout page.', 'pymntpl-paypal-woocommerce' ),
 			],
 			'billing_agreement_description' => [
 				'title'       => __( 'Billing Agreement Description', 'pymntpl-paypal-woocommerce' ),

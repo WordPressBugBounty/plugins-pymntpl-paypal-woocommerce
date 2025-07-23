@@ -89,6 +89,10 @@ class ItemsFactory extends AbstractFactory {
 			$item->setDescription( $this->get_product_description( $product ) );
 		}
 
+		/**
+		 * @param Item  $item
+		 * @param array $cart_item
+		 */
 		return apply_filters( 'wc_ppcp_get_cart_item', $item, $cart_item );
 	}
 

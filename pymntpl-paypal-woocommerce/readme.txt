@@ -4,7 +4,7 @@ Tags: paypal, paylater, venmo, credit cards
 Requires at least: 4.7
 Tested up to: 6.8
 Requires PHP: 7.1
-Stable tag: 1.1.9
+Stable tag: 1.1.10
 Copyright: Payment Plugins
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -49,6 +49,11 @@ Our documentation has a step-by-step guide on how to connect the plugin to your 
 Payment Plugins is the team behind several of the highest reviewed and installed Payment integrations for WooCommerce.
 
 == Changelog ==
+= 1.1.10 - 07/23/25 =
+* Fixed - On checkout block, don't show description UI for PayPal express checkout button
+* Updated - Changed how the validation logic works when "Validate Checkout Fields" is enabled. This change should make the plugin more
+compatible with a larger number of plugins that rely on core WooCommerce checkout validation and the action "woocommerce_after_checkout_validation".
+* Added - Merchants now have 3 options for the PayPal icon on the checkout page which renders next to the payment method title.
 = 1.1.9 - 07/18/29 =
 * Added - Option "Fastlane Icon Enabled" on the Credit Card Settings so merchants can turn on/off the Fastlane icon that renders below the email field on the checkout page.
 * Added - The Cardholder Name field can now be set to optional or required.

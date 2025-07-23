@@ -107,7 +107,7 @@ class PayPalGateway extends AbstractGateway {
 		return [
 			[
 				'id'  => 'paypal',
-				'src' => $this->assets_api->assets_url( '../../assets/img/paypal_logo.svg' ),
+				'src' => $this->assets_api->assets_url( "../../assets/img/{$this->get_setting('icon', 'paypal_logo')}.svg" ),
 				'alt' => 'PayPal'
 			],
 			[

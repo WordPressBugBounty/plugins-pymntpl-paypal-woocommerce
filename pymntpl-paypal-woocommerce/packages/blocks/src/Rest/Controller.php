@@ -9,7 +9,6 @@ class Controller {
 	public function __construct() {
 		add_action( 'wc_ppcp_get_order_from_cart', [ $this, 'update_order_before_create' ], 10, 2 );
 		add_filter( 'wc_ppcp_cart_order_shipping_prefix', [ $this, 'get_shipping_prefix' ], 10, 2 );
-		add_filter( 'wc_ppcp_checkout_validation_fields', [ $this, 'checkout_validation_fields' ], 10, 2 );
 	}
 
 	/**
@@ -42,6 +41,13 @@ class Controller {
 		return $shipping_prefix;
 	}
 
+	/**
+	 * @param $fields
+	 * @param $request
+	 *
+	 * @return mixed
+	 * @deprecated 1.1.10 - WooCommerce now handles the phone number optional/required correctly in the checkout block.
+	 */
 	public function checkout_validation_fields( $fields, $request ) {
 		// Checkout Blocks manage their own settings for if the phone or email is required. They don't
 		// have a solution yet for validating those so for now unset these fields.
