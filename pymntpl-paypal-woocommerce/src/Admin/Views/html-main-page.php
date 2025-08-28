@@ -26,7 +26,7 @@ $user = wp_get_current_user();
                     </a>
                 </div>
                 <div class="wc-ppcp-main__card">
-                    <a target="_blank" href="https://docs.paymentplugins.com/wc-paypal/config">
+                    <a target="_blank" href="https://paymentplugins.com/documentation/paypal/">
                         <div class="wc-ppcp-main-card__content">
                             <h3><?php esc_html_e( 'Documentation', 'pymntpl-paypal-woocommerce' ) ?></h3>
                             <div class="icon-container documentation">

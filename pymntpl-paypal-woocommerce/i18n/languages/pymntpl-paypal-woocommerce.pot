@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Payment Plugins for PayPal WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Payment Plugins for PayPal WooCommerce 1.1.10\n"
+"Project-Id-Version: Payment Plugins for PayPal WooCommerce 1.1.11\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pymntpl-paypal-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-07-23T15:37:07+00:00\n"
+"POT-Creation-Date: 2025-08-28T00:12:15+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: pymntpl-paypal-woocommerce\n"
@@ -32,30 +32,30 @@ msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:33
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:45
-#: src/Payments/Gateways/CreditCardGateway.php:302
+#: src/Payments/Gateways/CreditCardGateway.php:314
 #: templates/checkout/credit-card.php:17
 msgid "Cardholder name"
 msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:33
-#: src/Payments/Gateways/CreditCardGateway.php:302
+#: src/Payments/Gateways/CreditCardGateway.php:314
 msgid "Cardholder name (optional)"
 msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:36
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:46
-#: src/Payments/Gateways/CreditCardGateway.php:305
+#: src/Payments/Gateways/CreditCardGateway.php:317
 #: templates/checkout/credit-card.php:27
 msgid "Card number"
 msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:39
-#: src/Payments/Gateways/CreditCardGateway.php:308
+#: src/Payments/Gateways/CreditCardGateway.php:320
 msgid "CVV"
 msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:41
-#: src/Payments/Gateways/CreditCardGateway.php:310
+#: src/Payments/Gateways/CreditCardGateway.php:322
 msgid "MM / YY"
 msgstr ""
 
@@ -74,29 +74,29 @@ msgid "The credit card form is incomplete."
 msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:51
-#: src/Payments/Gateways/CreditCardGateway.php:314
+#: src/Payments/Gateways/CreditCardGateway.php:326
 msgid "Your card name is incomplete"
 msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:52
-#: src/Payments/Gateways/CreditCardGateway.php:315
+#: src/Payments/Gateways/CreditCardGateway.php:327
 msgid "Your card number is incomplete"
 msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:53
-#: src/Payments/Gateways/CreditCardGateway.php:316
+#: src/Payments/Gateways/CreditCardGateway.php:328
 msgid "Your card's expiration date is incomplete."
 msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:54
-#: src/Payments/Gateways/CreditCardGateway.php:317
+#: src/Payments/Gateways/CreditCardGateway.php:329
 msgid "Your card's security code is incomplete."
 msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:56
 #: packages/blocks/src/Payments/Gateways/FastlaneGateway.php:56
 #: src/Messages.php:26
-#: src/Payments/Gateways/CreditCardGateway.php:548
+#: src/Payments/Gateways/CreditCardGateway.php:560
 #: templates/checkout/paypal.php:35
 #: templates/fastlane/modal.php:16
 #: templates/fastlane/tokenized-card.php:14
@@ -116,18 +116,18 @@ msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:59
 #: packages/blocks/src/Payments/Gateways/FastlaneGateway.php:58
-#: src/Payments/Gateways/CreditCardGateway.php:552
+#: src/Payments/Gateways/CreditCardGateway.php:564
 #: templates/fastlane/modal.php:13
 msgid "Continue"
 msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:60
-#: src/Payments/Gateways/CreditCardGateway.php:319
+#: src/Payments/Gateways/CreditCardGateway.php:331
 msgid "Advanced card processing is not available. Login to developer.paypal.com > Apps & Credentials and click your application. Under \"Features\" check \"Advanced Card Processing\"."
 msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:61
-#: src/Payments/Gateways/CreditCardGateway.php:320
+#: src/Payments/Gateways/CreditCardGateway.php:332
 msgid "Credit card processing is not available. Please use another payment method."
 msgstr ""
 
@@ -1256,13 +1256,13 @@ msgstr ""
 
 #: src/Legacy/LegacyPaymentHandler.php:196
 #: src/Payments/Gateways/AbstractGateway.php:417
-#: src/Payments/Gateways/CreditCardGateway.php:418
+#: src/Payments/Gateways/CreditCardGateway.php:430
 msgid "Capture ID: %s"
 msgstr ""
 
 #: src/Legacy/LegacyPaymentHandler.php:196
 #: src/Payments/Gateways/AbstractGateway.php:417
-#: src/Payments/Gateways/CreditCardGateway.php:420
+#: src/Payments/Gateways/CreditCardGateway.php:432
 msgid "Authorization ID: %s"
 msgstr ""
 
@@ -1587,81 +1587,81 @@ msgid ""
 "\t\t\t\temail detection to render the Fastlane payment flow."
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:221
+#: src/Payments/Gateways/CreditCardGateway.php:224
 msgid "Fastlane Signup Link"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:225
+#: src/Payments/Gateways/CreditCardGateway.php:228
 msgid "If enabled, a signup button will be visible above the credit card form on the checkout page so customers can signup for Fastlane."
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:231
+#: src/Payments/Gateways/CreditCardGateway.php:234
 msgid "Authenticate On Page Load"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:235
+#: src/Payments/Gateways/CreditCardGateway.php:238
 msgid "If enabled and the billing email is populated, the plugin will attempt to authenticate the user when the checkout page loads."
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:238
+#: src/Payments/Gateways/CreditCardGateway.php:244
 msgid "Fastlane Icon Enabled"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:242
+#: src/Payments/Gateways/CreditCardGateway.php:248
 msgid "If enabled, a PayPal Fastlane icon will render below the checkout page email field."
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:245
+#: src/Payments/Gateways/CreditCardGateway.php:254
 msgid "Email At Top"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:249
+#: src/Payments/Gateways/CreditCardGateway.php:258
 msgid "When enabled, the email field appears at the top of the checkout page. This setting only applies when using the checkout shortcode on your site."
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:321
+#: src/Payments/Gateways/CreditCardGateway.php:333
 msgid "The credit card form is incomplete"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:427
+#: src/Payments/Gateways/CreditCardGateway.php:439
 msgid "PayPal order %1$s created. %2$s. Payment method: %3$s"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:473
+#: src/Payments/Gateways/CreditCardGateway.php:485
 msgid "3DS payment has been rejected."
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:547
+#: src/Payments/Gateways/CreditCardGateway.php:559
 msgid "Save"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:549
+#: src/Payments/Gateways/CreditCardGateway.php:561
 msgid "Reset Settings"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:550
+#: src/Payments/Gateways/CreditCardGateway.php:562
 msgid ""
 "These settings define how payment transactions should be handled based on the customer's 3D \n"
 "\t\t\t\tSecure enrollment status, authentication outcome, and liability shift result."
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:553
+#: src/Payments/Gateways/CreditCardGateway.php:565
 msgid "Reject"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:554
+#: src/Payments/Gateways/CreditCardGateway.php:566
 msgid "Enrollment Status"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:555
+#: src/Payments/Gateways/CreditCardGateway.php:567
 msgid "Authentication Status"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:556
+#: src/Payments/Gateways/CreditCardGateway.php:568
 msgid "Liability Shift"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:557
+#: src/Payments/Gateways/CreditCardGateway.php:569
 msgid "Action"
 msgstr ""
 

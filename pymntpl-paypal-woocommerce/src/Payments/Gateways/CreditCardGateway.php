@@ -205,16 +205,19 @@ class CreditCardGateway extends AbstractGateway {
 				'description' => __( 'Available for US PayPal Business accounts. When enabled, Fastlane by PayPal will be available on the checkout page.', 'pymntpl-paypal-woocommerce' )
 			],
 			'fastlane_flow'            => [
-				'title'       => __( 'Fastlane Type', 'pymntpl-paypal-woocommerce' ),
-				'type'        => 'select',
-				'default'     => 'email_detection',
-				'options'     => [
+				'title'             => __( 'Fastlane Type', 'pymntpl-paypal-woocommerce' ),
+				'type'              => 'select',
+				'default'           => 'email_detection',
+				'options'           => [
 					'express_button'  => __( 'Express Checkout Button', 'pymntpl-paypal-woocommerce' ),
 					'email_detection' => __( 'Email Recognition', 'pymntpl-paypal-woocommerce' )
 				],
-				'value'       => 'yes',
-				'description' => __( 'If the express checkout option is enabled, a Fastlane express button will be available. The email recognition option will use dynamic
-				email detection to render the Fastlane payment flow.', 'pymntpl-paypal-woocommerce' )
+				'value'             => 'yes',
+				'description'       => __( 'If the express checkout option is enabled, a Fastlane express button will be available. The email recognition option will use dynamic
+				email detection to render the Fastlane payment flow.', 'pymntpl-paypal-woocommerce' ),
+				'custom_attributes' => [
+					'data-show-if' => 'fastlane_enabled=true'
+				],
 
 			],
 			'fastlane_signup'          => [
@@ -224,29 +227,38 @@ class CreditCardGateway extends AbstractGateway {
 				'value'             => 'yes',
 				'description'       => __( 'If enabled, a signup button will be visible above the credit card form on the checkout page so customers can signup for Fastlane.', 'pymntpl-paypal-woocommerce' ),
 				'custom_attributes' => [
-					'data-show-if' => 'fastlane_flow=email_detection'
+					'data-show-if' => 'fastlane_enabled=true,fastlane_flow=email_detection'
 				],
 			],
 			'fastlane_pageload'        => [
-				'title'       => __( 'Authenticate On Page Load', 'pymntpl-paypal-woocommerce' ),
-				'type'        => 'checkbox',
-				'default'     => 'no',
-				'value'       => 'yes',
-				'description' => __( 'If enabled and the billing email is populated, the plugin will attempt to authenticate the user when the checkout page loads.', 'pymntpl-paypal-woocommerce' )
+				'title'             => __( 'Authenticate On Page Load', 'pymntpl-paypal-woocommerce' ),
+				'type'              => 'checkbox',
+				'default'           => 'no',
+				'value'             => 'yes',
+				'description'       => __( 'If enabled and the billing email is populated, the plugin will attempt to authenticate the user when the checkout page loads.', 'pymntpl-paypal-woocommerce' ),
+				'custom_attributes' => [
+					'data-show-if' => 'fastlane_enabled=true'
+				]
 			],
 			'fastlane_icon_enabled'    => [
-				'title'       => __( 'Fastlane Icon Enabled', 'pymntpl-paypal-woocommerce' ),
-				'type'        => 'checkbox',
-				'default'     => 'yes',
-				'value'       => 'yes',
-				'description' => __( 'If enabled, a PayPal Fastlane icon will render below the checkout page email field.', 'pymntpl-paypal-woocommerce' )
+				'title'             => __( 'Fastlane Icon Enabled', 'pymntpl-paypal-woocommerce' ),
+				'type'              => 'checkbox',
+				'default'           => 'yes',
+				'value'             => 'yes',
+				'description'       => __( 'If enabled, a PayPal Fastlane icon will render below the checkout page email field.', 'pymntpl-paypal-woocommerce' ),
+				'custom_attributes' => [
+					'data-show-if' => 'fastlane_enabled=true'
+				],
 			],
 			'fastlane_email_top'       => [
-				'title'       => __( 'Email At Top', 'pymntpl-paypal-woocommerce' ),
-				'type'        => 'checkbox',
-				'default'     => 'yes',
-				'value'       => 'yes',
-				'description' => __( 'When enabled, the email field appears at the top of the checkout page. This setting only applies when using the checkout shortcode on your site.', 'pymntpl-paypal-woocommerce' )
+				'title'             => __( 'Email At Top', 'pymntpl-paypal-woocommerce' ),
+				'type'              => 'checkbox',
+				'default'           => 'yes',
+				'value'             => 'yes',
+				'description'       => __( 'When enabled, the email field appears at the top of the checkout page. This setting only applies when using the checkout shortcode on your site.', 'pymntpl-paypal-woocommerce' ),
+				'custom_attributes' => [
+					'data-show-if' => 'fastlane_enabled=true'
+				]
 			]
 		];
 	}

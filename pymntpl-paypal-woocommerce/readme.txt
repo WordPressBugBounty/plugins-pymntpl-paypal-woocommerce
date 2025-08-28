@@ -4,7 +4,7 @@ Tags: paypal, paylater, venmo, credit cards
 Requires at least: 4.7
 Tested up to: 6.8
 Requires PHP: 7.1
-Stable tag: 1.1.10
+Stable tag: 1.1.11
 Copyright: Payment Plugins
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -40,15 +40,20 @@ In order to process payments online, you will need a PayPal Business Account.
 == Frequently Asked Questions ==
 = How do I test the plugin? =
 The plugin has a sandbox option, where you can test payments. Our documentation shows you how to setup a Sandbox account.
-[Documentation](https://docs.paymentplugins.com/wc-paypal/config/#/create_sandbox_account)
+[Documentation](https://paymentplugins.com/documentation/paypal/testing/create-sandbox-accounts)
 
 = How do I connect my PayPal account? =
-Our documentation has a step-by-step guide on how to connect the plugin to your PayPal account. [Documentation](https://docs.paymentplugins.com/wc-paypal/config/#/connect)
+Our documentation has a step-by-step guide on how to connect the plugin to your PayPal account. [Documentation](https://paymentplugins.com/documentation/paypal/getting-started/connect-account)
 
 = Who is Payment Plugins =
 Payment Plugins is the team behind several of the highest reviewed and installed Payment integrations for WooCommerce.
 
 == Changelog ==
+= 1.1.11 - 08/28/25 =
+* Fixed - Incompatibility notice that was showing on block editor under certain conditions. The PayPal plugin has supported the cart and checkout block for several years.
+* Updated - On checkout block, show a loading mask when the Fastlane Checkout button is clicked.
+* Updated - Changed documentation url links so they point to the new documentation site: [PayPal Documentation](https://paymentplugins.com/documentation/paypal/)
+* Updated - WooCommerce tested up to: 10.1
 = 1.1.10 - 07/23/25 =
 * Fixed - On checkout block, don't show description UI for PayPal express checkout button
 * Updated - Changed how the validation logic works when "Validate Checkout Fields" is enabled. This change should make the plugin more

@@ -37,13 +37,13 @@
                                 </div>
                             </li>
                             <!--<li>
-                                <label><?php /*esc_html_e( 'Enable Reference Transactions', 'pymntpl-paypal-woocommerce' ) */?></label>
+                                <label><?php /*esc_html_e( 'Enable Reference Transactions', 'pymntpl-paypal-woocommerce' ) */ ?></label>
                                 <div>
 									<?php
-/*									printf( esc_html__( 'Reference transactions are used to process things like subscriptions and pre-orders. If you don\'t currently have
-                                    reference transactions enabled on your production account, you will need to submit a request to PayPal. Reference transactions are enabled by default on sandbox accounts. %1$sReference transaction request instructions.%2$s' ),
-										'<a target="_blank" href="https://docs.paymentplugins.com/wc-paypal/config/#/reference_transactions">', '</a>' );
-									*/?>
+							/*									printf( esc_html__( 'Reference transactions are used to process things like subscriptions and pre-orders. If you don\'t currently have
+																reference transactions enabled on your production account, you will need to submit a request to PayPal. Reference transactions are enabled by default on sandbox accounts. %1$sReference transaction request instructions.%2$s' ),
+																	'<a target="_blank" href="https://docs.paymentplugins.com/wc-paypal/config/#/reference_transactions">', '</a>' );
+																*/ ?>
                                 </div>
                             </li>-->
                             <li>
@@ -51,15 +51,15 @@
                                 <div>
 									<?php esc_html_e( 'If you require a billing phone number during checkout, we recommend you enable the contact phone number option in your PayPal account. When enabled, PayPal will
                                     provide the customer\'s phone number, which the plugin will use to populate the checkout page. It will improve conversion rates since the customer won\'t have to enter their phone number.', 'pymntp-paypal-woocommerce' ); ?>
-									<?php printf( esc_html__( '%1$sEnable phone number instructions%2$s', '' ), '<a target="_blank" href="https://docs.paymentplugins.com/wc-paypal/config/#/billing_phone">', '</a>' ) ?>
+									<?php printf( esc_html__( '%1$sEnable phone number instructions%2$s', '' ), '<a target="_blank" href="https://paymentplugins.com/documentation/paypal/getting-started/billing-phone">', '</a>' ) ?>
                                 </div>
                             </li>
                             <!--<li>
-                                <label><?php /*esc_html_e( 'Enable Billing Address', 'pymntpl-paypal-woocommerce' ); */?></label>
+                                <label><?php /*esc_html_e( 'Enable Billing Address', 'pymntpl-paypal-woocommerce' ); */ ?></label>
                                 <div>
 									<?php /*esc_html_e( 'If you sell digital goods that don\'t require shipping, we recommend you enable the billing address option. When enabled on your account, the customer\'s billing address will be provided by PayPal. This
-			                        allows the plugin to auto-populate your checkout page billing address fields.', 'pymntp-paypal-woocommerce' ); */?>
-									<?php /*printf( esc_html__( '%1$sEnable billing address instructions%2$s', '' ), '<a target="_blank" href="https://docs.paymentplugins.com/wc-paypal/config/#/billing_address_request">', '</a>' ) */?>
+			                        allows the plugin to auto-populate your checkout page billing address fields.', 'pymntp-paypal-woocommerce' ); */ ?>
+									<?php /*printf( esc_html__( '%1$sEnable billing address instructions%2$s', '' ), '<a target="_blank" href="https://docs.paymentplugins.com/wc-paypal/config/#/billing_address_request">', '</a>' ) */ ?>
                                 </div>
                             </li>-->
                         </ul>

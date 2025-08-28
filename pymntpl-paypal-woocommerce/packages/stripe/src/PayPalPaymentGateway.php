@@ -39,7 +39,7 @@ class PayPalPaymentGateway extends \PaymentPlugins\WooCommerce\PPCP\Payments\Gat
 	public function get_express_checkout_script_handles() {
 		$handles = [];
 		if ( $this->banner_checkout_enabled() ) {
-			$this->assets->register_script( 'wc-ppcp-checkout-express', 'build/js/paypal-express-checkout.js' );
+			$this->assets->register_script( 'wc-ppcp-checkout-express', 'build/js/paypal-express-checkout.js', [ 'wc-ppcp-frontend-commons' ] );
 			$handles[] = 'wc-ppcp-checkout-express';
 		}
 

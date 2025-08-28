@@ -19,7 +19,7 @@ $section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['s
         <a href="<?php echo esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=ppcp_api' ) ) ?>">
 			<?php esc_html_e( 'Settings', 'pymntpl-paypal-woocommerce' ) ?>
         </a>
-        <a target="_blank" href="https://docs.paymentplugins.com/wc-paypal/config">
+        <a target="_blank" href="https://paymentplugins.com/documentation/paypal/">
 			<?php esc_html_e( 'Documentation', 'pymntpl-paypal-woocommerce' ) ?>
         </a>
         <a class="<?php if ( $section === 'support' ) { ?>active<?php } ?>" href="<?php echo esc_url( admin_url( 'admin.php?page=wc-ppcp-main&section=support' ) ) ?>">
