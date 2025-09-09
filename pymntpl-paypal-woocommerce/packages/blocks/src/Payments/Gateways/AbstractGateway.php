@@ -66,6 +66,7 @@ class AbstractGateway extends AbstractPaymentMethodType {
 	}
 
 	protected function is_redirect_with_order() {
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		return isset( $_REQUEST['_ppcp_order_review'] );
 	}
 

@@ -521,7 +521,10 @@ class CreditCardGateway extends AbstractGateway {
 						<?php echo wp_kses_post( $data['label'] ) ?>
                     </button>
                     <div id="3ds-app"></div>
-					<?php echo $this->get_description_html( $data ); // WPCS: XSS ok. ?>
+					<?php
+					// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo $this->get_description_html( $data ); // WPCS: XSS ok.
+					?>
 					<?php foreach ( $value as $k => $v ) : ?>
                         <input type="hidden" name="<?php echo esc_attr( $field_key ) . '[' . $k . ']' ?>" value="<?php echo esc_attr( $v ) ?>"
                                data-key="<?php echo esc_attr( $k ) ?>" data-default="<?php echo esc_attr( $actions[ $k ] ?? '' ) ?>"/>

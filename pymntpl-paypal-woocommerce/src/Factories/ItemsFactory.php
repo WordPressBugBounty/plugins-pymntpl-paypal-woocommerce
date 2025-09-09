@@ -28,9 +28,13 @@ class ItemsFactory extends AbstractFactory {
 			} else {
 				$total = (float) $cart_item['line_subtotal'] / (float) $cart_item['quantity'];
 			}
+			if ( $total < 0 ) {
+				// if the total is negative then don't continue. This item will be added to the discount.
+				continue;
+			}
 			$qty  = $cart_item['quantity'];
 			$name = $cart_item['data']->get_name();
-			$items->add( $this->get_cart_item( abs( $total ), $name, $qty, $cart_item ) );
+			$items->add( $this->get_cart_item( $total, $name, $qty, $cart_item ) );
 		}
 		if ( 0 < $this->cart->get_fee_total() ) {
 			$fees = $this->cart->get_fees();
@@ -59,6 +63,16 @@ class ItemsFactory extends AbstractFactory {
 	public function from_order() {
 		$items = new Collection();
 		foreach ( $this->order->get_items() as $item ) {
+			/**
+			 * @var \WC_Order_Item_Product $item
+			 */
+			// only add items where the amount is greater than zero
+			if ( (float) $item->get_subtotal() < 0 ) {
+				continue;
+			}
+			/**
+			 * @var Item $item
+			 */
 			$item = $this->get_order_item( $item );
 			$items->add( $item );
 		}

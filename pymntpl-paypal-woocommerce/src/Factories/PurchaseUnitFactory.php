@@ -35,7 +35,7 @@ class PurchaseUnitFactory extends AbstractFactory {
 		if ( $this->cart->needs_shipping() ) {
 			$purchase_unit->setShipping( $this->factories->shipping->from_customer( 'shipping' ) );
 		}
-		$this->filter_purchase_unit( $purchase_unit, $this->cart->total );
+		$this->filter_purchase_unit( $purchase_unit, (float) $this->cart->get_total( 'edit' ) );
 
 		return apply_filters( 'wc_ppcp_purchase_unit_factory_from_cart', $purchase_unit, $this );
 	}

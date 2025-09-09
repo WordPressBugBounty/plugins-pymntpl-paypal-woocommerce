@@ -110,33 +110,46 @@ class FunnelKitIntegration implements PluginIntegrationType {
 
 	public function handle_return_request() {
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended
-		$order_id  = isset( $_GET['order_id'] ) ? absint( wc_clean( wp_unslash( $_GET['order_id'] ) ) ) : null;
-		$order_key = isset( $_GET['order_key'] ) ? wc_clean( wp_unslash( $_GET['order_key'] ) ) : null;
-		$token     = isset( $_GET['token'] ) ? wc_clean( wp_unslash( $_GET['token'] ) ) : null;
-		if ( $order_id && $order_key && $token ) {
-			$order = wc_get_order( $order_id );
-			if ( $order->key_is_valid( $order_key ) ) {
-				$paypal_order = $this->client->orderMode( $order )->orders->retrieve( $token );
-				if ( ! is_wp_error( $paypal_order ) ) {
-					add_filter( 'wfocu_valid_state_for_data_setup', '__return_true' );
-					WFOCU_Core()->template_loader->set_offer_id( WFOCU_Core()->data->get_current_offer() );
-					WFOCU_Core()->template_loader->maybe_setup_offer();
-					WFOCU_Core()->data->set( '_upsell_package', $order->get_meta( '_upsell_package' ) );
+		try {
+			$order     = null;
+			$order_id  = isset( $_GET['order_id'] ) ? absint( wc_clean( wp_unslash( $_GET['order_id'] ) ) ) : null;
+			$order_key = isset( $_GET['order_key'] ) ? wc_clean( wp_unslash( $_GET['order_key'] ) ) : null;
+			$token     = isset( $_GET['token'] ) ? wc_clean( wp_unslash( $_GET['token'] ) ) : null;
+			if ( $order_id && $order_key && $token ) {
+				$order = wc_get_order( $order_id );
+				if ( $order && $order->key_is_valid( $order_key ) ) {
+					$paypal_order = $this->client->orderMode( $order )->orders->retrieve( $token );
+					if ( ! is_wp_error( $paypal_order ) ) {
+						add_filter( 'wfocu_valid_state_for_data_setup', '__return_true' );
+						WFOCU_Core()->template_loader->set_offer_id( WFOCU_Core()->data->get_current_offer() );
+						WFOCU_Core()->template_loader->maybe_setup_offer();
+						WFOCU_Core()->data->set( '_upsell_package', $order->get_meta( '_upsell_package' ) );
 
-					$payment_method = WFOCU_Core()->gateways->get_integration( $order->get_payment_method() );
-					$payment_method->set_paypal_order( $paypal_order );
+						$payment_method = WFOCU_Core()->gateways->get_integration( $order->get_payment_method() );
+						$payment_method->set_paypal_order( $paypal_order );
 
-					if ( $payment_method->process_charge( $order ) ) {
-						$data = WFOCU_Core()->process_offer->_handle_upsell_charge( true );
-					} else {
-						$data = WFOCU_Core()->process_offer->_handle_upsell_charge( false );
+						if ( $payment_method->process_charge( $order ) ) {
+							$data = WFOCU_Core()->process_offer->_handle_upsell_charge( true );
+						} else {
+							$data = WFOCU_Core()->process_offer->_handle_upsell_charge( false );
+						}
+						$order->delete_meta_data( '_upsell_package' );
+						$order->save();
+						wp_safe_redirect( $data['redirect_url'] );
+						exit;
 					}
-					$order->delete_meta_data( '_upsell_package' );
-					$order->save();
-					wp_safe_redirect( $data['redirect_url'] );
-					exit;
 				}
 			}
+		} catch ( \Exception $e ) {
+			if ( $order instanceof \WC_Order ) {
+				$order->add_order_note(
+					sprintf( __( 'Error processing payment. Reason: %s', 'pymntpl-paypal-woocommerce' ), $e->getMessage() )
+				);
+				$redirect = WFOCU_Core()->public->get_clean_order_received_url( true, true );
+				wp_redirect( $redirect );
+				exit;
+			}
+			wp_die( sprintf( __( 'Error processing payment. Reason: %s', 'pymntpl-paypal-woocommerce' ), $e->getMessage() ) );
 		}
 	}
 

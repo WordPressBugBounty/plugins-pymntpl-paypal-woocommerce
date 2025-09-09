@@ -268,5 +268,4 @@ class AbstractGateway extends \WFOCU_Gateway {
 			}
 		}
 	}
-
 }

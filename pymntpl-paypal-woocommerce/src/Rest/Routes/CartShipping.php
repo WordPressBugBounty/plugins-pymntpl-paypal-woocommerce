@@ -74,7 +74,10 @@ class CartShipping extends AbstractCart {
 
 		$this->prepare_post_response( $order );
 
-		return true;
+		return [
+			'success'  => true,
+			'order_id' => $order->getId()
+		];
 	}
 
 	/**

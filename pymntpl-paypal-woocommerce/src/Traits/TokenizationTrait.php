@@ -17,6 +17,7 @@ trait TokenizationTrait {
 	public function get_saved_payment_method_token_id_from_request( $order = null ) {
 		$key = 'wc-' . $this->id . '-payment-token';
 
+		//phpcs:disable WordPress.Security.NonceVerification.Missing
 		$value = \wc_clean( \wp_unslash( $_POST[ $key ] ?? '' ) );
 
 		if ( \is_numeric( $value ) ) {
@@ -53,6 +54,7 @@ trait TokenizationTrait {
 	public function should_use_saved_payment_method() {
 		$key = 'wc-' . $this->id . '-payment-token';
 
+		//phpcs:disable WordPress.Security.NonceVerification.Missing
 		return ! empty( $_POST[ $key ] ) && \wc_clean( \wp_unslash( $_POST[ $key ] ) ) !== 'new';
 	}
 

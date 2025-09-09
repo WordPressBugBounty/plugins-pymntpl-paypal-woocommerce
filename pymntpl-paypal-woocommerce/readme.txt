@@ -4,7 +4,7 @@ Tags: paypal, paylater, venmo, credit cards
 Requires at least: 4.7
 Tested up to: 6.8
 Requires PHP: 7.1
-Stable tag: 1.1.11
+Stable tag: 1.1.12
 Copyright: Payment Plugins
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -49,6 +49,10 @@ Our documentation has a step-by-step guide on how to connect the plugin to your 
 Payment Plugins is the team behind several of the highest reviewed and installed Payment integrations for WooCommerce.
 
 == Changelog ==
+= 1.1.12 - 09/09/25 =
+* Updated - Improved how the plugin handles the PAYER_ACTION_REQUIRED status on PayPal orders.
+* Updated - If a product amount is negative, move that to the discount. Some plugins treat discounts as a product and PayPal's API doesn't allow negative product amounts. [https://wordpress.org/support/topic/not-compatible-with-the-wpc-product-bundles-for-woocommerce-plugin/](https://wordpress.org/support/topic/not-compatible-with-the-wpc-product-bundles-for-woocommerce-plugin/)
+* Updated - Improved compatability with Funnelkit upsell when payment is processed via redirect to PayPal payment page.
 = 1.1.11 - 08/28/25 =
 * Fixed - Incompatibility notice that was showing on block editor under certain conditions. The PayPal plugin has supported the cart and checkout block for several years.
 * Updated - On checkout block, show a loading mask when the Fastlane Checkout button is clicked.

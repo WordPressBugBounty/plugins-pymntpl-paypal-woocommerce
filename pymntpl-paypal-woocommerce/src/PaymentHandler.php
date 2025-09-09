@@ -45,6 +45,7 @@ class PaymentHandler extends LegacyPaymentHandler {
 		$this->factories->initialize( $order, $this->payment_method );
 		$paypal_order = null;
 		$needs_update = false;
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		$this->payment_method->set_save_payment_method( ! empty( $_POST["{$this->payment_method->id}_save_payment"] ) );
 		try {
 			$paypal_order_id = $this->get_paypal_order_id_from_request();
@@ -132,7 +133,7 @@ class PaymentHandler extends LegacyPaymentHandler {
 					}
 				}
 			} else {
-				if ( $paypal_order ) {
+				if ( $paypal_order instanceof Order ) {
 					$this->cache->set( sprintf( '%s_%s', $this->payment_method->id, Constants::PAYPAL_ORDER_ID ), $paypal_order->getId() );
 				}
 			}

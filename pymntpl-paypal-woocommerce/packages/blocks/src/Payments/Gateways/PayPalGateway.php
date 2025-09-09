@@ -81,7 +81,8 @@ class PayPalGateway extends AbstractGateway {
 		];
 
 		if ( $this->is_redirect_with_order() ) {
-			$redirect_data = json_decode( base64_decode( rawurldecode( wc_clean( $_REQUEST['_ppcp_order_review'] ) ) ), true );
+			// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+			$redirect_data = json_decode( base64_decode( rawurldecode( wc_clean( wp_unslash( $_REQUEST['_ppcp_order_review'] ) ) ) ), true );
 			if ( isset( $redirect_data['paypal_order'] ) ) {
 				$order = $this->client->orders->retrieve( $redirect_data['paypal_order'] );
 				if ( ! is_wp_error( $order ) ) {

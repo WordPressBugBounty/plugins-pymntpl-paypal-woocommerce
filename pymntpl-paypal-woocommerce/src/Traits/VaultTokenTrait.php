@@ -23,6 +23,7 @@ trait VaultTokenTrait {
 			return $this->payment_token_id;
 		}
 
+		//phpcs:disable WordPress.Security.NonceVerification.Missing
 		return isset( $_POST[ $key ] ) ? \wc_clean( \wp_unslash( $_POST[ $key ] ) ) : null;
 	}
 

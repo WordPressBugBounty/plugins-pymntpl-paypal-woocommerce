@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Payment Plugins for PayPal WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Payment Plugins for PayPal WooCommerce 1.1.11\n"
+"Project-Id-Version: Payment Plugins for PayPal WooCommerce 1.1.12\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pymntpl-paypal-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-08-28T00:12:15+00:00\n"
+"POT-Creation-Date: 2025-09-09T01:58:43+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: pymntpl-paypal-woocommerce\n"
@@ -96,7 +96,7 @@ msgstr ""
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:56
 #: packages/blocks/src/Payments/Gateways/FastlaneGateway.php:56
 #: src/Messages.php:26
-#: src/Payments/Gateways/CreditCardGateway.php:560
+#: src/Payments/Gateways/CreditCardGateway.php:563
 #: templates/checkout/paypal.php:35
 #: templates/fastlane/modal.php:16
 #: templates/fastlane/tokenized-card.php:14
@@ -116,7 +116,7 @@ msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:59
 #: packages/blocks/src/Payments/Gateways/FastlaneGateway.php:58
-#: src/Payments/Gateways/CreditCardGateway.php:564
+#: src/Payments/Gateways/CreditCardGateway.php:567
 #: templates/fastlane/modal.php:13
 msgid "Continue"
 msgstr ""
@@ -145,11 +145,11 @@ msgstr ""
 msgid "After clicking \"%1$s\", you will be redirected to PayPal to complete your purchase securely."
 msgstr ""
 
-#: packages/blocks/src/Payments/Gateways/PayPalGateway.php:92
+#: packages/blocks/src/Payments/Gateways/PayPalGateway.php:93
 msgid "Some required fields are missing. Please review your details and then complete your order with PayPal."
 msgstr ""
 
-#: packages/blocks/src/Payments/Gateways/PayPalGateway.php:124
+#: packages/blocks/src/Payments/Gateways/PayPalGateway.php:125
 #: src/Payments/Gateways/PayPalGateway.php:192
 msgid "Pay with PayPal"
 msgstr ""
@@ -474,6 +474,16 @@ msgstr ""
 
 #: packages/elementor/src/Widget/ProductPaymentButtonsWidget.php:14
 msgid "PayPal Product Payment Buttons"
+msgstr ""
+
+#: packages/funnelkit/src/Upsell/FunnelKitIntegration.php:146
+#: packages/funnelkit/src/Upsell/FunnelKitIntegration.php:152
+#: src/Legacy/LegacyPaymentHandler.php:132
+#: src/Legacy/LegacyPaymentHandler.php:139
+#: src/PaymentHandler.php:121
+#: src/PaymentHandler.php:128
+#: src/PaymentHandler.php:149
+msgid "Error processing payment. Reason: %s"
 msgstr ""
 
 #: packages/mondial-relay/src/CheckoutValidation.php:32
@@ -1208,23 +1218,23 @@ msgstr ""
 msgid "Payment Token ID"
 msgstr ""
 
-#: src/Factories/ItemsFactory.php:49
-#: src/Factories/ItemsFactory.php:118
+#: src/Factories/ItemsFactory.php:53
+#: src/Factories/ItemsFactory.php:132
 msgid "Fees"
 msgstr ""
 
-#: src/Factories/ItemsFactory.php:156
-#: src/Factories/ItemsFactory.php:163
+#: src/Factories/ItemsFactory.php:170
+#: src/Factories/ItemsFactory.php:177
 msgid "Product ID: %1$s. Variation ID: %2$s"
 msgstr ""
 
-#: src/Factories/ItemsFactory.php:158
-#: src/Factories/ItemsFactory.php:165
+#: src/Factories/ItemsFactory.php:172
+#: src/Factories/ItemsFactory.php:179
 msgid "Product ID: %1$s"
 msgstr ""
 
-#: src/Factories/ItemsFactory.php:182
-#: src/Factories/ItemsFactory.php:184
+#: src/Factories/ItemsFactory.php:196
+#: src/Factories/ItemsFactory.php:198
 msgid "Product %1$s"
 msgstr ""
 
@@ -1236,16 +1246,8 @@ msgstr ""
 msgid "Reconciliation"
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:132
-#: src/Legacy/LegacyPaymentHandler.php:139
-#: src/PaymentHandler.php:120
-#: src/PaymentHandler.php:127
-#: src/PaymentHandler.php:148
-msgid "Error processing payment. Reason: %s"
-msgstr ""
-
 #: src/Legacy/LegacyPaymentHandler.php:180
-#: src/PaymentHandler.php:172
+#: src/PaymentHandler.php:173
 msgid "PayPal capture status is pending. Reason: %1$s. Payment will complete when capture.completed webhook is received."
 msgstr ""
 
@@ -1267,39 +1269,39 @@ msgid "Authorization ID: %s"
 msgstr ""
 
 #: src/Legacy/LegacyPaymentHandler.php:287
-#: src/PaymentHandler.php:299
+#: src/PaymentHandler.php:300
 msgid "To process a refund, there must be a transaction id associated with the order."
 msgstr ""
 
 #: src/Legacy/LegacyPaymentHandler.php:290
-#: src/PaymentHandler.php:302
+#: src/PaymentHandler.php:303
 msgid "This payment has a status of Authorize. Only captured payments can be refunded."
 msgstr ""
 
 #: src/Legacy/LegacyPaymentHandler.php:324
-#: src/PaymentHandler.php:328
+#: src/PaymentHandler.php:329
 msgid "Error capturing payment. Reason: %s"
 msgstr ""
 
 #: src/Legacy/LegacyPaymentHandler.php:328
-#: src/PaymentHandler.php:332
+#: src/PaymentHandler.php:333
 msgid "Payment captured in PayPal. Capture ID: %s Amount: %s"
 msgstr ""
 
 #: src/Legacy/LegacyPaymentHandler.php:360
-#: src/PaymentHandler.php:364
+#: src/PaymentHandler.php:365
 msgid "A valid authorization ID is required to perform a void."
 msgstr ""
 
 #: src/Legacy/LegacyPaymentHandler.php:374
 #: src/Legacy/LegacyPaymentHandler.php:404
-#: src/PaymentHandler.php:378
-#: src/PaymentHandler.php:408
+#: src/PaymentHandler.php:379
+#: src/PaymentHandler.php:409
 msgid "PayPal authorization cancelled. Authorization ID: %s"
 msgstr ""
 
 #: src/Legacy/LegacyPaymentHandler.php:398
-#: src/PaymentHandler.php:402
+#: src/PaymentHandler.php:403
 msgid "Order cancellation"
 msgstr ""
 
@@ -1631,37 +1633,37 @@ msgstr ""
 msgid "3DS payment has been rejected."
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:559
+#: src/Payments/Gateways/CreditCardGateway.php:562
 msgid "Save"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:561
+#: src/Payments/Gateways/CreditCardGateway.php:564
 msgid "Reset Settings"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:562
+#: src/Payments/Gateways/CreditCardGateway.php:565
 msgid ""
 "These settings define how payment transactions should be handled based on the customer's 3D \n"
 "\t\t\t\tSecure enrollment status, authentication outcome, and liability shift result."
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:565
+#: src/Payments/Gateways/CreditCardGateway.php:568
 msgid "Reject"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:566
+#: src/Payments/Gateways/CreditCardGateway.php:569
 msgid "Enrollment Status"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:567
+#: src/Payments/Gateways/CreditCardGateway.php:570
 msgid "Authentication Status"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:568
+#: src/Payments/Gateways/CreditCardGateway.php:571
 msgid "Liability Shift"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:569
+#: src/Payments/Gateways/CreditCardGateway.php:572
 msgid "Action"
 msgstr ""
 
@@ -2059,12 +2061,12 @@ msgstr ""
 msgid "Click to copy"
 msgstr ""
 
-#: src/Traits/TokenizationTrait.php:35
+#: src/Traits/TokenizationTrait.php:36
 msgid "You do not have permission to use this payment method."
 msgstr ""
 
-#: src/Traits/TokenizationTrait.php:38
-#: src/Traits/TokenizationTrait.php:41
+#: src/Traits/TokenizationTrait.php:39
+#: src/Traits/TokenizationTrait.php:42
 msgid "Invalid payment method ID provided."
 msgstr ""
 

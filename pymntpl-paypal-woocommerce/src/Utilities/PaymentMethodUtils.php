@@ -28,7 +28,7 @@ class PaymentMethodUtils {
 		}
 
 		$where_clause = ' WHERE ' . implode( ' AND ', $where );
-
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$count = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}woocommerce_payment_tokens {$where_clause}" );
 
 		return absint( $count ) > 0;
