@@ -64,8 +64,11 @@ class CheckoutValidator {
 	}
 
 	public function get_notices_html() {
-		foreach ( $this->errors->get_error_messages() as $error ) {
-			\wc_add_notice( $error, 'error' );
+		foreach ( $this->errors->errors as $code => $messages ) {
+			$data = $this->errors->get_error_data( $code );
+			foreach ( $messages as $message ) {
+				\wc_add_notice( $message, 'error', $data );
+			}
 		}
 
 		return \wc_print_notices( true );

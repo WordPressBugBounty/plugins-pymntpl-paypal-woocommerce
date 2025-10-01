@@ -419,4 +419,12 @@ abstract class AbstractGateway extends \WC_Payment_Gateway {
 		);
 	}
 
+	/**
+	 * @since 1.1.14
+	 * @return false
+	 */
+	public function is_immediate_payment_required() {
+		return false;
+	}
+
 }

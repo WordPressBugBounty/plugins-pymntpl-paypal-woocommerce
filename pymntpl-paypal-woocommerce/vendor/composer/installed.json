@@ -7,18 +7,18 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:paymentplugins/paypal-php-sdk.git",
-                "reference": "7368222a13293c6aab8a93fb69d4b39c70e711f4"
+                "reference": "56757ccf50ce74a13d4cc0083367255951e964db"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paymentplugins/paypal-php-sdk/zipball/7368222a13293c6aab8a93fb69d4b39c70e711f4",
-                "reference": "7368222a13293c6aab8a93fb69d4b39c70e711f4",
+                "url": "https://api.github.com/repos/paymentplugins/paypal-php-sdk/zipball/56757ccf50ce74a13d4cc0083367255951e964db",
+                "reference": "56757ccf50ce74a13d4cc0083367255951e964db",
                 "shasum": ""
             },
             "require-dev": {
                 "phpunit/phpunit": "^8.5.5 || ^9.3.5"
             },
-            "time": "2025-06-05T16:31:20+00:00",
+            "time": "2025-09-29T17:46:06+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",

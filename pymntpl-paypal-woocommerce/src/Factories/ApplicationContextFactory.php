@@ -3,6 +3,7 @@
 namespace PaymentPlugins\WooCommerce\PPCP\Factories;
 
 use PaymentPlugins\PayPalSDK\OrderApplicationContext;
+use PaymentPlugins\PayPalSDK\PaymentMethod;
 use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\AdvancedSettings;
 use PaymentPlugins\WooCommerce\PPCP\Utilities\LocaleUtil;
 
@@ -59,6 +60,16 @@ class ApplicationContextFactory extends AbstractFactory {
 			$locale = LocaleUtil::get_site_locale( true );
 			if ( LocaleUtil::is_locale_supported( $locale, true ) ) {
 				$context->setLocale( $locale );
+			}
+		}
+
+		if ( $this->payment_method ) {
+			if ( $this->payment_method->is_immediate_payment_required() ) {
+				$context->setPaymentMethod(
+					( new PaymentMethod() )->setPayeePreferred(
+						PaymentMethod::IMMEDIATE_PAYMENT_REQUIRED
+					)
+				);
 			}
 		}
 

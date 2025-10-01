@@ -4,7 +4,7 @@ Tags: paypal, paylater, venmo, credit cards
 Requires at least: 4.7
 Tested up to: 6.8
 Requires PHP: 7.1
-Stable tag: 1.1.13
+Stable tag: 1.1.14
 Copyright: Payment Plugins
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -49,6 +49,10 @@ Our documentation has a step-by-step guide on how to connect the plugin to your 
 Payment Plugins is the team behind several of the highest reviewed and installed Payment integrations for WooCommerce.
 
 == Changelog ==
+= 1.1.14 - 10/01/25 =
+* Added - [Immediate Payment Only](https://paymentplugins.com/documentation/paypal/paypal-settings/#immediate-payment-only) option which allows merchants to disable eChecks or any payment method that doesn't settle immediately.
+* Updated - WooCommerce tested up to: 10.2
+* Updated - Improved error handling when "Validate Checkout Fields" option is enabled. The "woocommerce-invalid" class is now added to invalid fields. [https://wordpress.org/support/topic/checkout-errors-scroll/](https://wordpress.org/support/topic/checkout-errors-scroll/)
 = 1.1.13 - 09/13/25 =
 * Fixed - Issue on cart and checkout block if "Vault" option was not enabled in the Advanced Settings page. This triggered a "rest_invalid_param" error for PayPal in express checkout.
 = 1.1.12 - 09/09/25 =

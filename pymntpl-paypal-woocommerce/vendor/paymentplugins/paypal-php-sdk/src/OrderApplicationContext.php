@@ -3,14 +3,14 @@
 namespace PaymentPlugins\PayPalSDK;
 
 /**
- * @property stsring $brand_name
- * @property string  $locale
- * @property string  $landing_page
- * @property string  $shipping_preference
- * @property string  $user_action
- * @property string  $return_url
- * @property string  $cancel_url
- * @propery $payment_method
+ * @property string $brand_name
+ * @property string $locale
+ * @property string $landing_page
+ * @property string $shipping_preference
+ * @property string $user_action
+ * @property string $return_url
+ * @property string $cancel_url
+ * @property PaymentMethod $payment_method
  */
 class OrderApplicationContext extends AbstractObject {
 
@@ -138,6 +138,22 @@ class OrderApplicationContext extends AbstractObject {
 	 */
 	public function setCancelUrl( $cancel_url ) {
 		$this->cancel_url = $cancel_url;
+
+		return $this;
+	}
+
+	/**
+	 * @return PaymentMethod
+	 */
+	public function getPaymentMethod() {
+		return $this->payment_method;
+	}
+
+	/**
+	 * @param PaymentMethod $payment_method
+	 */
+	public function setPaymentMethod( $payment_method ) {
+		$this->payment_method = $payment_method;
 
 		return $this;
 	}

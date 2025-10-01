@@ -198,6 +198,14 @@ class PayPalGateway extends AbstractGateway {
 				],
 
 			],
+			'immediate_payment'             => [
+				'title'       => __( 'Immediate Payment Only', 'pymntpl-paypal-woocommerce' ),
+				'type'        => 'checkbox',
+				'default'     => 'no',
+				'value'       => 'yes',
+				'desc_tip'    => true,
+				'description' => __( 'If enabled, only payments which settle immediately will be available.', 'pymntpl-paypal-woocommerce' )
+			],
 			'button_options'                => [
 				'type'  => 'title',
 				'title' => __( 'PayPal Button Design', 'pymntpl-paypal-woocommerce' )
@@ -687,6 +695,10 @@ class PayPalGateway extends AbstractGateway {
 				throw new RetryException( 'Create new order' );
 			}
 		}
+	}
+
+	public function is_immediate_payment_required() {
+		return \wc_string_to_bool( $this->get_option( 'immediate_payment', 'no' ) );
 	}
 
 }
