@@ -33,7 +33,7 @@ class PaymentController {
 
 	/**
 	 * @param                                                                    $result
-	 * @param \WC_Order                                                          $order
+	 * @param \WC_Order $order
 	 * @param \PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\AbstractGateway $payment_method
 	 *
 	 * @return bool|mixed|\WP_Error
@@ -193,7 +193,7 @@ class PaymentController {
 	/**
 	 * Process a payment for a renewal order.
 	 *
-	 * @param float     $amount
+	 * @param float $amount
 	 * @param \WC_Order $order
 	 *
 	 * @return void
@@ -207,12 +207,19 @@ class PaymentController {
 			$this->factories->initialize( $order, $payment_method );
 
 			$request = $this->factories->order->from_order( $payment_method->get_option( 'intent' ) );
-			$request->setPaymentSource( $this->factories->paymentSource->from_order() );
+			$request->setPaymentSource( $this->factories->paymentSource->from_order( 'recurring' ) );
 
 			OrderFilterUtil::filter_order( $request );
 
 			$request = apply_filters( 'wc_ppcp_renewal_order_params', $request, $order, $payment_method->payment_handler );
 
+			$this->log->info(
+				sprintf(
+					'Creating PayPal order for subscription renewal via %s. Order ID: %s. Args: %s',
+					__METHOD__, $order->get_id(), print_r( $request->toArray(), true )
+				),
+				'payment'
+			);
 
 			$response = $this->client->orderMode( $order )->orders->create( $request );
 
@@ -240,6 +247,10 @@ class PaymentController {
 		} catch ( \Exception $e ) {
 			$order->update_status( 'failed' );
 			$order->add_order_note( sprintf( __( 'Recurring payment failed. Reason: %s', 'pymntpl-paypal-woocommerce' ), $e->getMessage() ) );
+			$this->log->error( sprintf(
+				'Recurring payment failed for. Order ID: %s. Reason: %s',
+				$order->get_id(), $e->getMessage()
+			) );
 		}
 	}
 
@@ -255,7 +266,7 @@ class PaymentController {
 				$token->initialize_from_payment_token( $payment_token );
 				$token->set_user_id( $order->get_customer_id() );
 			} else {
-				$payment_token_id = $this->get_payment_token_id_from_request();
+				$payment_token_id = $payment_method->get_payment_token_id_from_request();
 
 				if ( ! $payment_token_id ) {
 					throw new \Exception( __( 'A payment token ID is required when adding a payment method.', 'pymntpl-paypal-woocommerce' ) );
@@ -308,7 +319,10 @@ class PaymentController {
 					'change_payment_method' => $order->get_id()
 				], $params['plan']['merchant_preferences']['return_url'] );
 
-				$params['plan']['merchant_preferences']['cancel_url'] = add_query_arg( [ 'change_payment_method' => $order->get_id(), '_wpnonce' => wp_create_nonce() ], $order->get_checkout_payment_url() );
+				$params['plan']['merchant_preferences']['cancel_url'] = add_query_arg( [
+					'change_payment_method' => $order->get_id(),
+					'_wpnonce'              => wp_create_nonce()
+				], $order->get_checkout_payment_url() );
 
 				$token = $this->client->orderMode( $order )->billingAgreementTokens->create( $params );
 				if ( is_wp_error( $token ) ) {

@@ -32,6 +32,7 @@ class Controller {
 		$this->registry->register( $container->get( WooCommercePayPalCheckoutGateway::class ) );
 		$this->registry->register( $container->get( WooCommercePayPalAngellEYE::class ) );
 		$this->registry->register( $container->get( WooCommercePPCPAngellEYE::class ) );
+		$this->registry->register( $container->get( CheckoutPluginsPayPalWooCommerce::class ) );
 	}
 
 	/**
@@ -55,6 +56,11 @@ class Controller {
 		} );
 		$container->register( WooCommercePPCPAngellEYE::class, function ( $container ) {
 			return new WooCommercePPCPAngellEYE(
+				$container->get( PayPalClient::class )
+			);
+		} );
+		$container->register( CheckoutPluginsPayPalWooCommerce::class, function ( $container ) {
+			return new CheckoutPluginsPayPalWooCommerce(
 				$container->get( PayPalClient::class )
 			);
 		} );
@@ -90,7 +96,7 @@ class Controller {
 	 */
 	public function get_payment_source_from_order( $payment_source, $order ) {
 		// f the payment source token doesn't have an ID, check the integrations.
-		if ( ! $payment_source->getToken()->getId() ) {
+		if ( $payment_source->getToken() && ! $payment_source->getToken()->getId() ) {
 			foreach ( $this->registry->get_registered_integrations() as $integration ) {
 				if ( $integration->is_plugin ) {
 					$payment_source = $integration->get_payment_source_from_order( $payment_source, $order );

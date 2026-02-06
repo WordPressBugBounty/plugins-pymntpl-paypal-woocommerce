@@ -104,7 +104,7 @@ class ItemsFactory extends AbstractFactory {
 		}
 
 		/**
-		 * @param Item  $item
+		 * @param Item $item
 		 * @param array $cart_item
 		 */
 		return apply_filters( 'wc_ppcp_get_cart_item', $item, $cart_item );
@@ -186,7 +186,7 @@ class ItemsFactory extends AbstractFactory {
 
 	/**
 	 * @param                        $name
-	 * @param mixed                  $obj
+	 * @param mixed $obj
 	 *
 	 * @return string
 	 */
@@ -199,7 +199,13 @@ class ItemsFactory extends AbstractFactory {
 			}
 		}
 
-		return substr( \mb_convert_encoding( wp_strip_all_tags( $name ), 'UTF-8', 'UTF-8' ), 0, 127 );
+		$name = substr( $name, 0, 127 );
+
+		if ( function_exists( 'mb_convert_encoding' ) ) {
+			$name = mb_convert_encoding( $name, 'UTF-8', 'UTF-8' );
+		}
+
+		return $name;
 	}
 
 }

@@ -1,1 +1,1 @@
-<?php return array('dependencies' => array('wc-ppcp-cart', 'wp-polyfill'), 'version' => 'df1d41e8d8e069c4b4db');
+<?php return array('dependencies' => array('wc-ppcp-actions', 'wc-ppcp-utils', 'wp-polyfill'), 'version' => 'ac87a2e50ff3ce9563bc');

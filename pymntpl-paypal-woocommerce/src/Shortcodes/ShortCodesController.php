@@ -32,6 +32,7 @@ class ShortCodesController {
 				if ( $instance->is_supported_page( $container->get( ContextHandler::class ) ) ) {
 					add_action( 'wc_ppcp_add_script_data', [ $instance, 'add_shortcode_script_data' ], 10, 2 );
 					$instance->set_attributes( new ShortcodeAttributes( $instance->parse_attributes( $attrs ) ) );
+					$this->enqueue_shortcode_scripts( $instance );
 					$instance->before_render();
 					\ob_start();
 					$instance->render();
@@ -39,6 +40,12 @@ class ShortCodesController {
 					return \ob_get_clean();
 				}
 			} );
+		}
+	}
+
+	private function enqueue_shortcode_scripts( AbstractShortCode $shortcode ) {
+		foreach ( $shortcode->get_script_handles() as $handle ) {
+			wp_enqueue_script( $handle );
 		}
 	}
 

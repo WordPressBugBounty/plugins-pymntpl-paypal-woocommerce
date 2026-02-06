@@ -45,8 +45,8 @@ class PaymentMethodRegistry extends Registry\BaseRegistry {
 			/**
 			 * @var AbstractGateway $payment_method
 			 */
-			if ( $payment_method->is_cart_section_enabled() ) {
-				$gateways[] = $payment_method;
+			if ( $payment_method->is_available() && $payment_method->is_cart_section_enabled() ) {
+				$gateways[ $payment_method->id ] = $payment_method;
 			}
 		}
 
@@ -57,8 +57,10 @@ class PaymentMethodRegistry extends Registry\BaseRegistry {
 		$gateways = [];
 		if ( $product ) {
 			foreach ( $this->get_registered_integrations() as $payment_method ) {
-				if ( $payment_method->is_product_section_enabled( $product ) && ! apply_filters( 'wc_ppcp_is_product_section_disabled', false, $product ) ) {
-					$gateways[] = $payment_method;
+				if ( $payment_method->enabled === 'yes' ) {
+					if ( $payment_method->is_product_section_enabled( $product ) && ! apply_filters( 'wc_ppcp_is_product_section_disabled', false, $product ) ) {
+						$gateways[ $payment_method->id ] = $payment_method;
+					}
 				}
 			}
 		}
@@ -74,7 +76,7 @@ class PaymentMethodRegistry extends Registry\BaseRegistry {
 			 */
 			if ( $payment_method->is_available() ) {
 				if ( $payment_method->is_express_section_enabled() ) {
-					$gateways[] = $payment_method;
+					$gateways[ $payment_method->id ] = $payment_method;
 				}
 			}
 		}
@@ -99,6 +101,9 @@ class PaymentMethodRegistry extends Registry\BaseRegistry {
 	public function add_checkout_script_dependencies() {
 		$handles = [];
 		foreach ( $this->get_active_integrations() as $payment_method ) {
+			/**
+			 * @var AbstractGateway $payment_method
+			 */
 			$handles = array_merge( $handles, $payment_method->get_checkout_script_handles() );
 		}
 
@@ -132,13 +137,30 @@ class PaymentMethodRegistry extends Registry\BaseRegistry {
 		return $handles;
 	}
 
+	/**
+	 * Returns script handles for the add payment method page.
+	 * @return array
+	 */
+	public function add_payment_method_script_dependencies() {
+		$handles = [];
+		foreach ( $this->get_active_integrations() as $payment_method ) {
+			if ( $payment_method->supports( 'add_payment_method' ) ) {
+				$handles = array_merge( $handles, $payment_method->get_checkout_script_handles() );
+			}
+		}
+
+		return $handles;
+	}
+
 	public function add_minicart_script_dependencies() {
 		$handles = [];
 		foreach ( $this->get_minicart_payment_gateways() as $payment_method ) {
-			/**
-			 * @var AbstractGateway $payment_method
-			 */
-			$handles = array_merge( $handles, $payment_method->get_minicart_script_handles() );
+			if ( \wc_string_to_bool( $payment_method->enabled ) ) {
+				/**
+				 * @var AbstractGateway $payment_method
+				 */
+				$handles = array_merge( $handles, $payment_method->get_minicart_script_handles() );
+			}
 		}
 
 		return apply_filters( 'wc_ppcp_minicart_script_dependencies', $handles );
@@ -148,15 +170,39 @@ class PaymentMethodRegistry extends Registry\BaseRegistry {
 		return apply_filters( 'wc_ppcp_shop_script_dependencies', [] );
 	}
 
-	public function add_payment_method_data( AssetDataApi $asset_data, $context ) {
+	/**
+	 * Get payment method data for all active integrations
+	 *
+	 * @param $context ContextHandler
+	 *
+	 * @return array Associative array with payment method IDs as keys and their data as values
+	 */
+	public function get_payment_method_data( $context ) {
+		$payment_data = [];
 		foreach ( $this->get_active_integrations() as $payment_method ) {
-			$data = apply_filters(
+			$data                                          = apply_filters(
 				'wc_ppcp_add_payment_method_data',
 				$payment_method->get_payment_method_data( $context ),
 				$context,
 				$payment_method
 			);
-			$asset_data->add( $payment_method->id . '_data', $data );
+			$payment_data[ $payment_method->id . '_data' ] = $data;
+		}
+
+		return $payment_data;
+	}
+
+	/**
+	 * Add payment method data to AssetDataApi
+	 *
+	 * @param AssetDataApi $asset_data
+	 * @param              $context     ContextHandler
+	 *
+	 * @return void
+	 */
+	public function add_payment_method_data( AssetDataApi $asset_data, $context ) {
+		foreach ( $this->get_payment_method_data( $context ) as $key => $data ) {
+			$asset_data->add( $key, $data );
 		}
 	}
 

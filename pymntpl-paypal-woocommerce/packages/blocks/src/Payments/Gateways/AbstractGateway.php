@@ -7,6 +7,7 @@ namespace PaymentPlugins\PPCP\Blocks\Payments\Gateways;
 use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType;
 use PaymentPlugins\PayPalSDK\PayPalClient;
 use PaymentPlugins\WooCommerce\PPCP\Assets\AssetsApi;
+use PaymentPlugins\WooCommerce\PPCP\PaymentMethodRegistry;
 
 /**
  * Class AbstractGateway
@@ -68,6 +69,20 @@ class AbstractGateway extends AbstractPaymentMethodType {
 	protected function is_redirect_with_order() {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		return isset( $_REQUEST['_ppcp_order_review'] );
+	}
+
+	/**
+	 * @param array $data
+	 * @param \PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\AbstractGateway $gateway
+	 *
+	 * @return mixed
+	 */
+	public function add_schema_payment_data( $data, $gateway ) {
+		return $data;
+	}
+
+	protected function get_payment_method() {
+		return wc_ppcp_get_container()->get( PaymentMethodRegistry::class )->get( $this->name );
 	}
 
 }

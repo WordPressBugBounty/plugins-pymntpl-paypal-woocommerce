@@ -10,7 +10,7 @@ use PaymentPlugins\WooCommerce\PPCP\Assets\AssetDataApi;
  * @property string $intent
  * @property string $vault
  * @property string $commit
- * @property array  $components
+ * @property array $components
  * @property string $currency
  * @property string $enableFunding;
  * @protected string $locale
@@ -23,7 +23,7 @@ class PayPalQueryParams {
 		'client-id'                   => 'sb',
 		'intent'                      => '',
 		'commit'                      => 'true',
-		'components'                  => [ 'buttons', 'messages', 'card-fields' ],
+		'components'                  => [ 'buttons', 'messages', 'card-fields', 'googlepay', 'applepay' ],
 		'currency'                    => '',
 		'enable-funding'              => [ 'paylater' ],
 		'data-partner-attribution-id' => 'PaymentPlugins_PCP'
@@ -61,8 +61,8 @@ class PayPalQueryParams {
 
 	private function initialize() {
 		add_action( 'wc_ppcp_add_script_data', [ $this, 'add_script_data' ], 10 );
-		add_filter( 'wc_ppcp_cart_data', [ $this, 'add_cart_data' ], 10 );
-		add_filter( 'wc_ppcp_post_cart/refresh', [ $this, 'add_cart_data' ], 10 );
+		add_filter( 'wc_ppcp_update_order_review_data', [ $this, 'add_update_order_review_data' ], 10 );
+		add_filter( 'wc_ppcp_post_cart/refresh', [ $this, 'add_cart_refresh_data' ], 10 );
 	}
 
 	public function add_script_data() {
@@ -71,7 +71,15 @@ class PayPalQueryParams {
 		$this->asset_data->add( self::QUERY_PARAMS, $this->prepare_query_params() );
 	}
 
-	public function add_cart_data( $data ) {
+	public function add_update_order_review_data( $data ) {
+		$this->initialize_paypal_flow();
+		$this->initialize_query_params();
+		$data[ self::QUERY_PARAMS ] = $this->prepare_query_params();
+
+		return $data;
+	}
+
+	public function add_cart_refresh_data( $data ) {
 		$this->initialize_paypal_flow();
 		$this->initialize_query_params();
 		$data[ self::QUERY_PARAMS ] = $this->prepare_query_params();

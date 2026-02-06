@@ -67,8 +67,10 @@ class AdminOrderTracking extends AbstractRoute {
 		$tracker->setStatus( $request['shipping_status'] );
 		$tracker->setCarrier( $request['carrier'] );
 
-		if ( ! empty( $request['carrier_other'] ) ) {
-			$tracker->setCarrierNameOther( $request['carrier_other'] );
+		if ( $tracker->getCarrier() === 'OTHER' ) {
+			if ( ! empty( $request['carrier_other'] ) ) {
+				$tracker->setCarrierNameOther( $request['carrier_other'] );
+			}
 		}
 		if ( ! empty( $request['notify_buyer'] ) ) {
 			$tracker->setNotifyBuyer( $request['notify_buyer'] );

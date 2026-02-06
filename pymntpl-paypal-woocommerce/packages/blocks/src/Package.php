@@ -4,11 +4,14 @@
 namespace PaymentPlugins\PPCP\Blocks;
 
 use Automattic\WooCommerce\Blocks\Assets\AssetDataRegistry;
+use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
 use Automattic\WooCommerce\StoreApi\Schemas\ExtendSchema;
 use Automattic\WooCommerce\StoreApi\StoreApi;
 use PaymentPlugins\PayPalSDK\PayPalClient;
+use PaymentPlugins\PPCP\Blocks\Payments\Gateways\ApplePayGateway;
 use PaymentPlugins\PPCP\Blocks\Payments\Gateways\CreditCardGateway;
 use PaymentPlugins\PPCP\Blocks\Payments\Gateways\FastlaneGateway;
+use PaymentPlugins\PPCP\Blocks\Payments\Gateways\GooglePayGateway;
 use PaymentPlugins\PPCP\Blocks\Payments\Gateways\PayPalGateway;
 use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\APISettings;
 use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\PayLaterMessageSettings;
@@ -29,7 +32,7 @@ class Package extends AbstractPackage {
 	 * Package constructor.
 	 *
 	 * @param Container $container
-	 * @param string    $version
+	 * @param string $version
 	 */
 	public function __construct( Container $container, $version ) {
 		$this->container = $container;
@@ -56,6 +59,18 @@ class Package extends AbstractPackage {
 		} );
 		$this->container->register( CreditCardGateway::class, function ( $container ) {
 			return new CreditCardGateway(
+				$container->get( PayPalClient::class ),
+				$container->get( self::ASSETS_API )
+			);
+		} );
+		$this->container->register( GooglePayGateway::class, function ( $container ) {
+			return new GooglePayGateway(
+				$container->get( PayPalClient::class ),
+				$container->get( self::ASSETS_API )
+			);
+		} );
+		$this->container->register( ApplePayGateway::class, function ( $container ) {
+			return new ApplePayGateway(
 				$container->get( PayPalClient::class ),
 				$container->get( self::ASSETS_API )
 			);
@@ -89,7 +104,9 @@ class Package extends AbstractPackage {
 			return new Rest\Controller();
 		} );
 		$this->container->register( SchemaController::class, function () {
-			return new SchemaController( StoreApi::container()->get( ExtendSchema::class ) );
+			return new SchemaController(
+				StoreApi::container()->get( ExtendSchema::class )
+			);
 		} );
 		$this->container->register( FrontendScripts::class, function ( $container ) {
 			return new FrontendScripts( $container->get( self::ASSETS_API ) );

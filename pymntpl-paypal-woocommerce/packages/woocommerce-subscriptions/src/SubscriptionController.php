@@ -9,6 +9,7 @@ use PaymentPlugins\WooCommerce\PPCP\Factories\CoreFactories;
 use PaymentPlugins\WooCommerce\PPCP\Logger;
 use PaymentPlugins\WooCommerce\PPCP\Main;
 use PaymentPlugins\WooCommerce\PPCP\PaymentHandler;
+use PaymentPlugins\WooCommerce\PPCP\PaymentMethodRegistry;
 use PaymentPlugins\WooCommerce\PPCP\PaymentResult;
 use PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\AbstractGateway;
 use PaymentPlugins\WooCommerce\PPCP\Rest\Routes\CartCheckout;
@@ -45,16 +46,46 @@ class SubscriptionController {
 		add_filter( 'wc_ppcp_get_paypal_flow', [ $this, 'get_paypal_flow' ], 10, 2 );
 		add_filter( 'wc_ppcp_get_formatted_cart_item', [ $this, 'get_formatted_cart_item' ], 10, 2 );
 		add_action( 'wc_ppcp_rest_handle_checkout_validation', [ $this, 'handle_checkout_validation' ] );
-		add_action( 'woocommerce_scheduled_subscription_payment_ppcp', [ $this, 'scheduled_subscription_payment' ], 10, 2 );
-		add_action( 'woocommerce_scheduled_subscription_payment_ppcp_card', [ $this, 'scheduled_subscription_payment' ], 10, 2 );
+		add_action( 'woocommerce_scheduled_subscription_payment_ppcp', [
+			$this,
+			'scheduled_subscription_payment'
+		], 10, 2 );
+		add_action( 'woocommerce_scheduled_subscription_payment_ppcp_card', [
+			$this,
+			'scheduled_subscription_payment'
+		], 10, 2 );
+		add_action( 'woocommerce_scheduled_subscription_payment_ppcp_applepay', [
+			$this,
+			'scheduled_subscription_payment'
+		], 10, 2 );
 		add_filter( 'woocommerce_subscription_payment_meta', [ $this, 'add_subscription_payment_meta' ], 10, 2 );
-		add_filter( 'woocommerce_subscription_failing_payment_method_updated_ppcp', [ $this, 'update_failing_payment_method' ], 10, 2 );
-		add_filter( 'woocommerce_subscription_failing_payment_method_updated_ppcp_card', [ $this, 'update_failing_payment_method' ], 10, 2 );
+		add_filter( 'woocommerce_subscription_failing_payment_method_updated_ppcp', [
+			$this,
+			'update_failing_payment_method'
+		], 10, 2 );
+		add_filter( 'woocommerce_subscription_failing_payment_method_updated_ppcp_card', [
+			$this,
+			'update_failing_payment_method'
+		], 10, 2 );
+		add_filter( 'woocommerce_subscription_failing_payment_method_updated_ppcp_applepay', [
+			$this,
+			'update_failing_payment_method'
+		], 10, 2 );
 		add_filter( 'wc_ppcp_show_card_save_checkbox', [ $this, 'show_card_save_checkbox' ] );
 		add_filter( 'wc_ppcp_add_payment_method_data', [ $this, 'add_payment_method_data' ], 10, 3 );
 		add_filter( 'wc_ppcp_payment_method_save_required', [ $this, 'get_payment_method_save_required' ], 10, 2 );
-		add_filter( 'wc_ppcp_checkout_payment_method_save_required', [ $this, 'get_checkout_payment_method_save_required' ], 10, 3 );
-		add_filter( 'woocommerce_subscription_note_new_payment_method_title', [ $this, 'update_new_payment_method_title' ], 10, 3 );
+		add_filter( 'wc_ppcp_checkout_payment_method_save_required', [
+			$this,
+			'get_checkout_payment_method_save_required'
+		], 10, 3 );
+		add_filter( 'woocommerce_subscription_note_new_payment_method_title', [
+			$this,
+			'update_new_payment_method_title'
+		], 10, 3 );
+		add_filter( 'wc_ppcp_product_payment_gateways', [ $this, 'filter_product_payment_gateways' ], 10, 2 );
+		add_filter( 'wc_ppcp_express_checkout_payment_gateways', [ $this, 'filter_express_payment_gateways' ] );
+		add_filter( 'wc_ppcp_cart_payment_gateways', [ $this, 'filter_cart_payment_gateways' ] );
+		add_filter( 'woocommerce_available_payment_gateways', [ $this, 'get_available_payment_gateways' ] );
 
 		/**
 		 * Filter called when cart or checkout block is enabled.
@@ -63,8 +94,8 @@ class SubscriptionController {
 	}
 
 	/**
-	 * @param mixed           $result
-	 * @param \WC_Order       $order
+	 * @param mixed $result
+	 * @param \WC_Order $order
 	 * @param AbstractGateway $payment_method
 	 */
 	public function process_payment( $result, \WC_Order $order, AbstractGateway $payment_method ) {
@@ -147,7 +178,7 @@ class SubscriptionController {
 	}
 
 	/**
-	 * @param float     $amount
+	 * @param float $amount
 	 * @param \WC_Order $order
 	 */
 	public function scheduled_subscription_payment( $amount, \WC_Order $order ) {
@@ -155,40 +186,39 @@ class SubscriptionController {
 	}
 
 	/**
-	 * @param array            $payment_meta
+	 * @param array $payment_meta
 	 * @param \WC_Subscription $subscription
 	 */
 	public function add_subscription_payment_meta( $payment_meta, $subscription ) {
-		$payment_meta['ppcp']      = [
-			'post_meta' => [
-				Constants::BILLING_AGREEMENT_ID => [
+		/**
+		 * @var PaymentMethodRegistry $payment_registry
+		 */
+		$payment_registry = wc_ppcp_get_container()->get( PaymentMethodRegistry::class );
+
+		foreach ( $payment_registry->get_registered_integrations() as $integration ) {
+			if ( $integration->supports( 'vault' ) ) {
+				$payment_meta[ $integration->id ] = [
+					'post_meta' => [
+						Constants::PAYMENT_METHOD_TOKEN => [
+							'value' => $subscription->get_meta( Constants::PAYMENT_METHOD_TOKEN ),
+							'label' => __( 'Payment Method Token', 'pymntpl-paypal-woocommerce' ),
+						]
+					]
+				];
+			}
+			if ( $integration->supports( 'billing_agreement' ) ) {
+				$payment_meta[ $integration->id ]['post_meta'][ Constants::BILLING_AGREEMENT_ID ] = [
 					'value' => $subscription->get_meta( Constants::BILLING_AGREEMENT_ID ),
 					'label' => __( 'Billing Agreement ID', 'pymntpl-paypal-woocommerce' ),
-				],
-				Constants::PAYMENT_METHOD_TOKEN => [
-					'value' => $subscription->get_meta( Constants::PAYMENT_METHOD_TOKEN ),
-					'label' => __( 'Payment Method Token', 'pymntpl-paypal-woocommerce' ),
-				]
-			]
-		];
-		$payment_meta['ppcp_card'] = [
-			'post_meta' => [
-				Constants::PAYMENT_METHOD_TOKEN => [
-					'value' => $subscription->get_meta( Constants::PAYMENT_METHOD_TOKEN ),
-					'label' => __( 'Payment Method Token', 'pymntpl-paypal-woocommerce' ),
-				]
-				/*Constants::CUSTOMER_ID          => [
-					'value' => $subscription->get_meta( Constants::CUSTOMER_ID ),
-					'label' => __( 'Customer ID', 'pymntpl-paypal-woocommerce' ),
-				]*/
-			]
-		];
+				];
+			}
+		}
 
 		return apply_filters( 'wc_ppcp_add_subscription_payment_meta', $payment_meta, $subscription );
 	}
 
 	/**
-	 * @param array      $data
+	 * @param array $data
 	 * @param array|null $cart_item
 	 *
 	 * @return mixed
@@ -205,7 +235,7 @@ class SubscriptionController {
 
 	/**
 	 * @param \WC_Subscription $subscription
-	 * @param \WC_Order        $renewal_order
+	 * @param \WC_Order $renewal_order
 	 */
 	public function update_failing_payment_method( $subscription, $renewal_order ) {
 		$payment_method = wc_get_payment_gateway_by_order( $renewal_order );
@@ -293,9 +323,9 @@ class SubscriptionController {
 	}
 
 	/**
-	 * @param bool                                                               $bool
+	 * @param bool $bool
 	 * @param \PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\AbstractGateway $payment_method
-	 * @param \WC_Order                                                          $order
+	 * @param \WC_Order $order
 	 *
 	 * @return bool|mixed
 	 */
@@ -314,9 +344,9 @@ class SubscriptionController {
 	}
 
 	/**
-	 * @param array                                           $data
+	 * @param array $data
 	 * @param \PaymentPlugins\WooCommerce\PPCP\ContextHandler $context
-	 * @param AbstractGateway                                 $payment_method
+	 * @param AbstractGateway $payment_method
 	 *
 	 * @return void
 	 */
@@ -336,7 +366,7 @@ class SubscriptionController {
 			} elseif ( $context->is_order_pay() ) {
 				// @todo - add code for order pay
 			} else {
-				if ( \WC_Subscriptions_Cart::cart_contains_free_trial() && WC()->cart->total == 0 ) {
+				if ( \WC_Subscriptions_Cart::cart_contains_free_trial() && WC()->cart->get_total( 'edit' ) == 0 ) {
 					$data['needsSetupToken'] = true;
 				}
 			}
@@ -347,8 +377,8 @@ class SubscriptionController {
 	}
 
 	/**
-	 * @param string           $new_payment_method_title
-	 * @param string           $gateway_id
+	 * @param string $new_payment_method_title
+	 * @param string $gateway_id
 	 * @param \WC_Subscription $subscription
 	 *
 	 * @return void
@@ -387,9 +417,55 @@ class SubscriptionController {
 		return $data;
 	}
 
+	public function filter_product_payment_gateways( $payment_gateways, $product ) {
+		if ( \WC_Subscriptions_Product::is_subscription( $product ) ) {
+			foreach ( $payment_gateways as $gateway ) {
+				if ( ! $gateway->supports( 'subscriptions' ) ) {
+					unset( $payment_gateways[ $gateway->id ] );
+				}
+			}
+		}
+
+		return $payment_gateways;
+	}
+
+	public function filter_express_payment_gateways( $payment_gateways ) {
+		if ( \WC_Subscriptions_Cart::cart_contains_subscription() ) {
+			foreach ( $payment_gateways as $gateway ) {
+				if ( ! $gateway->supports( 'subscriptions' ) ) {
+					unset( $payment_gateways[ $gateway->id ] );
+				}
+			}
+		}
+
+		return $payment_gateways;
+	}
+
+	public function filter_cart_payment_gateways( $payment_gateways ) {
+		if ( \WC_Subscriptions_Cart::cart_contains_subscription() ) {
+			foreach ( $payment_gateways as $gateway ) {
+				if ( ! $gateway->supports( 'subscriptions' ) ) {
+					unset( $payment_gateways[ $gateway->id ] );
+				}
+			}
+		}
+
+		return $payment_gateways;
+	}
+
+	public function get_available_payment_gateways( $gateways ) {
+		if ( is_checkout() ) {
+			if ( \WC_Subscriptions_Cart::cart_contains_free_trial() && WC()->cart->get_total( 'edit' ) == 0 ) {
+				unset( $gateways['ppcp_applepay'] );
+			}
+		}
+
+		return $gateways;
+	}
+
 	/**
-	 * @since 1.1.3
 	 * @return bool
+	 * @since 1.1.3
 	 */
 	private function is_manual_renewal_required() {
 		return function_exists( 'wcs_is_manual_renewal_required' ) && \wcs_is_manual_renewal_required();

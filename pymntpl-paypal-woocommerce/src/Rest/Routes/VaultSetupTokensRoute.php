@@ -74,6 +74,8 @@ class VaultSetupTokensRoute extends AbstractRoute {
 		}
 
 		if ( $context->is_checkout() ) {
+			$this->populate_post_data( $request );
+
 			if ( $this->is_checkout_validation_enabled( $request ) ) {
 				$this->validator->validate_checkout( $request, false );
 			}

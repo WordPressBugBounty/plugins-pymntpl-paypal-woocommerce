@@ -76,9 +76,12 @@ class CheckoutValidator {
 
 	public function get_failure_response() {
 		return new \WP_Error( 'validation_errors', 'Validation errors', [
-			'status'   => 400,
-			'errors'   => $this->get_errors(),
-			'messages' => $this->get_notices_html()
+			'status'           => 400,
+			'errors'           => $this->get_errors(),
+			'messages'         => $this->get_notices_html(),
+			'sanitized_errors' => array_map( function ( $error ) {
+				return wp_kses( $error, [] );
+			}, $this->get_errors() )
 		] );
 	}
 

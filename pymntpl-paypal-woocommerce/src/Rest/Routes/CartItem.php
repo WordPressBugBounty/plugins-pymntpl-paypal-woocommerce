@@ -4,7 +4,10 @@
 namespace PaymentPlugins\WooCommerce\PPCP\Rest\Routes;
 
 
+use PaymentPlugins\WooCommerce\PPCP\Assets\PayPalDataTransformer;
 use PaymentPlugins\WooCommerce\PPCP\Constants;
+use PaymentPlugins\WooCommerce\PPCP\ContextHandler;
+use PaymentPlugins\WooCommerce\PPCP\PaymentMethodRegistry;
 use PaymentPlugins\WooCommerce\PPCP\ProductSettings;
 
 /**
@@ -23,6 +26,16 @@ class CartItem extends AbstractCart {
 				'callback' => [ $this, 'handle_request' ],
 				'args'     => [
 					'payment_method' => [
+						'required'          => true,
+						'validate_callback' => [ $this->validator, 'validate_payment_method' ]
+					]
+				]
+			],
+			[
+				'methods'  => \WP_REST_Server::DELETABLE,
+				'callback' => [ $this, 'handle_request' ],
+				'args'     => [
+					'key' => [
 						'required' => true
 					]
 				]
@@ -49,8 +62,9 @@ class CartItem extends AbstractCart {
 				throw new \Exception( __( 'Invalid payment method provided.', 'pymntpl-paypal-woocommerce' ) );
 			}
 
+			$cart_item_key = WC()->cart->add_to_cart( ...$cart_params );
 			// add item to the cart
-			if ( WC()->cart->add_to_cart( ...$cart_params ) === false ) {
+			if ( $cart_item_key === false ) {
 				throw new \Exception( $this->get_wc_notice( 'error', __( 'Error adding product to cart.', 'pymntpl-paypal-woocommerce' ) ) );
 			}
 
@@ -78,12 +92,41 @@ class CartItem extends AbstractCart {
 
 			$this->cache->set( sprintf( '%s_%s', $payment_method->id, Constants::PAYPAL_ORDER_ID ), $result->id );
 
-			return $result->id;
+			$data_transformer = new PayPalDataTransformer();
+
+			return [
+				'order_id'      => $result->id,
+				'cart'          => $data_transformer->transform_cart( WC()->cart ),
+				'cart_item_key' => $cart_item_key,
+			];
 		} catch ( \Exception $e ) {
 			$this->logger->info( sprintf( 'Error adding product to cart. Reason: %s. Cart args: %s', $e->getMessage(), print_r( $cart_params, true ) ) );
 
 			return new \WP_Error( 'add-to-cart-error', $e->getMessage(), [ 'status' => 200 ] );
 		}
+	}
+
+	/**
+	 * @param \WP_REST_Request $request
+	 *
+	 * @return array
+	 * @throws \Exception
+	 */
+	public function handle_delete_request( \WP_REST_Request $request ) {
+		$cart          = WC()->cart;
+		$cart_item_key = $request->get_param( 'key' );
+		$result        = $cart->remove_cart_item( $cart_item_key );
+
+		if ( ! $result ) {
+			$this->logger->info( sprintf( 'Cart item %s was not removed.', $cart_item_key ) );
+		}
+
+		$data_transformer = new PayPalDataTransformer();
+
+		return [
+			'cart'          => $data_transformer->transform_cart( $cart ),
+			'cart_item_key' => $cart_item_key
+		];
 	}
 
 	private function get_add_to_cart_params( \WP_REST_Request $request ) {

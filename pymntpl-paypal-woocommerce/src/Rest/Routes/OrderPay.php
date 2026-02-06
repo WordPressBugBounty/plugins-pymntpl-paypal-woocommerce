@@ -6,6 +6,7 @@ use PaymentPlugins\PayPalSDK\OrderApplicationContext;
 use PaymentPlugins\PayPalSDK\PurchaseUnit;
 use PaymentPlugins\WooCommerce\PPCP\Factories\CoreFactories;
 use PaymentPlugins\WooCommerce\PPCP\Logger;
+use PaymentPlugins\WooCommerce\PPCP\Rest\Validators\RouteValidator;
 use PaymentPlugins\WooCommerce\PPCP\Utilities\OrderFilterUtil;
 use PaymentPlugins\WooCommerce\PPCP\Utils;
 use PaymentPlugins\WooCommerce\PPCP\WPPayPalClient;
@@ -21,10 +22,16 @@ class OrderPay extends AbstractRoute {
 
 	private $logger;
 
+	/**
+	 * @var \PaymentPlugins\WooCommerce\PPCP\Rest\Validators\RouteValidator
+	 */
+	private $validator;
+
 	public function __construct( CoreFactories $factories, WPPayPalClient $client, Logger $logger ) {
 		$this->factories = $factories;
 		$this->client    = $client;
 		$this->logger    = $logger;
+		$this->validator = new RouteValidator();
 	}
 
 	public function get_path() {
@@ -38,7 +45,8 @@ class OrderPay extends AbstractRoute {
 				'callback' => [ $this, 'handle_request' ],
 				'args'     => [
 					'payment_method' => [
-						'required' => true
+						'required'          => true,
+						'validate_callback' => [ $this->validator, 'validate_payment_method' ]
 					],
 					'order_id'       => [
 						'required' => true

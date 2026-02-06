@@ -2,6 +2,8 @@
 
 namespace PaymentPlugins\WooCommerce\PPCP;
 
+use PaymentPlugins\WooCommerce\PPCP\Utilities\NumberUtil;
+
 /**
  * @property float $net
  * @property float $fee
@@ -91,8 +93,21 @@ class FeeCalculation {
 	 */
 	public function calculate_from_receivable_breakdown( $breakdown ) {
 		if ( $breakdown ) {
+			// The fee is always in the source currency so no conversion needed.
 			$this->add_fee( (float) $breakdown->paypal_fee->value );
-			$this->add_net( (float) $breakdown->net_amount->value );
+			/**
+			 * The net amount may be in the source or the target currency. If it's in the target currency
+			 * a conversion needs to be performed.
+			 */
+			if ( $breakdown->net_amount->currency_code !== $breakdown->gross_amount->currency_code &&
+			     isset( $breakdown->exchange_rate->value ) ) {
+				$this->add_net( NumberUtil::round_incl_currency(
+					(float) $breakdown->net_amount->value / (float) $breakdown->exchange_rate->value,
+					$breakdown->exchange_rate->source_currency
+				) );
+			} else {
+				$this->add_net( (float) $breakdown->net_amount->value );
+			}
 			$this->populate_order();
 		}
 	}

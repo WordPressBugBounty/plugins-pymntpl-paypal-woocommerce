@@ -7,6 +7,7 @@ use PaymentPlugins\PayPalSDK\OrderApplicationContext;
 use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\AdvancedSettings;
 use PaymentPlugins\WooCommerce\PPCP\CheckoutValidator;
 use PaymentPlugins\WooCommerce\PPCP\Constants;
+use PaymentPlugins\WooCommerce\PPCP\Payments\PaymentGateways;
 use PaymentPlugins\WooCommerce\PPCP\Traits\CheckoutRouteTrait;
 
 /**
@@ -18,12 +19,15 @@ class CartOrder extends AbstractCart {
 
 	private $settings;
 
-	private $validator;
+	/**
+	 * @var \PaymentPlugins\WooCommerce\PPCP\CheckoutValidator
+	 */
+	private $checkout_validator;
 
 	public function __construct( AdvancedSettings $settings, ...$args ) {
 		parent::__construct( ...$args );
-		$this->settings  = $settings;
-		$this->validator = new CheckoutValidator();
+		$this->settings           = $settings;
+		$this->checkout_validator = new CheckoutValidator();
 	}
 
 	public function get_path() {
@@ -37,7 +41,8 @@ class CartOrder extends AbstractCart {
 				'callback' => [ $this, 'handle_request' ],
 				'args'     => [
 					'payment_method' => [
-						'required' => true
+						'required'          => true,
+						'validate_callback' => [ $this->validator, 'validate_payment_method' ]
 					]
 				]
 			]
@@ -71,15 +76,15 @@ class CartOrder extends AbstractCart {
 			}
 
 			if ( $this->is_checkout_initiated( $request ) ) {
-				if ( $this->is_checkout_validation_enabled( $request ) ) {
-					$this->validator->validate_checkout( $request );
+				if ( $this->is_checkout_validation_enabled( $request ) && $request->get_param( 'payment_method' ) === 'ppcp' ) {
+					$this->checkout_validator->validate_checkout( $request );
 				}
 				/**
 				 * 3rd party code can use this action to perform custom validations.
 				 *
 				 * @since 1.0.31
 				 */
-				do_action( 'wc_ppcp_validate_checkout_fields', $request, $this->validator );
+				do_action( 'wc_ppcp_validate_checkout_fields', $request, $this->checkout_validator );
 			}
 
 			$result = $this->client->orders->create( $order );
@@ -122,8 +127,8 @@ class CartOrder extends AbstractCart {
 	 * @return mixed|void|\WP_Error
 	 */
 	public function get_error_response( $error ) {
-		if ( $error instanceof \Exception && $this->validator->has_errors() ) {
-			return $this->validator->get_failure_response();
+		if ( $error instanceof \Exception && $this->checkout_validator->has_errors() ) {
+			return $this->checkout_validator->get_failure_response();
 		}
 
 		return parent::get_error_response( $error );

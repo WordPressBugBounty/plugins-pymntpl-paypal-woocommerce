@@ -7,8 +7,11 @@ use PaymentPlugins\PayPalSDK\PurchaseUnit;
 use PaymentPlugins\WooCommerce\PPCP\Cache\CacheInterface;
 use PaymentPlugins\WooCommerce\PPCP\Factories\CoreFactories;
 use PaymentPlugins\WooCommerce\PPCP\Logger;
+use PaymentPlugins\WooCommerce\PPCP\Payments\PaymentGateways;
+use PaymentPlugins\WooCommerce\PPCP\Rest\Validators\RouteValidator;
 use PaymentPlugins\WooCommerce\PPCP\Utilities\OrderFilterUtil;
 use PaymentPlugins\WooCommerce\PPCP\Utils;
+use WP_Error;
 
 class AbstractCart extends AbstractRoute {
 
@@ -20,11 +23,14 @@ class AbstractCart extends AbstractRoute {
 
 	protected $cache;
 
+	protected $validator;
+
 	public function __construct( PayPalClient $client, Logger $logger, CoreFactories $factories, CacheInterface $cache ) {
 		$this->client    = $client;
 		$this->logger    = $logger;
 		$this->factories = $factories;
 		$this->cache     = $cache;
+		$this->validator = new RouteValidator();
 	}
 
 	public function get_path() {
@@ -79,20 +85,6 @@ class AbstractCart extends AbstractRoute {
 
 	protected function calculate_totals() {
 		WC()->cart->calculate_totals();
-	}
-
-	/**
-	 * @param $request
-	 *
-	 * @since 1.0.6
-	 */
-	protected function populate_post_data( $request ) {
-		/**
-		 * Some 3rd party plugins depend on the $_POST array being populated
-		 */
-		//phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$_POST    = array_merge( $_POST, $request->get_json_params() );
-		$_REQUEST = array_merge( $_REQUEST, $request->get_json_params() );
 	}
 
 }

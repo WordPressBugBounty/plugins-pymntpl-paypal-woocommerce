@@ -11,7 +11,7 @@ class FastlaneGateway extends AbstractGateway {
 	public $name = 'ppcp_fastlane';
 
 	public function get_payment_method_script_handles() {
-		$this->assets_api->register_script( 'wc-ppcp-blocks-fastlane-express', 'build/fastlane-express.js', [ 'wc-ppcp-blocks-commons' ] );
+		$this->assets_api->register_script( 'wc-ppcp-blocks-fastlane-express', 'build/fastlane-express.js' );
 
 		return [ 'wc-ppcp-blocks-fastlane-express' ];
 	}
@@ -24,7 +24,6 @@ class FastlaneGateway extends AbstractGateway {
 	public function initialize() {
 		$this->settings = \get_option( "woocommerce_ppcp_card_settings", [] );
 
-		add_filter( 'wc_ppcp_blocks_get_extended_data', [ $this, 'get_schema_extended_data' ] );
 		add_action( 'woocommerce_blocks_enqueue_checkout_block_scripts_before', [ $this, 'enqueue_checkout_scripts' ] );
 	}
 
@@ -38,7 +37,7 @@ class FastlaneGateway extends AbstractGateway {
 		}
 	}
 
-	public function get_schema_extended_data( $data ) {
+	public function add_schema_payment_data( $data, $gateway ) {
 		$data['fastlane'] = $this->get_payment_method_data();
 
 		return $data;

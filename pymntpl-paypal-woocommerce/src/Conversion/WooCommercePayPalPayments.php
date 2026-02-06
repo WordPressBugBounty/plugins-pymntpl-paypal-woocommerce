@@ -16,7 +16,7 @@ class WooCommercePayPalPayments extends GeneralPayPalPlugin {
 	protected $payment_token_id = 'payment_token_id';
 
 	/**
-	 * @param string    $payment_method
+	 * @param string $payment_method
 	 * @param \WC_Order $order
 	 */
 	public function get_payment_method( $payment_method, $order ) {
@@ -34,7 +34,7 @@ class WooCommercePayPalPayments extends GeneralPayPalPlugin {
 
 	/**
 	 * @param \PaymentPlugins\PayPalSDK\PaymentSource $payment_source
-	 * @param \WC_Order                               $order
+	 * @param \WC_Order $order
 	 *
 	 * @return \PaymentPlugins\PayPalSDK\PaymentSource
 	 */
@@ -53,7 +53,7 @@ class WooCommercePayPalPayments extends GeneralPayPalPlugin {
 					$payment_source->token->setType( Token::PAYMENT_METHOD_TOKEN );
 					$this->payment_source = $payment_source;
 				} else {
-					$customer_id = $this->get_customer_id( $order->get_customer_id(), 'v2' );
+					$customer_id = $this->get_customer_id( $order->get_customer_id() );
 					if ( $customer_id ) {
 						$response = $this->client->paymentTokens->all( [ 'customer_id' => $customer_id ] );
 						if ( ! is_wp_error( $response ) && $response->payment_tokens->count() > 0 ) {

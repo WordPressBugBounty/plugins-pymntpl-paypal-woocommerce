@@ -72,7 +72,6 @@ class PageController {
 			'name'   => $user->get( 'first_name' ) . ' ' . $user->get( 'last_name' ),
 			'email'  => $user->get( 'user_email' )
 		] );
-		$this->assets->enqueue_script( 'wc-ppcp-admin-commons', 'build/js/admin-commons.js' );
 		$this->assets->enqueue_script( 'wc-ppcp-help-widget', 'build/js/help-widget.js' );
 		$assets = $this->assets;
 		include_once __DIR__ . '/Views/html-support-page.php';

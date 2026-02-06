@@ -26,9 +26,10 @@ class CartPaymentButtonsWidget extends AbstractButtonWidget {
 	}
 
 	public function get_script_depends() {
-		$payment_gateways = Main::container()->get( PaymentGateways::class );
-		$handles          = $this->get_gateway()->get_cart_script_handles();
-		$payment_gateways->add_scripts( $handles );
+		$handles = [];
+		foreach ( $this->get_gateways() as $gateway ) {
+			$handles = array_merge( $handles, $gateway->get_cart_script_handles() );
+		}
 		$this->add_script_data();
 
 		return $handles;
@@ -36,7 +37,7 @@ class CartPaymentButtonsWidget extends AbstractButtonWidget {
 
 	protected function render() {
 		$this->template_loader->load_template( 'cart/payment-methods.php', [
-			'payment_methods'   => [ $this->get_gateway() ],
+			'payment_methods'   => $this->get_gateways(),
 			'below_add_to_cart' => 'below'
 		] );
 	}

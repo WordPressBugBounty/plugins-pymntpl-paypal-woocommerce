@@ -17,16 +17,16 @@ class CartPaymentButtons extends AbstractPaymentButtons {
 		return [ 'cart' ];
 	}
 
-	public function before_render() {
-		$handles = $this->get_gateway()->get_cart_script_handles();
-		$this->payment_gateways->add_scripts( $handles );
+	public function get_script_handles() {
+		$handles = [];
+		foreach ( $this->get_gateways() as $gateway ) {
+			$handles = array_merge( $handles, $gateway->get_cart_script_handles() );
+		}
+
+		return $handles;
 	}
 
 	public function render() {
-		if ( is_ajax() ) {
-			$data = apply_filters( 'wc_ppcp_cart_data', Utils::get_cart_data( WC()->cart ) );
-			$this->assets_data->print_data( 'wcPPCPCartData', $data );
-		}
 		$this->templates->load_template( 'cart/payment-methods.php', [
 			'payment_methods'   => [ $this->get_gateway() ],
 			'below_add_to_cart' => $this->attributes->get( 'location' ) === 'below'

@@ -23,13 +23,10 @@ class PayPalGateway extends AbstractGateway {
 		$vault_enabled     = \wc_string_to_bool( $advanced_settings->get_option( 'vault_enabled', 'yes' ) );
 
 		if ( $vault_enabled ) {
-			$this->assets_api->register_script( 'wc-ppcp-blocks-paypal', 'build/paypal.js', [ 'wc-ppcp-blocks-commons' ] );
+			$this->assets_api->register_script( 'wc-ppcp-blocks-paypal', 'build/paypal.js' );
 		} else {
-			$this->assets_api->register_script( 'wc-ppcp-blocks-paypal', 'build/legacy/paypal.js', [ 'wc-ppcp-blocks-legacy-commons' ] );
+			$this->assets_api->register_script( 'wc-ppcp-blocks-paypal', 'build/legacy/paypal.js' );
 		}
-
-		wp_enqueue_style( 'wc-ppcp-blocks-styles' );
-		wp_enqueue_style( 'wc-ppcp-style' );
 
 		return [ 'wc-ppcp-blocks-paypal', 'wc-ppcp-blocks-checkout' ];
 	}
@@ -37,9 +34,10 @@ class PayPalGateway extends AbstractGateway {
 	public function get_payment_method_data() {
 		$sources = [ 'paypal', 'paylater', 'card', 'venmo' ];
 		$data    = [
-			'payLaterEnabled'         => wc_string_to_bool( $this->get_setting( 'paylater_enabled', 'no' ) ),
+			'paypalEnabled'           => $this->is_active(),
 			'cardEnabled'             => wc_string_to_bool( $this->get_setting( 'card_enabled', 'no' ) ),
 			'venmoEnabled'            => wc_string_to_bool( $this->get_setting( 'venmo_enabled', 'no' ) ),
+			'payLaterEnabled'         => wc_string_to_bool( $this->get_setting( 'paylater_enabled', 'no' ) ),
 			'paypalSections'          => $this->get_setting( 'sections', [] ),
 			'payLaterSections'        => $this->get_setting( 'paylater_sections', [] ),
 			'creditCardSections'      => $this->get_setting( 'credit_card_sections', [] ),

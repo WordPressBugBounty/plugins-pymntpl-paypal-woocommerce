@@ -9,9 +9,9 @@ class ClientRequestRetryController {
 	}
 
 	/**
-	 * @param bool                                             $bool
+	 * @param bool $bool
 	 * @param \PaymentPlugins\PayPalSDK\Exception\ApiException $exception
-	 * @param array                                            $args
+	 * @param array $args
 	 *
 	 * @return mixed
 	 */
@@ -25,6 +25,20 @@ class ClientRequestRetryController {
 					if ( $data['details'][0]['field'] === '/application_context/locale' ) {
 						unset( $params['application_context']['locale'] );
 						$bool = $params;
+					}
+					if ( $data['details'][0]['field'] === '/payment_source/card/vault_id' ) {
+						$issue = $data['details'][0]['issue'];
+						if ( $issue === 'MISMATCHED_VAULT_ID_TO_PAYMENT_SOURCE' ) {
+							if ( ! empty( $params['payment_source']['card'] ) ) {
+								$params['payment_source']['paypal'] = $params['payment_source']['card'];
+								unset( $params['payment_source']['card'] );
+								$bool = $params;
+							} elseif ( ! empty( $params['payment_source']['paypal'] ) ) {
+								$params['payment_source']['card'] = $params['payment_source']['paypal'];
+								unset( $params['payment_source']['paypal'] );
+								$bool = $params;
+							}
+						}
 					}
 				}
 				break;

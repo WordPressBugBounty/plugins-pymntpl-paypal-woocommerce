@@ -44,7 +44,8 @@ class Install {
 
 	public function add_links( $links ) {
 		return $links + [
-				'settings' => sprintf( '<a href="%1$s">%2$s</a>', admin_url( 'admin.php?page=wc-settings&tab=checkout&section=ppcp_api' ), esc_html__( 'Settings', 'pymntpl-paypal-woocommerce' ) )
+				'settings'      => sprintf( '<a href="%1$s">%2$s</a>', admin_url( 'admin.php?page=wc-settings&tab=checkout&section=ppcp_api' ), esc_html__( 'Settings', 'pymntpl-paypal-woocommerce' ) ),
+				'documentation' => sprintf( '<a href="%1$s" target="_blank">%2$s</a>', 'https://paymentplugins.com/documentation/paypal/', esc_html__( 'Documentation', 'pymntpl-paypal-woocommerce' ) )
 			];
 	}
 

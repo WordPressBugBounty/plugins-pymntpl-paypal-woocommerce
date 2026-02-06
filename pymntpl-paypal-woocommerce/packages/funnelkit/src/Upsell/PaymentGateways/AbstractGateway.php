@@ -110,14 +110,21 @@ class AbstractGateway extends \WFOCU_Gateway {
 	 * @return \PaymentPlugins\PayPalSDK\Order
 	 */
 	public function get_create_order_params( $order ) {
+		/**
+		 * @var \PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\AbstractGateway $payment_method
+		 */
 		$payment_method = wc_get_payment_gateway_by_order( $order );
 		$currency       = $order->get_currency();
 		$package        = WFOCU_Core()->data->get( '_upsell_package' );
+
+		$package['total']    = (float) $package['total'];
+		$package['taxes']    = (float) $package['taxes'];
+		$package['shipping'] = (float) $package['shipping'];
 		/**
 		 * @var CoreFactories $factories
 		 */
 		$factories = wc_ppcp_get_container()->get( CoreFactories::class );
-		$factories->initialize( $order );
+		$factories->initialize( $order, $payment_method );
 
 		$current_offer = WFOCU_Core()->data->get( 'current_offer' );
 		list( $item_total, $needs_shipping ) = array_reduce( $package['products'], function ( $carry, $product ) {
@@ -185,10 +192,7 @@ class AbstractGateway extends \WFOCU_Gateway {
 		$result->setPurchaseUnits( $purchase_units );
 
 		if ( $order->get_meta( Constants::PAYMENT_METHOD_TOKEN ) ) {
-			$result->setPaymentSource( ( new PaymentSource() )
-				->setToken( ( new Token() )
-					->setId( $order->get_meta( Constants::PAYMENT_METHOD_TOKEN ) )
-					->setType( Token::PAYMENT_METHOD_TOKEN ) ) );
+			$result->setPaymentSource( $factories->paymentSource->from_order() );
 		} elseif ( $order->get_meta( Constants::BILLING_AGREEMENT_ID ) ) {
 			$result->setPaymentSource( ( new PaymentSource() )
 				->setToken( ( new Token() )

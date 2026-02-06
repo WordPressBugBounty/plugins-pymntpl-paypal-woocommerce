@@ -68,8 +68,8 @@ class AssetsApi {
 	 * @param $relative_path
 	 * @param $deps
 	 *
-	 * @since 1.0.55
 	 * @return void
+	 * @since 1.0.55
 	 */
 	public function register_style( $handle, $relative_path, $deps = [] ) {
 		wp_register_style( $handle, $this->assets_url( $relative_path ), $deps, $this->config->version() );

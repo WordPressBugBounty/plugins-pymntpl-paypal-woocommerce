@@ -46,7 +46,7 @@ abstract class AbstractWidget extends Widget_Base {
 	protected $gateway;
 
 	protected function initialize() {
-		$container = Main::container();
+		$container = wc_ppcp_get_container();
 		$this->set_assets( $container->get( AssetsApi::class ) );
 		$this->set_payment_method_registry( $container->get( PaymentMethodRegistry::class ) );
 		$this->set_asset_data( $container->get( AssetDataApi::class ) );
@@ -89,18 +89,26 @@ abstract class AbstractWidget extends Widget_Base {
 
 	public function before_render() {
 		$this->frontend = true;
+		parent::before_render();
 	}
 
 	protected function get_paypal_editor_script() {
 		return add_query_arg( [
 			'client-id'      => 'sb',
-			'components'     => 'buttons',
+			'components'     => 'buttons,googlepay',
 			'enable-funding' => 'paylater,venmo'
 		], 'https://www.paypal.com/sdk/js' );
 	}
 
-	protected function get_gateway() {
-		return $this->payment_method_registry->get( 'ppcp' );
+	protected function get_gateway( $id ) {
+		return $this->payment_method_registry->get( $id );
+	}
+
+	protected function get_gateways() {
+		return [
+			$this->payment_method_registry->get( 'ppcp' ),
+			$this->payment_method_registry->get( 'ppcp_googlepay' )
+		];
 	}
 
 	public function is_frontend_request() {

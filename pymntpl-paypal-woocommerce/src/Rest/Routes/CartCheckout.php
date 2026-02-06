@@ -37,7 +37,8 @@ class CartCheckout extends AbstractCart {
 				'callback' => [ $this, 'handle_request' ],
 				'args'     => [
 					'payment_method' => [
-						'required' => true
+						'required'          => true,
+						'validate_callback' => [ $this->validator, 'validate_payment_method' ]
 					]
 				]
 			]

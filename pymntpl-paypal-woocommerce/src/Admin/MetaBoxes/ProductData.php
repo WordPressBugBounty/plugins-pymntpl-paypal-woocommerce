@@ -38,9 +38,7 @@ class ProductData {
 
 	public function render_panel() {
 		global $product_object;
-		$this->assets_api->enqueue_script( 'wc-ppcp-product-metabox', 'build/js/admin-product-metabox.js', [
-			'wc-ppcp-admin-commons'
-		] );
+		$this->assets_api->enqueue_script( 'wc-ppcp-product-metabox', 'build/js/admin-product-metabox.js' );
 		$this->assets_api->enqueue_style( 'wc-ppcp-admin', 'build/css/admin.css' );
 		WC()->payment_gateways();
 		$settings = new ProductSettings( $product_object );

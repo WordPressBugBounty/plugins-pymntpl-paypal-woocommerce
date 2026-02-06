@@ -138,9 +138,10 @@ class Utils {
 	 */
 	public static function get_cart_data( $cart ) {
 		return [
-			'total'         => NumberUtil::round( $cart->total, 2 ),
+			'total'         => NumberUtil::round( $cart->get_total( 'float' ), 2 ),
 			'needsShipping' => $cart->needs_shipping(),
-			'isEmpty'       => $cart->is_empty()
+			'isEmpty'       => $cart->is_empty(),
+			'currency'      => get_woocommerce_currency()
 		];
 	}
 
@@ -152,7 +153,8 @@ class Utils {
 	public static function get_order_data( $order ) {
 		return [
 			'order_id'  => $order->get_id(),
-			'order_key' => $order->get_order_key()
+			'order_key' => $order->get_order_key(),
+			'currency'  => $$order->get_currency()
 		];
 	}
 

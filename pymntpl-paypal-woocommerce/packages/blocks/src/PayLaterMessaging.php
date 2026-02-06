@@ -28,8 +28,8 @@ class PayLaterMessaging {
 	private $registered = false;
 
 	public function __construct( PayLaterMessageSettings $settings, AssetsApi $assets, AssetDataRegistry $data_registry ) {
-		$this->settings      = $settings;
-		$this->assets        = $assets;
+		$this->settings = $settings;
+		$this->assets = $assets;
 		$this->data_registry = $data_registry;
 		$this->initialize();
 	}
@@ -41,7 +41,12 @@ class PayLaterMessaging {
 	}
 
 	public function add_script_dependencies( $dependencies, $handle ) {
-		if ( ! in_array( $handle, [ 'wc-checkout-block', 'wc-checkout-block-frontend', 'wc-cart-block', 'wc-cart-block-frontend' ], true ) ) {
+		if ( ! in_array( $handle, [
+			'wc-checkout-block',
+			'wc-checkout-block-frontend',
+			'wc-cart-block',
+			'wc-cart-block-frontend'
+		], true ) ) {
 			return $dependencies;
 		}
 		$context = null;
@@ -51,12 +56,11 @@ class PayLaterMessaging {
 			$context = $this->context::CART;
 		}
 		if ( $context && wc_string_to_bool( $this->settings->get_option( "{$context}_enabled" ) ) ) {
-			$this->assets->register_script( 'wc-ppcp-blocks-commons', 'build/blocks-commons.js' );
-			$this->assets->register_script( 'wc-ppcp-blocks-paylater-messaging', 'build/paylater-messaging.js', [ 'wc-ppcp-blocks-commons' ] );
+			$this->assets->register_script( 'wc-ppcp-blocks-paylater-messaging', 'build/paylater-messaging.js' );
 
 			wp_enqueue_style( 'wc-ppcp-blocks-styles' );
 
-			$dependencies[]   = 'wc-ppcp-blocks-paylater-messaging';
+			$dependencies[] = 'wc-ppcp-blocks-paylater-messaging';
 
 			$this->registered = true;
 		}

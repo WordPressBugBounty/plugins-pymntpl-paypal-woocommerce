@@ -53,7 +53,8 @@ class PaymentHandler extends LegacyPaymentHandler {
 				$paypal_order_id = $this->cache->get( sprintf( '%s_%s', $this->payment_method->id, Constants::PAYPAL_ORDER_ID ) );
 
 				// If there isn't an existing PayPal order ID, create a PayPal order.
-				if ( ! $paypal_order_id ) {
+				// If the order ID came from the cache, but the customer is now using a saved payment method, create a new order.
+				if ( ! $paypal_order_id || ( $this->payment_method->supports( 'vault' ) && $this->payment_method->should_use_saved_payment_method() ) ) {
 					$args = $this->get_create_order_params( $order );
 
 					$this->payment_method->logger->info(
@@ -97,7 +98,7 @@ class PaymentHandler extends LegacyPaymentHandler {
 						$paypal_order = $this->client->orders->capture( $paypal_order->getId() );
 					} else {
 						$this->payment_method->logger->info( sprintf( 'Authorizing payment for PayPal order %s via %s. Order ID: %s', $paypal_order->getId(), __METHOD__, $order->get_id() ), 'payment' );
-						$paypal_order = $this->client->orders->authorize( $paypal_order->getId(), );
+						$paypal_order = $this->client->orders->authorize( $paypal_order->getId() );
 					}
 				}
 			}
@@ -176,6 +177,7 @@ class PaymentHandler extends LegacyPaymentHandler {
 				$order->payment_complete( $result->get_capture_id() );
 			}
 		} else {
+			$order->set_transaction_id( $result->get_authorization_id() );
 			$order->update_meta_data( Constants::AUTHORIZATION_ID, $result->get_authorization_id() );
 			$order->update_status( apply_filters( 'wc_ppcp_authorized_order_status', $this->payment_method->get_option( 'authorize_status', 'on-hold' ), $order, $result->get_paypal_order(), $this ) );
 		}
@@ -230,12 +232,11 @@ class PaymentHandler extends LegacyPaymentHandler {
 
 		if ( $this->payment_method->supports( 'vault' ) ) {
 			if ( $this->payment_method->should_use_saved_payment_method() ) {
-				$id             = $this->payment_method->get_saved_payment_method_token_id_from_request( $order );
-				$payment_source = ( new PaymentSource() )
-					->setToken( ( new Token() )->setId( $id )->setType( Token::PAYMENT_METHOD_TOKEN ) );
-				$paypal_order->setPaymentSource( $payment_source );
+				$id = $this->payment_method->get_saved_payment_method_token_id_from_request( $order );
 				$this->payment_method->set_payment_token_id( $id );
-				$order->update_meta_data( Constants::PAYMENT_METHOD_TOKEN, $this->payment_method->get_payment_token_id() );
+				$order->update_meta_data( Constants::PAYMENT_METHOD_TOKEN, $id );
+				$payment_source = $this->factories->paymentSource->from_order();
+				$paypal_order->setPaymentSource( $payment_source );
 			} else {
 				$paypal_order->setPaymentSource( $this->factories->paymentSource->from_checkout() );
 			}
@@ -254,6 +255,7 @@ class PaymentHandler extends LegacyPaymentHandler {
 	protected function get_update_order_params( \WC_Order $order, Order $paypal_order ) {
 		$this->factories->initialize( $order );
 		$patches = [];
+
 		/**
 		 * @var PurchaseUnit $pu
 		 */
@@ -262,15 +264,20 @@ class PaymentHandler extends LegacyPaymentHandler {
 		 * @var PurchaseUnit $purchase_unit
 		 */
 		foreach ( $paypal_order->purchase_units as $purchase_unit ) {
-			if ( $purchase_unit->getReferenceId() ) {
-				$pu->setReferenceId( $purchase_unit->getReferenceId() );
-			} else {
-				$pu->setReferenceId( 'default' );
-			}
-			$pu->patch();
-			$pu->addPatchRequest( '', PatchRequest::REPLACE );
+			$purchase_unit->setAmount( $pu->getAmount() );
+			$purchase_unit->setInvoiceId( $pu->getInvoiceId() );
+			$purchase_unit->setCustomId( $pu->getCustomId() );
+			$purchase_unit->setItems( $pu->getItems() );
+			$purchase_unit->setDescription( $pu->getDescription() );
 
-			$patches = array_merge( $patches, $pu->getPatchRequests() );
+			$purchase_unit->setShipping( $pu->getShipping() );
+
+			$purchase_unit->patch();
+			$purchase_unit->addPatchRequest( '', PatchRequest::REPLACE );
+
+			$patches = array_merge( $patches, $purchase_unit->getPatchRequests() );
+
+			//$this->payment_method->logger->info( 'PayPal Patches: ' . print_r( $patches, true ) );
 		}
 
 		/**
@@ -292,10 +299,9 @@ class PaymentHandler extends LegacyPaymentHandler {
 	 * @param string    $reason
 	 */
 	public function process_refund( \WC_Order $order, $amount, $reason = '' ) {
-		$id = $order->get_transaction_id();
-		if ( empty( $id ) ) {
-			// transaction is empty so check if there is an authorization ID.
-			$auth_id = $order->get_meta( Constants::AUTHORIZATION_ID );
+		$id      = $order->get_transaction_id();
+		$auth_id = $order->get_meta( Constants::AUTHORIZATION_ID );
+		if ( empty( $id ) || $id === $auth_id ) {
 			if ( ! $auth_id ) {
 				throw new \Exception( __( 'To process a refund, there must be a transaction id associated with the order.',
 					'pymntpl-paypal-woocommerce' ) );
@@ -391,9 +397,9 @@ class PaymentHandler extends LegacyPaymentHandler {
 	/**
 	 * @param \WC_Order $order
 	 *
-	 * @since 1.0.22
 	 * @return void
 	 * @throws \Exception
+	 * @since 1.0.22
 	 */
 	public function process_order_cancellation( \WC_Order $order ) {
 		$txn_id      = $order->get_transaction_id();
@@ -451,6 +457,7 @@ class PaymentHandler extends LegacyPaymentHandler {
 	 * @param \WC_Order       $order
 	 *
 	 * @return void
+	 * @throws \Exception
 	 */
 	private function validate_paypal_order( $paypal_order, $order ) {
 		// Only validate orders with a CREATED status because that means they haven't been approved yet.

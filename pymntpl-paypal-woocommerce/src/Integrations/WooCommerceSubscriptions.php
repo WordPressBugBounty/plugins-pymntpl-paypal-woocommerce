@@ -384,11 +384,11 @@ class WooCommerceSubscriptions implements PluginIntegrationType {
 	 * @param \PaymentPlugins\WooCommerce\PPCP\ContextHandler $context
 	 * @param AbstractGateway                                 $payment_method
 	 *
-	 * @return void
+	 * @return array
 	 */
 	public function add_payment_method_data( $data, $context, $payment_method ) {
 		if ( $context->is_checkout() ) {
-			if ( \WC_Subscriptions_Cart::cart_contains_free_trial() && WC()->cart->total == 0 ) {
+			if ( \WC_Subscriptions_Cart::cart_contains_free_trial() && WC()->cart->get_total( 'edit' ) == 0 ) {
 				$data['needsSetupToken'] = true;
 			}
 		} else {

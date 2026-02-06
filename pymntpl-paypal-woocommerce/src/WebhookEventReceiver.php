@@ -43,10 +43,13 @@ class WebhookEventReceiver {
 			if ( $order && $order instanceof \WC_Order ) {
 				if ( ! OrderLock::has_order_lock( $order ) ) {
 					$needs_payment_complete = $order->get_meta( Constants::CAPTURE_STATUS ) === Capture::PENDING;
+
+					// If the transaction ID matches the authorization ID, then the payment needs to be completed.
+					$txn_matches_auth_id = $order->get_transaction_id() === $order->get_meta( Constants::AUTHORIZATION_ID );
 					/**
-					 * Only orders that don't have a transaction ID or ar pending review should be completed.
+					 * Only orders that don't have a transaction ID or are pending review should be completed.
 					 */
-					if ( ! $order->get_transaction_id() || $needs_payment_complete || $order->has_status( 'on-hold' ) ) {
+					if ( ! $order->get_transaction_id() || $txn_matches_auth_id || $needs_payment_complete || $order->has_status( 'on-hold' ) ) {
 						$paypal_order_id = $order->get_meta( Constants::ORDER_ID );
 						if ( $paypal_order_id ) {
 							$paypal_order = $this->client->orderMode( $order )->orders->retrieve( $paypal_order_id );

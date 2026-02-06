@@ -64,8 +64,8 @@ abstract class AbstractRoute {
 	/**
 	 * @param $notice_type
 	 *
-	 * @since 1.0.54
 	 * @return void
+	 * @since 1.0.54
 	 */
 	protected function get_wc_notice( $notice_type = '', $default = '' ) {
 		$notices = \wc_get_notices( $notice_type );
@@ -76,6 +76,20 @@ abstract class AbstractRoute {
 		}
 
 		return $default;
+	}
+
+	/**
+	 * @param $request
+	 *
+	 * @since 1.0.6
+	 */
+	protected function populate_post_data( $request ) {
+		/**
+		 * Some 3rd party plugins depend on the $_POST array being populated
+		 */
+		//phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$_POST    = array_merge( $_POST, $request->get_json_params() );
+		$_REQUEST = array_merge( $_REQUEST, $request->get_json_params() );
 	}
 
 }

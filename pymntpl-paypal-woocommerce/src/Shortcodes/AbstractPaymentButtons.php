@@ -13,18 +13,32 @@ class AbstractPaymentButtons extends AbstractShortCode {
 		return $this->payment_gateways->get_payment_method_registry()->get( $this->gateway_id );
 	}
 
+	public function get_gateways() {
+		$gateways = [];
+		foreach ( $this->attributes->get( 'gateway_ids' ) as $id ) {
+			$gateway = $this->payment_gateways->get_payment_method_registry()->get( $id );
+			if ( $gateway->enabled === 'yes' ) {
+				$gateways[] = $gateway;
+			}
+		}
+
+		return $gateways;
+	}
+
 	public function parse_attributes( $attributes ) {
 		$defaults = [
-			'layout'  => 'vertical',
-			'funding' => 'paypal',
-			'label'   => $this->get_gateway()->get_option( 'button_label' ),
-			'shape'   => $this->get_gateway()->get_option( 'button_shape', 'rect' ),
-			'height'  => $this->get_gateway()->get_option( 'button_height' )
+			'gateway_ids' => 'ppcp',
+			'layout'      => 'vertical',
+			'funding'     => 'paypal',
+			'label'       => $this->get_gateway()->get_option( 'button_label' ),
+			'shape'       => $this->get_gateway()->get_option( 'button_shape', 'rect' ),
+			'height'      => $this->get_gateway()->get_option( 'button_height' )
 		];
 
-		$attributes            = \wp_parse_args( $attributes, $defaults );
-		$attributes['funding'] = explode( ',', $attributes['funding'] );
-		$attributes['height']  = (int) $attributes['height'];
+		$attributes                = \wp_parse_args( $attributes, $defaults );
+		$attributes['funding']     = explode( ',', $attributes['funding'] );
+		$attributes['height']      = (int) $attributes['height'];
+		$attributes['gateway_ids'] = array_filter( explode( ',', $attributes['gateway_ids'] ) );
 
 		return $attributes;
 	}

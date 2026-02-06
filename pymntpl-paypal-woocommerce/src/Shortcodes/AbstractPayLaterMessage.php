@@ -18,6 +18,12 @@ class AbstractPayLaterMessage extends AbstractShortCode {
 		$this->settings = $container->get( PayLaterMessageSettings::class );
 	}
 
+	public function get_script_handles() {
+		$handles[] = 'wc-ppcp-paylater-messages';
+
+		return $handles;
+	}
+
 	public function parse_attributes( $attributes ) {
 		$defaults = $this->settings->get_context_options( $this->style_key )['style'];
 
@@ -37,6 +43,7 @@ class AbstractPayLaterMessage extends AbstractShortCode {
 		if ( ! $data ) {
 			$data = [];
 		}
+		$data['enabled']                   = true;
 		$data['enabled']                   = true;
 		$data['isShortcode']               = true;
 		$data[ $this->style_key ]['style'] = [

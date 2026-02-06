@@ -75,8 +75,11 @@ abstract class AbstractShortCode {
 		return true;
 	}
 
-	public function initialize_properties(Container $container){
+	public function initialize_properties( Container $container ) {
+	}
 
+	public function get_script_handles() {
+		return [];
 	}
 
 	public function before_render() {

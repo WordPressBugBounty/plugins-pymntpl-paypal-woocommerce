@@ -3,9 +3,6 @@
 
 namespace PaymentPlugins\WooCommerce\PPCP;
 
-
-use PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\AbstractGateway;
-
 class ProductSettings extends \WC_Settings_API {
 
 	private $product_id = 0;

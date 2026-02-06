@@ -40,7 +40,8 @@ class CartRefresh extends AbstractRoute {
 		return [
 			'cart' => [
 				'total'         => NumberUtil::round( $cart->total, 2 ),
-				'needsShipping' => $cart->needs_shipping()
+				'needsShipping' => $cart->needs_shipping(),
+				'currency'      => get_woocommerce_currency()
 			]
 		];
 	}

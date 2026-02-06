@@ -4,8 +4,8 @@ namespace PaymentPlugins\PPCP\FunnelKit\Upsell;
 
 use PaymentPlugins\PPCP\FunnelKit\Upsell\PaymentGateways\CreditCard;
 use PaymentPlugins\PPCP\FunnelKit\Upsell\PaymentGateways\PayPal;
+use PaymentPlugins\PPCP\FunnelKit\Upsell\PaymentGateways\ApplePay;
 use PaymentPlugins\WooCommerce\PPCP\Constants;
-use PaymentPlugins\WooCommerce\PPCP\Main;
 use PaymentPlugins\WooCommerce\PPCP\Rest\RestController;
 
 class PaymentGatewaysController {
@@ -35,8 +35,9 @@ class PaymentGatewaysController {
 
 	private function get_payment_gateways() {
 		return [
-			'ppcp'      => 'PaymentPlugins\PPCP\FunnelKit\Upsell\PaymentGateways\PayPal',
-			'ppcp_card' => 'PaymentPlugins\PPCP\FunnelKit\Upsell\PaymentGateways\CreditCard'
+			'ppcp'          => 'PaymentPlugins\PPCP\FunnelKit\Upsell\PaymentGateways\PayPal',
+			'ppcp_card'     => 'PaymentPlugins\PPCP\FunnelKit\Upsell\PaymentGateways\CreditCard',
+			'ppcp_applepay' => 'PaymentPlugins\PPCP\FunnelKit\Upsell\PaymentGateways\ApplePay',
 		];
 	}
 
@@ -47,6 +48,7 @@ class PaymentGatewaysController {
 	public function register_gateways( PaymentGatewaysRegistry $registry, $container ) {
 		$registry->register( $container->get( PayPal::class ) );
 		$registry->register( $container->get( CreditCard::class ) );
+		$registry->register( $container->get( ApplePay::class ) );
 	}
 
 	private function get_payment_method_script_handles() {
@@ -93,8 +95,8 @@ class PaymentGatewaysController {
 
 	/**
 	 * @param \WC_Subscription $subscription
-	 * @param string           $product_hash
-	 * @param \WC_Order        $order
+	 * @param string $product_hash
+	 * @param \WC_Order $order
 	 *
 	 * @return void
 	 */

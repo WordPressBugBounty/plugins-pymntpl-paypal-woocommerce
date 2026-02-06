@@ -9,7 +9,7 @@ if ( $gateway->supports( 'vault' ) && is_checkout() ) {
 do_action( 'wc_ppcp_before_card_container', $gateway );
 ?>
 <div class="wc-payment-form wc-ppcp-card-payment-form">
-    <div class="wc-ppcp-card-payment-method__container">
+    <div class="wc-ppcp_card-payment-method__container">
 		<?php if ( $gateway->is_cardholder_name_enabled() ): ?>
             <div class="ppcp-card-fields--container card-name-field">
                 <div class="ppcp-card-field--container card-name-field">

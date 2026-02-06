@@ -32,7 +32,7 @@ class SettingsApi {
 	public function output() {
 		global $current_section;
 		$this->add_script_data();
-		$this->asset_data->do_asset_data();
+		$this->asset_data->print_data( 'wcPPCPSettings', $this->asset_data->get_data() );
 		$settings = $this->settings_registry->get( $current_section );
 		if ( $settings ) {
 			$settings->admin_options();
@@ -43,7 +43,10 @@ class SettingsApi {
 		foreach ( $this->settings_registry->get_registered_integrations() as $settings ) {
 			$this->asset_data->add( $settings->id, $settings->get_settings_script_data() );
 		}
-		$this->asset_data->add( 'adminAjaxUrl', add_query_arg( array( 'action' => 'wc_ppcp_admin_request', 'path' => '/$path' ), admin_url( 'admin-ajax.php' ) ) );
+		$this->asset_data->add( 'adminAjaxUrl', add_query_arg( array(
+			'action' => 'wc_ppcp_admin_request',
+			'path'   => '/$path'
+		), admin_url( 'admin-ajax.php' ) ) );
 		do_action( 'wc_ppcp_admin_add_script_data', $this->asset_data );
 	}
 
@@ -55,7 +58,11 @@ class SettingsApi {
 			$section = isset( $_REQUEST['section'] ) ? wc_clean( wp_unslash( $_REQUEST['section'] ) ) : '';
 			if ( strpos( $section, 'ppcp' ) !== false ) {
 				$handles = apply_filters( 'wc_ppcp_admin_script_dependencies', [], $section );
-				$this->assets->enqueue_script( 'wc-ppcp-admin-commons', 'build/js/admin-commons.js', $handles );
+				if ( ! empty( $handles ) ) {
+					foreach ( $handles as $handle ) {
+						wp_enqueue_script( $handle );
+					}
+				}
 				$this->assets->enqueue_style( 'wc-ppcp-admin', 'build/css/admin.css' );
 			}
 		}

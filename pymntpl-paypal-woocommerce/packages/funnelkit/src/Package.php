@@ -4,7 +4,6 @@ namespace PaymentPlugins\PPCP\FunnelKit;
 
 use PaymentPlugins\PayPalSDK\PayPalClient;
 use PaymentPlugins\PPCP\FunnelKit\Checkout\FieldMappings;
-use PaymentPlugins\PPCP\FunnelKit\Upsell\PaymentGateways\CreditCard;
 use PaymentPlugins\PPCP\FunnelKit\Upsell\PaymentGatewaysController;
 use PaymentPlugins\WooCommerce\PPCP\Assets\AssetsApi;
 use PaymentPlugins\WooCommerce\PPCP\Cache\CacheHandler;
@@ -12,7 +11,9 @@ use PaymentPlugins\WooCommerce\PPCP\Config;
 use PaymentPlugins\WooCommerce\PPCP\Package\AbstractPackage;
 use PaymentPlugins\WooCommerce\PPCP\PaymentButtonController;
 use PaymentPlugins\WooCommerce\PPCP\PaymentHandler;
+use PaymentPlugins\PPCP\FunnelKit\Upsell\PaymentGateways\CreditCard;
 use PaymentPlugins\PPCP\FunnelKit\Upsell\PaymentGateways\PayPal;
+use PaymentPlugins\PPCP\FunnelKit\Upsell\PaymentGateways\ApplePay;
 
 class Package extends AbstractPackage {
 
@@ -68,6 +69,9 @@ class Package extends AbstractPackage {
 		} );
 		$this->container->register( CreditCard::class, function ( $container ) {
 			return new CreditCard( $container->get( self::ASSETS ), $container->get( PaymentHandler::class ), WFOCU_Core()->log );
+		} );
+		$this->container->register( Applepay::class, function ( $container ) {
+			return new Applepay( $container->get( self::ASSETS ), $container->get( PaymentHandler::class ), WFOCU_Core()->log );
 		} );
 	}
 

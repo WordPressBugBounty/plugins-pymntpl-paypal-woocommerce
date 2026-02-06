@@ -17,17 +17,21 @@ class ProductPaymentButtons extends AbstractPaymentButtons {
 		return [ 'product' ];
 	}
 
-	public function before_render() {
-		$handles = $this->get_gateway()->get_product_script_handles();
-		$this->payment_gateways->add_scripts( $handles );
+	public function get_script_handles() {
+		$handles = [];
+		foreach ( $this->get_gateways() as $gateway ) {
+			$handles = array_merge( $handles, $gateway->get_product_script_handles() );
+		}
+
+		return $handles;
 	}
 
 	public function render() {
 		global $product;
 		if ( $product ) {
-			$this->assets_data->add( 'product', Utils::get_product_data( $product ) );
+			//$this->assets_data->add( 'product', Utils::get_product_data( $product ) );
 			$this->templates->load_template( 'product/payment-methods.php', [
-				'payment_methods' => [ $this->get_gateway() ],
+				'payment_methods' => $this->get_gateways(),
 				'position'        => 'bottom'
 			] );
 		}

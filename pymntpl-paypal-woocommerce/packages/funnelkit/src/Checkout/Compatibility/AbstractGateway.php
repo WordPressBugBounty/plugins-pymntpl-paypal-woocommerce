@@ -4,6 +4,8 @@ namespace PaymentPlugins\PPCP\FunnelKit\Checkout\Compatibility;
 
 class AbstractGateway {
 
+	protected $id;
+
 	/**
 	 * @var \PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\AbstractGateway
 	 */
@@ -21,4 +23,7 @@ class AbstractGateway {
 		return $this->payment_gateway->is_section_enabled( 'express_checkout' );
 	}
 
+	public function get_id() {
+		return $this->id;
+	}
 }

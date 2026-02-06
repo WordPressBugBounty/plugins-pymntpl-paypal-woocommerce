@@ -3,23 +3,20 @@
 namespace PaymentPlugins\PPCP\Blocks\Payments\Gateways;
 
 use PaymentPlugins\PPCP\Blocks\Utils\ActionUtils;
-use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\AdvancedSettings;
 
 class CreditCardGateway extends AbstractGateway {
 
 	protected $name = 'ppcp_card';
 
 	public function get_payment_method_script_handles() {
-		$this->assets_api->register_script( 'wc-ppcp-blocks-cards', 'build/credit-cards.js', [ 'wc-ppcp-blocks-commons' ] );
-		wp_enqueue_style( 'wc-ppcp-blocks-styles' );
-		wp_enqueue_style( 'wc-ppcp-style' );
+		$this->assets_api->register_script( 'wc-ppcp-blocks-cards', 'build/credit-cards.js' );
 
 		return [ 'wc-ppcp-blocks-cards' ];
 	}
 
 	public function get_payment_method_data() {
 		$base_url          = \plugins_url( 'assets/images/payment-methods/', WC_PLUGIN_FILE );
-		$card_gateway      = wc_ppcp_get_container()->get( \PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\CreditCardGateway::class );
+		$card_gateway      = $this->get_payment_method();
 		$token             = $card_gateway->get_payment_method_token_instance();
 		$format            = $token->get_payment_method_format( $card_gateway->get_option( 'payment_format', 'type_ending_in' ) );
 		$email_detection   = $this->get_setting( 'fastlane_flow' ) === 'email_detection';

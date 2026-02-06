@@ -51,13 +51,13 @@ class AdminOrder extends \PaymentPlugins\WooCommerce\PPCP\Rest\Routes\Admin\Abst
 	}
 
 	public function handle_get_request( \WP_REST_Request $request ) {
-		$order          = wc_get_order( absint( $request['order_id'] ) );
-		$transaction_id = $order->get_transaction_id();
-		$data           = [ 'can_capture' => false ];
+		$order            = wc_get_order( absint( $request['order_id'] ) );
+		$transaction_id   = $order->get_transaction_id();
+		$authorization_id = $order->get_meta( Constants::AUTHORIZATION_ID );
+		$data             = [ 'can_capture' => false ];
 		//fetch the order
-		if ( empty( $transaction_id ) ) {
-			$authorization_id = $order->get_meta( Constants::AUTHORIZATION_ID );
-			// there is an auth ID and no transaction, so this order can be captured
+		if ( empty( $transaction_id ) || $transaction_id === $authorization_id ) {
+			// The txn ID is the auth ID, so this order can be captured
 			if ( $authorization_id ) {
 				$authorization = $this->client->orderMode( $order )->authorizations->retrieve( $authorization_id );
 				if ( is_wp_error( $authorization ) ) {

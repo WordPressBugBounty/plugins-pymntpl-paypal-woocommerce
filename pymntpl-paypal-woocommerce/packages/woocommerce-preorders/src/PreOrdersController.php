@@ -19,12 +19,6 @@ class PreOrdersController {
 
 	private $payment_controller;
 
-	private $client;
-
-	private $factories;
-
-	private $log;
-
 	public function __construct( PaymentController $payment_controller ) {
 		$this->payment_controller = $payment_controller;
 	}
@@ -39,6 +33,10 @@ class PreOrdersController {
 		add_filter( 'wc_ppcp_add_payment_method_data', [ $this, 'add_payment_method_data' ], 10, 3 );
 		add_filter( 'wc_ppcp_payment_method_save_required', [ $this, 'get_payment_method_save_required' ], 10, 2 );
 		add_filter( 'wc_ppcp_checkout_payment_method_save_required', [ $this, 'get_checkout_payment_method_save_required' ], 10, 3 );
+
+		add_filter( 'wc_ppcp_product_payment_gateways', [ $this, 'filter_product_payment_gateways' ], 10, 2 );
+		add_filter( 'wc_ppcp_express_checkout_payment_gateways', [ $this, 'filter_express_payment_gateways' ] );
+		add_filter( 'wc_ppcp_cart_payment_gateways', [ $this, 'filter_cart_payment_gateways' ] );
 	}
 
 	/**
@@ -164,10 +162,51 @@ class PreOrdersController {
 					$data['needsSetupToken'] = true;
 				}
 			}
-		} elseif ( $context->is_order_pay() ) {
+		} elseif ( $context->is_product() && $context->get_product_id() ) {
+			$product = \wc_get_product( $context->get_product_id() );
+			if ( \WC_Pre_Orders_Product::product_is_charged_upon_release( $product ) ) {
+				$data['needsSetupToken'] = true;
+			}
 		}
 
 		return $data;
 	}
+
+	public function filter_product_payment_gateways( $payment_gateways, $product ) {
+		if ( \WC_Pre_Orders_Product::product_is_charged_upon_release( $product ) ) {
+			foreach ( $payment_gateways as $gateway ) {
+				if ( ! $gateway->supports( 'pre-orders' ) ) {
+					unset( $payment_gateways[ $gateway->id ] );
+				}
+			}
+		}
+
+		return $payment_gateways;
+	}
+
+	public function filter_cart_payment_gateways( $payment_gateways ) {
+		if ( \WC_Pre_Orders_Cart::cart_contains_pre_order() ) {
+			foreach ( $payment_gateways as $gateway ) {
+				if ( ! $gateway->supports( 'pre-orders' ) ) {
+					unset( $payment_gateways[ $gateway->id ] );
+				}
+			}
+		}
+
+		return $payment_gateways;
+	}
+
+	public function filter_express_payment_gateways( $payment_gateways ) {
+		if ( \WC_Pre_Orders_Cart::cart_contains_pre_order() ) {
+			foreach ( $payment_gateways as $gateway ) {
+				if ( ! $gateway->supports( 'pre-orders' ) ) {
+					unset( $payment_gateways[ $gateway->id ] );
+				}
+			}
+		}
+
+		return $payment_gateways;
+	}
+
 
 }

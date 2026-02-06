@@ -16,7 +16,8 @@ class ShippingOptionsFactory extends AbstractFactory {
 		// loop through shipping options and format then
 		$incl_tax                = $this->display_prices_including_tax();
 		$chosen_shipping_methods = WC()->session->get( 'chosen_shipping_methods', [] );
-		$methods                 = new Collection();
+		$shipping_options        = [];
+
 		foreach ( WC()->shipping()->get_packages() as $i => $package ) {
 			foreach ( $package['rates'] as $method ) {
 				/**
@@ -25,8 +26,18 @@ class ShippingOptionsFactory extends AbstractFactory {
 				 */
 				$amount   = $incl_tax ? (float) $method->get_cost() + (float) $method->get_shipping_tax() : (float) $method->get_cost();
 				$selected = isset( $chosen_shipping_methods[ $i ] ) && $chosen_shipping_methods[ $i ] === $method->id;
-				$methods->add( $this->get_shipping_method_option( $amount, $method, $i, $selected ) );
+				$shipping_options[] = $this->get_shipping_method_option( $amount, $method, $i, $selected );
 			}
+		}
+
+		// Sort shipping options by amount from least to greatest
+		usort( $shipping_options, function ( $a, $b ) {
+			return $a->getAmount()->getValue() <=> $b->getAmount()->getValue();
+		} );
+
+		$methods = new Collection();
+		foreach ( $shipping_options as $option ) {
+			$methods->add( $option );
 		}
 
 		return $methods;

@@ -105,6 +105,10 @@ abstract class AbstractGateway extends \WC_Payment_Gateway {
 		return [];
 	}
 
+	public function get_minicart_script_handles() {
+		return [];
+	}
+
 	/**
 	 * @param \PaymentPlugins\WooCommerce\PPCP\ContextHandler $context
 	 *
@@ -127,6 +131,14 @@ abstract class AbstractGateway extends \WC_Payment_Gateway {
 
 	public function is_section_enabled( $key ) {
 		return in_array( $key, $this->get_option( 'sections', [] ) );
+	}
+
+	/**
+	 * @return bool
+	 * @since 2.0.1
+	 */
+	public function is_checkout_section_enabled() {
+		return $this->is_section_enabled( 'checkout' );
 	}
 
 	public function is_cart_section_enabled() {
@@ -260,6 +272,9 @@ abstract class AbstractGateway extends \WC_Payment_Gateway {
 			if ( ! is_user_logged_in() ) {
 				throw new \Exception( __( 'You must be logged in to add a payment method.', 'pymntpl-paypal-woocommerce' ) );
 			}
+			if ( ! $this->supports( 'vault' ) ) {
+				throw new \Exception( __( 'This payment method does not supports vaulting.', 'pymntpl-paypal-woocommerce' ) );
+			}
 
 			$payment_token_id = $this->get_payment_token_id_from_request();
 
@@ -348,6 +363,7 @@ abstract class AbstractGateway extends \WC_Payment_Gateway {
 	}
 
 	public function get_transaction_url( $order ) {
+		//https://www.paypal.com/unifiedtransactions/details/payment/%s
 		$this->view_transaction_url = 'https://www.paypal.com/activity/payment/%s';
 		if ( $order->get_meta( Constants::PPCP_ENVIRONMENT ) === 'sandbox' ) {
 			$this->view_transaction_url = 'https://www.sandbox.paypal.com/activity/payment/%s';
@@ -394,8 +410,8 @@ abstract class AbstractGateway extends \WC_Payment_Gateway {
 	 *
 	 * @param \WC_Order|null $order
 	 *
-	 * @since 1.1.0
 	 * @return bool
+	 * @since 1.1.0
 	 */
 	public function is_payment_method_save_required( $order = null ) {
 		if ( $order instanceof \WC_Order ) {
@@ -420,8 +436,8 @@ abstract class AbstractGateway extends \WC_Payment_Gateway {
 	}
 
 	/**
-	 * @since 1.1.14
 	 * @return false
+	 * @since 1.1.14
 	 */
 	public function is_immediate_payment_required() {
 		return false;

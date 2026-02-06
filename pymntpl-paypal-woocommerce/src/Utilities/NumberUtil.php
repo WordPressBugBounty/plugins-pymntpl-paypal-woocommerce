@@ -23,9 +23,9 @@ class NumberUtil {
 	}
 
 	/**
-	 * @param float  $value
+	 * @param float $value
 	 * @param string $currency
-	 * @param int    $decimals
+	 * @param int $decimals
 	 *
 	 * @return string
 	 */
@@ -34,6 +34,31 @@ class NumberUtil {
 			? Currency::get_currency_decimals()[ $currency ] : $decimals;
 
 		return NumberUtil::round( $value, $decimals );
+	}
+
+	public static function add_precision( $value, $currency ) {
+		if ( ! is_numeric( $value ) ) {
+			$value = 0;
+		}
+
+		// Round to WooCommerce price decimals first
+		$decimals = wc_get_price_decimals();
+		$value    = floatval( $value );
+
+		// Get currency, default to WooCommerce currency if empty
+		$currency = empty( $currency ) ? get_woocommerce_currency() : $currency;
+
+		// Get the currency decimals/exponent from the Currency class
+		$currencies = Currency::get_currency_decimals();
+		$exp        = isset( $currencies[ $currency ] ) ? $currencies[ $currency ] : 2;
+
+		// Multiply by precision to convert to cents/smallest unit
+		$value = $value * pow( 10, $exp );
+
+		// Round to remove any floating point precision issues
+		$value = round( $value, 0, PHP_ROUND_HALF_UP );
+
+		return $value;
 	}
 
 }

@@ -2,10 +2,11 @@
 
 namespace PaymentPlugins\WooCommerce\PPCP\Payments\Gateways;
 
+use PaymentPlugins\PPCP\WooCommercePreOrders\Traits\PreOrdersTrait;
+use PaymentPlugins\PPCP\WooCommerceSubscriptions\Traits\SubscriptionTrait;
 use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\AdvancedSettings;
-use PaymentPlugins\WooCommerce\PPCP\Messages;
-use PaymentPlugins\WooCommerce\PPCP\PaymentResult;
 use PaymentPlugins\WooCommerce\PPCP\Tokens\CreditCardToken;
+use PaymentPlugins\WooCommerce\PPCP\Traits\CardPaymentNoteTrait;
 use PaymentPlugins\WooCommerce\PPCP\Traits\TokenizationTrait;
 use PaymentPlugins\WooCommerce\PPCP\Traits\VaultTokenTrait;
 use PaymentPlugins\WooCommerce\PPCP\Traits\ThreeDSecureTrait;
@@ -15,6 +16,9 @@ class CreditCardGateway extends AbstractGateway {
 	use VaultTokenTrait;
 	use TokenizationTrait;
 	use ThreeDSecureTrait;
+	use CardPaymentNoteTrait;
+	use SubscriptionTrait;
+	use PreOrdersTrait;
 
 	public $id = 'ppcp_card';
 
@@ -28,12 +32,13 @@ class CreditCardGateway extends AbstractGateway {
 
 	public function __construct( ...$args ) {
 		parent::__construct( ...$args );
-		$this->method_title       = __( 'PayPal Credit Card Gateway By Payment Plugins', 'pymntpl-paypal-woocommerce' );
-		$this->tab_label          = __( 'PayPal Credit Card Settings', 'pymntpl-paypal-woocommerce' );
-		$this->icon               = $this->assets->assets_url( 'assets/img/paypal_logo.svg' );
-		$this->method_description = __( 'Offer Credit Cards by PayPal', 'pymntpl-paypal-woocommerce' );
-		$this->order_button_text  = $this->get_option( 'order_button_text' );
-		$this->icon               = $this->get_option( 'card_icons_url', '' );
+		$this->method_title         = __( 'PayPal Credit Card Gateway By Payment Plugins', 'pymntpl-paypal-woocommerce' );
+		$this->tab_label            = __( 'Credit Card Settings', 'pymntpl-paypal-woocommerce' );
+		$this->icon                 = $this->assets->assets_url( 'assets/img/paypal_logo.svg' );
+		$this->method_description   = __( 'Offer Credit Cards by PayPal', 'pymntpl-paypal-woocommerce' );
+		$this->order_button_text    = $this->get_option( 'order_button_text' );
+		$this->icon                 = $this->get_option( 'card_icons_url', '' );
+		$this->settings['sections'] = [ 'checkout', 'order_pay', 'add_payment_method' ];
 	}
 
 	public function init_form_fields() {
@@ -185,14 +190,6 @@ class CreditCardGateway extends AbstractGateway {
 					'data-show-if' => '3ds_enabled=true'
 				],
 			],
-			'3ds_config'               => [
-				'type'              => 'configure_3ds',
-				'label'             => __( 'Configure 3DS', 'pymntpl-paypal-woocommerce' ),
-				'default'           => $this->get_3ds_actions(),
-				'sanitize_callback' => function ( $value ) {
-					return ! is_array( $value ) ? [] : array_map( 'wc_clean', array_map( 'stripslashes', $value ) );
-				}
-			],
 			'fastlane_title'           => [
 				'type'  => 'title',
 				'title' => __( 'Fastlane by PayPal', 'pymntpl-paypal-woocommerce' ),
@@ -278,7 +275,10 @@ class CreditCardGateway extends AbstractGateway {
 	public function express_checkout_fields() {
 		$icon_url = $this->assets->assets_url( 'assets/img/fastlane.svg' );
 
-		return $this->template_loader->load_template( 'fastlane/express-checkout.php', [ 'gateway' => $this, 'icon_url' => $icon_url ] );
+		$this->template_loader->load_template( 'fastlane/express-checkout.php', [
+			'gateway'  => $this,
+			'icon_url' => $icon_url
+		] );
 	}
 
 	public function get_admin_script_dependencies() {
@@ -298,7 +298,7 @@ class CreditCardGateway extends AbstractGateway {
 	}
 
 	public function get_checkout_script_handles() {
-		$this->assets->register_script( 'wc-ppcp-card-gateway', 'build/js/credit-cards.js', [ 'wc-ppcp-frontend-commons' ] );
+		$this->assets->register_script( 'wc-ppcp-card-gateway', 'build/js/credit-cards.js' );
 		$this->tokenization_script();
 
 		return [ 'wc-ppcp-card-gateway' ];
@@ -307,6 +307,8 @@ class CreditCardGateway extends AbstractGateway {
 	public function get_payment_method_data( $context ) {
 		$cardname_required = wc_string_to_bool( $this->get_option( 'cardholder_name_required', 'no' ) ) && wc_string_to_bool( $this->get_option( 'cardholder_name', 'no' ) );
 		$data              = [
+			'title'            => $this->get_title(),
+			'buttonPlacement'  => 'place_order',
 			'needsSetupToken'  => $context->is_add_payment_method(),
 			'cardNameRequired' => $cardname_required,
 			'fields'           => [
@@ -328,8 +330,8 @@ class CreditCardGateway extends AbstractGateway {
 					'INVALID_EXPIRY' => __( 'Your card\'s expiration date is incomplete.', 'pymntpl-paypal-woocommerce' ),
 					'INVALID_CVV'    => __( 'Your card\'s security code is incomplete.', 'pymntpl-paypal-woocommerce' )
 				],
-				'not_available_admin'  => __( 'Advanced card processing is not available. Login to developer.paypal.com > Apps & Credentials and click your application. Under "Features" check "Advanced Card Processing".', 'pymntpl-paypal-woocommerce' ),
-				'not_available'        => __( 'Credit card processing is not available. Please use another payment method.', 'pymntpl-paypal-woocommerce' ),
+				'unavailable_admin'    => __( 'Advanced card processing is not available. Login to developer.paypal.com > Apps & Credentials and click your application. Under "Features" check "Advanced Card Processing".', 'pymntpl-paypal-woocommerce' ),
+				'unavailable'          => __( 'Credit card processing is not available. Please use another payment method.', 'pymntpl-paypal-woocommerce' ),
 				'incomplete_card_form' => __( 'The credit card form is incomplete', 'pymntpl-paypal-woocommerce' )
 			],
 			'styles'           => [
@@ -365,15 +367,6 @@ class CreditCardGateway extends AbstractGateway {
 	 */
 	public function is_cardholder_name_enabled() {
 		return wc_string_to_bool( $this->get_option( 'cardholder_name', 'yes' ) );
-	}
-
-	/**
-	 * Returns true if 3DS is enabled.
-	 *
-	 * @return bool
-	 */
-	public function is_3ds_enabled() {
-		return wc_string_to_bool( $this->get_option( '3ds_enabled', 'no' ) );
 	}
 
 	public function show_card_save_checkbox() {
@@ -425,25 +418,6 @@ class CreditCardGateway extends AbstractGateway {
 		return $value;
 	}
 
-	public function add_payment_complete_note( \WC_Order $order, PaymentResult $result ) {
-		if ( $result->is_captured() ) {
-			$charge_text = sprintf( __( 'Capture ID: %s', 'pymntpl-paypal-woocommerce' ), $result->get_capture_id() );
-		} else {
-			$charge_text = sprintf( __( 'Authorization ID: %s', 'pymntpl-paypal-woocommerce' ), $result->get_authorization_id() );
-		}
-		$token = $this->get_payment_method_token_instance();
-		$token->initialize_from_paypal_order( $result->get_paypal_order() );
-
-		$order->add_order_note(
-			sprintf(
-				__( 'PayPal order %1$s created. %2$s. Payment method: %3$s', 'pymntpl-paypal-woocommerce' ),
-				$result->paypal_order->id,
-				$charge_text,
-				$token->get_payment_method_title()
-			)
-		);
-	}
-
 	/**
 	 * Returns true if Fastlane is enabled.
 	 *
@@ -454,125 +428,11 @@ class CreditCardGateway extends AbstractGateway {
 		return \wc_string_to_bool( $this->get_option( 'fastlane_enabled', 'no' ) );
 	}
 
-	public function validate_paypal_order( $paypal_order, $order ) {
-		if ( $this->is_3ds_enabled() ) {
-			// 3DS is enabled so check conditions for payments.
-			$payment_source        = $paypal_order->getPaymentSource();
-			$card                  = $payment_source->getCard();
-			$authentication_result = $card->getAuthenticationResult();
-
-			if ( ! $authentication_result ) {
-				$key = 'N_N_NO';
-			} else {
-				$threed_result = $authentication_result->getThreeDSecure();
-
-				$key = sprintf(
-					'%1$s_%2$s_%3$s',
-					$threed_result->getEnrollmentStatus(),
-					$threed_result->getAuthenticationStatus(),
-					$authentication_result->getLiabilityShift()
-				);
-			}
-
-			$recommended_actions = wp_parse_args( $this->get_option( '3ds_config', [] ), $this->get_3ds_actions() );
-
-			if ( isset( $recommended_actions[ $key ] ) ) {
-				$messages = wc_ppcp_get_container()->get( Messages::class );
-				$action   = $recommended_actions[ $key ];
-
-				switch ( $action ) {
-					case 'reject':
-						$text = $messages->get_message( $key, __( '3DS payment has been rejected.', 'pymntpl-paypal-woocommerce' ) );
-						throw new \Exception( $text );
-				}
-			}
-		}
-	}
-
 	/**
-	 * @param $key
-	 * @param $value
-	 *
-	 * @since 1.1.5
-	 * @return void
+	 * @throws \Exception
 	 */
-	public function generate_configure_3ds_html( $key, $data ) {
-		$field_key = $this->get_field_key( $key );
-		$data      = wp_parse_args( $data, [
-			'label'       => '',
-			'desc_tip'    => false,
-			'description' => ''
-		] );
-
-		$value = $this->get_option( $key, [] );
-		if ( ! \is_array( $value ) ) {
-			$value = [];
-		}
-		$actions = $this->get_3ds_actions();
-		$value   = wp_parse_args( $value, $actions );
-
-		ob_start();
-		?>
-        <tr valign="top">
-            <th scope="row" class="titledesc"></th>
-            <td class="forminp">
-                <fieldset>
-                    <button class="button-secondary show3DSModal">
-						<?php echo wp_kses_post( $data['label'] ) ?>
-                    </button>
-                    <div id="3ds-app"></div>
-					<?php
-					// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
-					echo $this->get_description_html( $data ); // WPCS: XSS ok.
-					?>
-					<?php foreach ( $value as $k => $v ) : ?>
-                        <input type="hidden" name="<?php echo esc_attr( $field_key ) . '[' . $k . ']' ?>" value="<?php echo esc_attr( $v ) ?>"
-                               data-key="<?php echo esc_attr( $k ) ?>" data-default="<?php echo esc_attr( $actions[ $k ] ?? '' ) ?>"/>
-					<?php endforeach; ?>
-                </fieldset>
-            </td>
-        </tr>
-		<?php
-		return ob_get_clean();
-	}
-
-	private function get_3ds_actions() {
-		return apply_filters( 'wc_ppcp_get_3ds_actions', [
-			'N_N_NO'       => 'continue',
-			'Y_Y_POSSIBLE' => 'continue',
-			'Y_Y_YES'      => 'continue',
-			'Y_N_NO'       => 'reject',
-			'Y_R_NO'       => 'reject',
-			'Y_A_POSSIBLE' => 'continue',
-			'Y_U_UNKNOWN'  => 'reject',
-			'Y_U_NO'       => 'reject',
-			'Y_C_UNKNOWN'  => 'reject',
-			'Y__NO'        => 'reject',
-			'N__NO'        => 'continue',
-			'U__NO'        => 'continue',
-			'U__UNKNOWN'   => 'reject',
-			'B__NO'        => 'continue',
-			'__UNKNOWN'    => 'reject',
-		] );
-	}
-
-	public function get_admin_script_data() {
-		return [
-			'i18n' => [
-				'save'                  => __( 'Save', 'pymntpl-paypal-woocommerce' ),
-				'cancel'                => __( 'Cancel', 'pymntpl-paypal-woocommerce' ),
-				'reset'                 => __( 'Reset Settings', 'pymntpl-paypal-woocommerce' ),
-				'description'           => __( 'These settings define how payment transactions should be handled based on the customer\'s 3D 
-				Secure enrollment status, authentication outcome, and liability shift result.', 'pymntpl-paypal-woocommerce' ),
-				'continue'              => __( 'Continue', 'pymntpl-paypal-woocommerce' ),
-				'reject'                => __( 'Reject', 'pymntpl-paypal-woocommerce' ),
-				'enrollment_status'     => __( 'Enrollment Status', 'pymntpl-paypal-woocommerce' ),
-				'authentication_status' => __( 'Authentication Status', 'pymntpl-paypal-woocommerce' ),
-				'liability_shift'       => __( 'Liability Shift', 'pymntpl-paypal-woocommerce' ),
-				'action'                => __( 'Action', 'pymntpl-paypal-woocommerce' ),
-				'desc2'                 => sprintf( __( 'For a full description of each response code, click %1$shere%2$s.' ), '<a href="https://developer.paypal.com/docs/checkout/advanced/customize/3d-secure/response-parameters/#supported-parameters" target="_blank">', '<a/>' )
-			]
-		];
+	public function validate_paypal_order( $paypal_order, $order ) {
+		$this->validate_3ds_order( $paypal_order, $order );
 	}
 
 }

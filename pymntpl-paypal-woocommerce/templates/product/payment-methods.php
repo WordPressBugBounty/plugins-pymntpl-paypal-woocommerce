@@ -3,6 +3,7 @@
  * @var \PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\AbstractGateway[] $payment_methods
  * @var bool $below_add_to_cart
  */
+do_action( 'wc_ppcp_before_product_payment_methods' );
 ?>
 <div class="wc-ppcp-product-payments__container <?php echo esc_html( $position ) ?>">
     <ul class="wc-ppcp-product-payment__methods">

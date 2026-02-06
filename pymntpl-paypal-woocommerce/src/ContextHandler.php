@@ -128,11 +128,18 @@ class ContextHandler {
 		return Utils::get_queried_product_id();
 	}
 
-	public function is_checkout_block() {
+	public function is_checkout_shortcode() {
 		$id = get_queried_object_id();
 
 		return $this->is_checkout()
 		       && \is_int( $id )
+		       && wc_post_content_has_shortcode( 'woocommerce_checkout' );
+	}
+
+	public function is_checkout_block() {
+		$id = get_queried_object_id();
+
+		return \is_int( $id )
 		       && class_exists( '\WC_Blocks_Utils' )
 		       && \WC_Blocks_Utils::has_block_in_page( $id, 'woocommerce/checkout' );
 	}

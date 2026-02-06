@@ -15,17 +15,23 @@ use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\PayLaterMessageSettings;
 use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\SettingsApi;
 use PaymentPlugins\WooCommerce\PPCP\Admin\Update;
 use PaymentPlugins\WooCommerce\PPCP\Assets\AssetDataApi;
+use PaymentPlugins\WooCommerce\PPCP\Assets\AssetDataController;
 use PaymentPlugins\WooCommerce\PPCP\Cache\CacheHandler;
 use PaymentPlugins\WooCommerce\PPCP\Cache\CacheInterface;
 use PaymentPlugins\WooCommerce\PPCP\Factories\CoreFactories;
 use PaymentPlugins\WooCommerce\PPCP\Fastlane\FastlaneController;
 use PaymentPlugins\WooCommerce\PPCP\Integrations\PluginIntegrationsRegistry;
+use PaymentPlugins\WooCommerce\PPCP\Orders\OrderAttributionController;
+use PaymentPlugins\WooCommerce\PPCP\Orders\OrderStatusController;
 use PaymentPlugins\WooCommerce\PPCP\Package\PackageController;
 use PaymentPlugins\WooCommerce\PPCP\Package\PackageRegistry;
+use PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\ApplePayGateway;
 use PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\CreditCardGateway;
+use PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\GooglePayGateway;
 use PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\PayPalGateway;
 use PaymentPlugins\WooCommerce\PPCP\Payments\PaymentGateways;
 use PaymentPlugins\WooCommerce\PPCP\Assets\AssetsApi;
+use PaymentPlugins\WooCommerce\PPCP\Products\ProductDataController;
 use PaymentPlugins\WooCommerce\PPCP\Rest\RestController;
 use PaymentPlugins\WooCommerce\PPCP\Shortcodes\CartPayLaterMessage;
 use PaymentPlugins\WooCommerce\PPCP\Shortcodes\CartPaymentButtons;
@@ -102,6 +108,9 @@ class Main {
 		$this->container->get( PaymentMethodController::class );
 		$this->container->get( FastlaneController::class )->initialize();
 		$this->container->get( ClientRequestRetryController::class )->initialize();
+		$this->container->get( AssetDataController::class )->initialize();
+		$this->container->get( OrderAttributionController::class )->initialize();
+		$this->container->get( ProductDataController::class )->initialize();
 
 		if ( is_admin() ) {
 			$this->container->get( SettingsApi::class );
@@ -170,12 +179,20 @@ class Main {
 				$container->get( Logger::class )
 			);
 		} );
+		$this->container->register( AssetDataController::class, function ( $container ) {
+			return new AssetDataController(
+				$container->get( AssetDataApi::class ),
+				$container->get( ContextHandler::class )
+			);
+		} );
 		$this->container->register( PayPalClient::class, function ( $container ) {
 			return new WPPayPalClient( $container->get( APISettings::class ), $container->get( Logger::class ) );
 		} );
 		$this->container->register( TemplateLoader::class, function ( $container ) {
 			return new TemplateLoader( $container->get( Config::class ), 'pymntpl-paypal-woocommerce' );
 		} );
+
+		/************ Payment Gateways ************/
 		$this->container->register( PayPalGateway::class, function ( $container ) {
 			return new PayPalGateway(
 				$container->get( PaymentHandler::class ),
@@ -192,6 +209,24 @@ class Main {
 				$container->get( TemplateLoader::class )
 			);
 		} );
+		$this->container->register( GooglePayGateway::class, function ( $container ) {
+			return new GooglePayGateway(
+				$container->get( PaymentHandler::class ),
+				$container->get( Logger::class ),
+				$container->get( AssetsApi::class ),
+				$container->get( TemplateLoader::class )
+			);
+		} );
+		$this->container->register( ApplePayGateway::class, function ( $container ) {
+			return new ApplePayGateway(
+				$container->get( PaymentHandler::class ),
+				$container->get( Logger::class ),
+				$container->get( AssetsApi::class ),
+				$container->get( TemplateLoader::class )
+			);
+		} );
+		/************ Payment Gateways End ************/
+
 		$this->container->register( PaymentHandler::class, function ( $container ) {
 			return new PaymentHandler(
 				$container->get( PayPalClient::class ),
@@ -206,7 +241,7 @@ class Main {
 			return new AssetsApi( $container->get( Config::class ) );
 		} );
 		$this->container->register( 'adminData', function ( $container ) {
-			return new AssetDataApi( 'wc-ppcp-admin-commons' );
+			return new AssetDataApi();
 		} );
 		$this->container->register( RestController::class, function ( $container ) {
 			return new RestController( $container );
@@ -326,6 +361,14 @@ class Main {
 		} );
 		$this->container->register( ClientRequestRetryController::class, function ( $container ) {
 			return new ClientRequestRetryController();
+		} );
+		$this->container->register( OrderAttributionController::class, function ( $container ) {
+			return new OrderAttributionController();
+		} );
+		$this->container->register( ProductDataController::class, function ( $container ) {
+			return new ProductDataController(
+				$container->get( PaymentMethodRegistry::class ),
+			);
 		} );
 	}
 

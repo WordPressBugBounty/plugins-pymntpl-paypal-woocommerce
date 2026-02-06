@@ -183,6 +183,7 @@ class LegacyPaymentHandler {
 				$order->payment_complete( $result->get_capture_id() );
 			}
 		} else {
+			$order->set_transaction_id( $result->get_authorization_id() );
 			$order->update_meta_data( Constants::AUTHORIZATION_ID, $result->get_authorization_id() );
 			$order->set_status( apply_filters( 'wc_ppcp_authorized_order_status', $this->payment_method->get_option( 'authorize_status', 'on-hold' ), $order, $result->get_paypal_order(), $this ) );
 		}
@@ -280,9 +281,9 @@ class LegacyPaymentHandler {
 	 */
 	public function process_refund( \WC_Order $order, $amount, $reason = '' ) {
 		$id = $order->get_transaction_id();
-		if ( empty( $id ) ) {
-			// transaction is empty so check if there is an authorization ID.
-			$auth_id = $order->get_meta( Constants::AUTHORIZATION_ID );
+		// transaction is empty so check if there is an authorization ID.
+		$auth_id = $order->get_meta( Constants::AUTHORIZATION_ID );
+		if ( empty( $id ) || $id === $auth_id ) {
 			if ( ! $auth_id ) {
 				throw new \Exception( __( 'To process a refund, there must be a transaction id associated with the order.',
 					'pymntpl-paypal-woocommerce' ) );
@@ -386,9 +387,9 @@ class LegacyPaymentHandler {
 	/**
 	 * @param \WC_Order $order
 	 *
-	 * @since 1.0.22
 	 * @return void
 	 * @throws \Exception
+	 * @since 1.0.22
 	 */
 	public function process_order_cancellation( \WC_Order $order ) {
 		$txn_id      = $order->get_transaction_id();

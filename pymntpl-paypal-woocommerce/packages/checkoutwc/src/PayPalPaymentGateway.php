@@ -3,8 +3,10 @@
 namespace PaymentPlugins\PPCP\CheckoutWC;
 
 use PaymentPlugins\WooCommerce\PPCP\Assets\AssetsApi;
-use PaymentPlugins\WooCommerce\PPCP\Main;
 
+/**
+ * @deprecated 2.0.0
+ */
 class PayPalPaymentGateway extends \Objectiv\Plugins\Checkout\Compatibility\CompatibilityAbstract {
 
 	/**
@@ -37,7 +39,7 @@ class PayPalPaymentGateway extends \Objectiv\Plugins\Checkout\Compatibility\Comp
 		$payment_method = $this->payment_gateways->get_gateway( 'ppcp' );
 		if ( $payment_method && $payment_method->is_section_enabled( 'express_checkout' ) ) {
 			add_action( 'cfw_payment_request_buttons', [ $this, 'output_express_button' ] );
-			Main::container()->get( \PaymentPlugins\WooCommerce\PPCP\PaymentButtonController::class )->set_render_express_buttons( false );
+			wc_ppcp_get_container()->get( \PaymentPlugins\WooCommerce\PPCP\PaymentButtonController::class )->set_render_express_buttons( false );
 		}
 	}
 

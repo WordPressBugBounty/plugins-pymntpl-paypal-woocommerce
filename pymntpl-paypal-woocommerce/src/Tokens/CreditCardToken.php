@@ -100,12 +100,29 @@ class CreditCardToken extends AbstractToken {
 	}
 
 	public function initialize_from_payment_source( PaymentSource $payment_source ) {
+		// Get card from either card or google_pay payment source
+		$card        = null;
+		$vault_id    = null;
+		$customer_id = null;
+
 		if ( isset( $payment_source->card ) ) {
-			$this->set_token( $payment_source->card->attributes->vault->id ?? '' );
-			$this->set_brand( $payment_source->card->brand ?? '' );
-			$this->set_last4( $payment_source->card->last_digits ?? '' );
-			$this->set_expiry( $payment_source->card->expiry ?? '' );
-			$this->set_customer_id( $payment_source->card->attributes->vault->customer->id ?? '' );
+			$card        = $payment_source->card;
+			$vault_id    = $card->attributes->vault->id ?? '';
+			$customer_id = $card->attributes->vault->customer->id ?? '';
+		} elseif ( isset( $payment_source->google_pay->card ) ) {
+			$card = $payment_source->google_pay->card;
+		} elseif ( isset( $payment_source->apple_pay->card ) ) {
+			$card        = $payment_source->apple_pay->card;
+			$vault_id    = $payment_source->apple_pay->attributes->vault->id ?? '';
+			$customer_id = $payment_source->apple_pay->attributes->vault->customer->id ?? '';
+		}
+
+		if ( $card ) {
+			$this->set_token( $vault_id );
+			$this->set_brand( $card->brand ?? '' );
+			$this->set_last4( $card->last_digits ?? '' );
+			$this->set_expiry( $card->expiry ?? '' );
+			$this->set_customer_id( $customer_id );
 		}
 	}
 
