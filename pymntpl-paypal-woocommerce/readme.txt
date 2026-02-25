@@ -4,7 +4,7 @@ Tags: paypal, paylater, venmo, credit cards
 Requires at least: 4.7
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 2.0.10
+Stable tag: 2.0.11
 Copyright: Payment Plugins
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -51,6 +51,11 @@ Our documentation has a step-by-step guide on how to connect the plugin to your 
 Payment Plugins is the team behind several of the highest reviewed and installed Payment integrations for WooCommerce.
 
 == Changelog ==
+= 2.0.11 - 02/25/26 =
+* Added - New payment method format options for Apple Pay and Google Pay
+* Fixed - OR_BIBED_15 error triggered by Google Pay on Safari browser
+* Fixed - PHP exception in WebhookEventReceiver which could be triggered during webhook
+* Updated - Improved product add on integration when express payment methods enabled on the product page
 = 2.0.10 - 02/05/26 =
 * Updated - WooCommerce tested up to: 10.5
 * Updated - Account for exchange rate when adding the PayPal fee and net amount to the WooCommerce order during capture of authorized payment

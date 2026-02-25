@@ -64,7 +64,11 @@ class WebhookEventReceiver {
 
 								$order->delete_meta_data( Constants::CAPTURE_STATUS );
 								$order->payment_complete( $capture->getId() );
-								$this->payment_handler->save_order_meta_data( $order, $paypal_order );
+								$payment_method = wc_get_payment_gateway_by_order( $order );
+								if ( $payment_method instanceof AbstractGateway ) {
+									$this->payment_handler->set_payment_method( $payment_method );
+									$this->payment_handler->save_order_meta_data( $order, $paypal_order );
+								}
 							} else {
 								throw new \Exception( $paypal_order->get_error_message(), 400 );
 							}

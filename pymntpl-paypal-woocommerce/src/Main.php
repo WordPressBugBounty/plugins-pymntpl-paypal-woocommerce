@@ -91,10 +91,16 @@ class Main {
 	}
 
 	public function initialize() {
+		$this->container->get( PaymentMethodController::class )->initialize();
+		$this->container->get( FastlaneController::class )->initialize();
+		$this->container->get( ClientRequestRetryController::class )->initialize();
+		$this->container->get( AssetDataController::class )->initialize();
+		$this->container->get( OrderAttributionController::class )->initialize();
+		$this->container->get( ProductDataController::class )->initialize();
+		$this->container->get( PaymentButtonController::class )->initialize();
 		$this->container->get( PaymentGateways::class );
 		$this->container->get( RestApi::class );
 		$this->container->get( OrderStatusController::class );
-		$this->container->get( PaymentButtonController::class );
 		$this->container->get( Conversion\Controller::class );
 		$this->container->get( WebhookEventReceiver::class );
 		$this->container->get( OrderApplicationUrlHandler::class );
@@ -105,12 +111,6 @@ class Main {
 		$this->container->get( ShortCodesController::class );
 		$this->container->get( Messages::class );
 		$this->container->get( CustomerController::class );
-		$this->container->get( PaymentMethodController::class );
-		$this->container->get( FastlaneController::class )->initialize();
-		$this->container->get( ClientRequestRetryController::class )->initialize();
-		$this->container->get( AssetDataController::class )->initialize();
-		$this->container->get( OrderAttributionController::class )->initialize();
-		$this->container->get( ProductDataController::class )->initialize();
 
 		if ( is_admin() ) {
 			$this->container->get( SettingsApi::class );
@@ -263,7 +263,6 @@ class Main {
 			);
 			$instance->set_cart_location( $container->get( AdvancedSettings::class )->get_option( 'cart_location' ) );
 			$instance->set_minicart_location( $container->get( AdvancedSettings::class )->get_option( 'minicart_location' ) );
-			$instance->initialize();
 
 			return $instance;
 		} );
@@ -351,13 +350,10 @@ class Main {
 			return $instance;
 		} );
 		$this->container->register( PaymentMethodController::class, function ( $container ) {
-			$instance = new PaymentMethodController(
+			return new PaymentMethodController(
 				$container->get( PayPalClient::class ),
 				$container->get( Logger::class )
 			);
-			$instance->initialize();
-
-			return $instance;
 		} );
 		$this->container->register( ClientRequestRetryController::class, function ( $container ) {
 			return new ClientRequestRetryController();
@@ -464,11 +460,11 @@ class Main {
 				\PaymentPlugins\PPCP\FunnelKit\Package::class,
 				\PaymentPlugins\PPCP\MondialRelay\Package::class,
 				\PaymentPlugins\PPCP\Elementor\Package::class,
-				\PaymentPlugins\PPCP\WooCommerceExtraProductOptions\Package::class,
+				//\PaymentPlugins\PPCP\WooCommerceExtraProductOptions\Package::class,
 				\PaymentPlugins\PPCP\WooCommerceShipStation\Package::class,
 				\PaymentPlugins\PPCP\WooCommerceGermanized\Package::class,
-				\PaymentPlugins\PPCP\WooCommerceProductAddons\Package::class,
-				\PaymentPlugins\PPCP\SW_WAPF\Package::class,
+				//\PaymentPlugins\PPCP\WooCommerceProductAddons\Package::class,
+				//\PaymentPlugins\PPCP\SW_WAPF\Package::class,
 				\PaymentPlugins\PPCP\WooCommerceSubscriptions\Package::class,
 				\PaymentPlugins\PPCP\WooCommercePreOrders\Package::class
 			] );

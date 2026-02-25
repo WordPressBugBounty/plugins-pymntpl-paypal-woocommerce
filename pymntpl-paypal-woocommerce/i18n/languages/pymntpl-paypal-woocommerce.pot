@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Payment Plugins for PayPal WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Payment Plugins for PayPal WooCommerce 2.0.10\n"
+"Project-Id-Version: Payment Plugins for PayPal WooCommerce 2.0.11\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pymntpl-paypal-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-02-05T17:30:24+00:00\n"
+"POT-Creation-Date: 2026-02-25T19:52:55+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: pymntpl-paypal-woocommerce\n"
@@ -1476,12 +1476,29 @@ msgstr ""
 msgid "Error saving payment method. Reason: %s"
 msgstr ""
 
+#: src/PaymentMethodController.php:64
+#: src/PaymentMethodController.php:65
+#: src/Payments/Gateways/ApplePayGateway.php:85
+msgid "Apple Pay"
+msgstr ""
+
+#: src/PaymentMethodController.php:66
+#: src/PaymentMethodController.php:72
+msgid "Gateway Title"
+msgstr ""
+
+#: src/PaymentMethodController.php:70
+#: src/PaymentMethodController.php:71
+#: src/Payments/Gateways/GooglePayGateway.php:107
+msgid "Google Pay"
+msgstr ""
+
 #: src/Payments/Gateways/AbstractGateway.php:216
 msgid "There was an error processing your payment. Reason: %s"
 msgstr ""
 
 #: src/Payments/Gateways/AbstractGateway.php:253
-#: src/WebhookEventReceiver.php:134
+#: src/WebhookEventReceiver.php:138
 msgid "Order refunded in PayPal. Amount: %1$s. Refund ID: %2$s"
 msgstr ""
 
@@ -1529,10 +1546,6 @@ msgstr ""
 #: src/Payments/Gateways/GooglePayGateway.php:105
 #: src/Payments/Gateways/PayPalGateway.php:69
 msgid "Title"
-msgstr ""
-
-#: src/Payments/Gateways/ApplePayGateway.php:85
-msgid "Apple Pay"
 msgstr ""
 
 #: src/Payments/Gateways/ApplePayGateway.php:87
@@ -1928,10 +1941,6 @@ msgstr ""
 
 #: src/Payments/Gateways/GooglePayGateway.php:90
 msgid "Offer Google Pay through PayPal"
-msgstr ""
-
-#: src/Payments/Gateways/GooglePayGateway.php:107
-msgid "Google Pay"
 msgstr ""
 
 #: src/Payments/Gateways/GooglePayGateway.php:169
@@ -3076,19 +3085,19 @@ msgstr ""
 msgid "Marketplace"
 msgstr ""
 
-#: src/WebhookEventReceiver.php:103
+#: src/WebhookEventReceiver.php:107
 msgid "PayPal transaction %s has been cancelled."
 msgstr ""
 
-#: src/WebhookEventReceiver.php:123
+#: src/WebhookEventReceiver.php:127
 msgid "Refund created within PayPal."
 msgstr ""
 
-#: src/WebhookEventReceiver.php:156
+#: src/WebhookEventReceiver.php:160
 msgid "Dispute %1$s created. Dispute reason: %2$s."
 msgstr ""
 
-#: src/WebhookEventReceiver.php:178
+#: src/WebhookEventReceiver.php:182
 msgid "Dispute %1$s resolved."
 msgstr ""
 

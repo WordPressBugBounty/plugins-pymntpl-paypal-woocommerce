@@ -7,8 +7,6 @@ use PaymentPlugins\PayPalSDK\PaymentToken;
 use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\AdvancedSettings;
 use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\APISettings;
 use PaymentPlugins\WooCommerce\PPCP\Tokens\AbstractToken;
-use PaymentPlugins\WooCommerce\PPCP\Tokens\CreditCardToken;
-use PaymentPlugins\WooCommerce\PPCP\Tokens\PayPalToken;
 
 class PaymentMethodController {
 
@@ -32,6 +30,7 @@ class PaymentMethodController {
 		add_filter( 'woocommerce_payment_methods_list_item', [ $this, 'get_payment_method_list_item' ], 20, 2 );
 		add_action( 'woocommerce_payment_token_deleted', [ $this, 'handle_payment_token_deleted' ], 10, 2 );
 		add_filter( 'woocommerce_get_customer_payment_tokens', [ $this, 'get_customer_payment_tokens' ], 10 );
+		add_filter( 'wc_ppcp_payment_method_formats', [ $this, 'add_payment_method_format' ], 10, 2 );
 	}
 
 	public function get_payment_token_class( $type ) {
@@ -51,6 +50,30 @@ class PaymentMethodController {
 		}
 
 		return $type;
+	}
+
+	/**
+	 * @param array         $formats
+	 * @param AbstractToken $token
+	 *
+	 * @return array
+	 */
+	public function add_payment_method_format( $formats, $token ) {
+		if ( $token->get_gateway_id() === 'ppcp_applepay' ) {
+			$formats['applepay_simple'] = [
+				'format'  => __( 'Apple Pay', 'pymntpl-paypal-woocommerce' ),
+				'example' => __( 'Apple Pay', 'pymntpl-paypal-woocommerce' ),
+				'label'   => __( 'Gateway Title', 'pymntpl-paypal-woocommerce' )
+			];
+		} elseif ( $token->get_gateway_id() === 'ppcp_googlepay' ) {
+			$formats['googlepay_simple'] = [
+				'format'  => __( 'Google Pay', 'pymntpl-paypal-woocommerce' ),
+				'example' => __( 'Google Pay', 'pymntpl-paypal-woocommerce' ),
+				'label'   => __( 'Gateway Title', 'pymntpl-paypal-woocommerce' )
+			];
+		}
+
+		return $formats;
 	}
 
 	public function get_payment_method_list_item( $item, $payment_token ) {
