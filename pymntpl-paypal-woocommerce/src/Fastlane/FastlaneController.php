@@ -3,7 +3,6 @@
 namespace PaymentPlugins\WooCommerce\PPCP\Fastlane;
 
 use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\APISettings;
-use PaymentPlugins\WooCommerce\PPCP\Assets\AssetsApi;
 use PaymentPlugins\WooCommerce\PPCP\Logger;
 use PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\CreditCardGateway;
 use PaymentPlugins\WooCommerce\PPCP\TemplateLoader;
@@ -61,22 +60,28 @@ class FastlaneController {
 			return;
 		}
 
+		/**
+		 * @var APISettings $api_settings
+		 */
+		$api_settings = wc_ppcp_get_container()->get( APISettings::class );
 		// Try to get cached token
-		$access_token = get_transient( 'wc_ppcp_client_token' );
+		$environment  = $api_settings->get_environment();
+		$access_token = get_transient( 'wc_ppcp_client_token_' . $environment );
 
 		// If no cached token, request a new one
 		if ( ! $access_token ) {
+			$domain   = preg_replace( '/^www\./', '', $_SERVER['HTTP_HOST'] ?? '' );
 			$response = $this->client->auth->create( null, [
 				'grant_type'    => 'client_credentials',
 				'response_type' => 'client_token',
 				'intent'        => 'sdk_init',
-				'domains'       => [ 'localhost' ]
+				'domains[]'     => $domain
 			] );
 
 			if ( ! is_wp_error( $response ) ) {
 				// Calculate expiration (token duration minus 100 seconds buffer)
 				$expiration = absint( $response->expires_in ) - 100;
-				set_transient( 'wc_ppcp_client_token', $response->access_token, $expiration );
+				set_transient( 'wc_ppcp_client_token_' . $environment, $response->access_token, $expiration );
 				$access_token = $response->access_token;
 			} else {
 				$this->log->info( 'There was an error generating the client token used for Fastlane. Error: %s', $response->get_error_message() );

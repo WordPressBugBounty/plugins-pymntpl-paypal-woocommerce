@@ -84,7 +84,10 @@ class PaymentResult {
 				}
 			}
 		} elseif ( $this->is_authorized() && $this->has_payments() ) {
-			$this->success = \in_array( $this->get_authorization_status(), [ Authorization::CREATED, Authorization::PENDING ] );
+			$this->success = \in_array( $this->get_authorization_status(), [
+				Authorization::CREATED,
+				Authorization::PENDING
+			] );
 			if ( $this->get_authorization() && $this->get_authorization()->getProcessorResponse() ) {
 				if ( ! $this->success && $this->get_authorization()->getProcessorResponse()->getResponseCode() !== '0000' ) {
 					$this->error_code    = $this->get_authorization()->getProcessorResponse()->getResponseCode();
@@ -145,16 +148,16 @@ class PaymentResult {
 	}
 
 	/**
-	 * @since 1.1.2
 	 * @return mixed
+	 * @since 1.1.2
 	 */
 	private function get_authorization_status() {
 		return $this->get_authorization()->getStatus();
 	}
 
 	/**
-	 * @since 1.1.2
 	 * @return mixed
+	 * @since 1.1.2
 	 */
 	private function get_capture_status() {
 		return $this->get_capture()->getStatus();
@@ -165,8 +168,8 @@ class PaymentResult {
 	}
 
 	/**
-	 * @since 1.0.24
 	 * @return \PaymentPlugins\PayPalSDK\Order|\WP_Error
+	 * @since 1.0.24
 	 */
 	public function get_paypal_order() {
 		return $this->paypal_order;
@@ -212,7 +215,7 @@ class PaymentResult {
 	/**
 	 * Returns true if the order requires another approval.
 	 *
-	 * @return void
+	 * @return bool
 	 */
 	public function needs_approval() {
 		if ( $this->paypal_order && $this->paypal_order instanceof Order ) {
@@ -226,16 +229,16 @@ class PaymentResult {
 	}
 
 	/**
-	 * @since 1.0.34
 	 * @return bool
+	 * @since 1.0.34
 	 */
 	public function already_captured() {
 		return ! $this->success() && $this->error_code === 'ORDER_ALREADY_CAPTURED';
 	}
 
 	/**
-	 * @since 1.0.34
 	 * @return bool
+	 * @since 1.0.34
 	 */
 	public function already_authorized() {
 		return ! $this->success() && $this->error_code === 'ORDER_ALREADY_AUTHORIZED';
@@ -243,12 +246,17 @@ class PaymentResult {
 
 	private function get_approval_url() {
 		if ( $this->paypal_order && $this->paypal_order instanceof Order ) {
-			if ( $this->paypal_order->isActionRequired() && $this->paypal_order->getLinks()->count() > 0 ) {
+			if ( $this->paypal_order->getLinks()->count() > 0 ) {
+				if ( $this->paypal_order->isActionRequired() ) {
+					$rel = 'payer-action';
+				} else {
+					$rel = 'approve';
+				}
 				foreach ( $this->paypal_order->getLinks() as $link ) {
 					/**
 					 * @var \PaymentPlugins\PayPalSDK\Link $link
 					 */
-					if ( $link->getRel() === 'payer-action' ) {
+					if ( $link->getRel() === $rel ) {
 						return $link->getHref();
 					}
 				}
@@ -280,8 +288,8 @@ class PaymentResult {
 	}
 
 	/**
-	 * @since 1.1.2
 	 * @return bool
+	 * @since 1.1.2
 	 */
 	public function is_wp_error() {
 		return \is_wp_error( $this->paypal_order );

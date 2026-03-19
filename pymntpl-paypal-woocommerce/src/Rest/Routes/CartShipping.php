@@ -124,9 +124,11 @@ class CartShipping extends AbstractCart {
 	private function update_cart_shipping_data( \WP_REST_Request $request ) {
 		if ( isset( $request['address'] ) ) {
 			$this->update_shipping_address( $request['address'] );
+			$this->add_postcode_format_filter( $request['address']['country'] ?? '' );
 		}
 		if ( isset( $request['shipping_method'] ) ) {
 			$this->update_shipping_methods( $request['shipping_method'] );
+			$this->add_postcode_format_filter( WC()->customer->get_shipping_country() );
 		}
 	}
 
@@ -360,4 +362,21 @@ class CartShipping extends AbstractCart {
 		unset( WC()->session->{$key} );
 	}
 
+	private function add_postcode_format_filter( $country ) {
+		if ( in_array( $country, array( 'CA', 'GB' ) ) ) {
+			add_filter( 'woocommerce_format_postcode', function ( $formatted_postcode, $country ) {
+				switch ( $country ) {
+					case 'CA':
+					case 'GB':
+						$postcode = str_replace( ' ', '', $formatted_postcode );
+						if ( strlen( $postcode ) <= 4 ) {
+							$formatted_postcode = $postcode;
+						}
+						break;
+				}
+
+				return $formatted_postcode;
+			}, 10, 2 );
+		}
+	}
 }

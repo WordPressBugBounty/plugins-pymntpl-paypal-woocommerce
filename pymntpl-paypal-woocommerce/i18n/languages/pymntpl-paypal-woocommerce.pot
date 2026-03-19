@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Payment Plugins for PayPal WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Payment Plugins for PayPal WooCommerce 2.0.11\n"
+"Project-Id-Version: Payment Plugins for PayPal WooCommerce 2.0.12\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pymntpl-paypal-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-02-25T19:52:55+00:00\n"
+"POT-Creation-Date: 2026-03-19T17:08:15+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: pymntpl-paypal-woocommerce\n"
@@ -134,12 +134,12 @@ msgid "Credit card processing is not available. Please use another payment metho
 msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/FastlaneGateway.php:58
-#: src/Fastlane/FastlaneController.php:123
+#: src/Fastlane/FastlaneController.php:128
 msgid "Please provide an email address before using Fastlane."
 msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/FastlaneGateway.php:59
-#: src/Fastlane/FastlaneController.php:124
+#: src/Fastlane/FastlaneController.php:129
 msgid "Please enter a valid email address before using Fastlane."
 msgstr ""
 
@@ -502,8 +502,8 @@ msgstr ""
 msgid "PayPal Product Payment Buttons"
 msgstr ""
 
-#: packages/funnelkit/src/Upsell/FunnelKitIntegration.php:146
-#: packages/funnelkit/src/Upsell/FunnelKitIntegration.php:152
+#: packages/funnelkit/src/Upsell/FunnelKitIntegration.php:149
+#: packages/funnelkit/src/Upsell/FunnelKitIntegration.php:155
 #: src/Legacy/LegacyPaymentHandler.php:132
 #: src/Legacy/LegacyPaymentHandler.php:139
 #: src/PaymentHandler.php:122
@@ -2356,11 +2356,11 @@ msgstr ""
 msgid "Please enter a valid shipping address."
 msgstr ""
 
-#: src/Rest/Routes/CartShipping.php:157
+#: src/Rest/Routes/CartShipping.php:159
 msgid "There are no shipping options available for the provided address."
 msgstr ""
 
-#: src/Rest/Routes/CartShipping.php:200
+#: src/Rest/Routes/CartShipping.php:202
 msgid "Error fetching order %s. Reason: %s"
 msgstr ""
 
