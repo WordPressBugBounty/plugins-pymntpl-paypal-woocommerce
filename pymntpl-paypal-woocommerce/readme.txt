@@ -4,7 +4,7 @@ Tags: paypal, paylater, venmo, credit cards
 Requires at least: 4.7
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 2.0.12
+Stable tag: 2.0.13
 Copyright: Payment Plugins
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -51,6 +51,8 @@ Our documentation has a step-by-step guide on how to connect the plugin to your 
 Payment Plugins is the team behind several of the highest reviewed and installed Payment integrations for WooCommerce.
 
 == Changelog ==
+= 2.0.13 - 03/30/26 =
+* Updated - Improved logic for handling 3DS authentication if required during Funnelkit upsell
 = 2.0.12 - 03/20/26 =
 * Updated - Improved handling of Apple Pay redacted postal code for “GB” and “CA” country codes when shipping zones contain wildcards. Example - NR34*, ME12*, etc
 * Updated - WooCommerce tested up to: 10.6

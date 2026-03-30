@@ -15,9 +15,11 @@ use PaymentPlugins\PayPalSDK\PurchaseUnit;
 use PaymentPlugins\PayPalSDK\Refund;
 use PaymentPlugins\PayPalSDK\Shipping;
 use PaymentPlugins\WooCommerce\PPCP\Assets\AssetsApi;
+use PaymentPlugins\WooCommerce\PPCP\Cache\CacheHandler;
 use PaymentPlugins\WooCommerce\PPCP\Constants;
 use PaymentPlugins\WooCommerce\PPCP\Factories\CoreFactories;
 use PaymentPlugins\WooCommerce\PPCP\FeeCalculation;
+use PaymentPlugins\WooCommerce\PPCP\Logger;
 use PaymentPlugins\WooCommerce\PPCP\PaymentHandler;
 use PaymentPlugins\WooCommerce\PPCP\PaymentResult;
 use PaymentPlugins\WooCommerce\PPCP\Utilities\NumberUtil;
@@ -62,6 +64,9 @@ class AbstractGateway extends \WFOCU_Gateway {
 
 	public function process_charge( $order ) {
 		$this->handle_client_error();
+		/**
+		 * @var \PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\AbstractGateway $payment_method
+		 */
 		$payment_method = $this->get_wc_gateway();
 		$this->payment_handler->set_payment_method( $payment_method );
 		$client = $this->payment_handler->client;
@@ -71,8 +76,13 @@ class AbstractGateway extends \WFOCU_Gateway {
 			} else {
 				$paypal_order = $client->orders->create( $this->get_create_order_params( $order ) );
 				if ( is_wp_error( $paypal_order ) ) {
+					/**
+					 * @var \WP_Error $paypal_order
+					 */
 					throw new \Exception( $paypal_order->get_error_message() );
 				}
+				// Store a reference to the PayPal Order ID.
+				$order->update_meta_data( '_ppcp_funnelkit_order_id', $paypal_order->getId() );
 			}
 			if ( $paypal_order->isApproved() || $paypal_order->isCreated() ) {
 				if ( $paypal_order->getPaymentSource() ) {

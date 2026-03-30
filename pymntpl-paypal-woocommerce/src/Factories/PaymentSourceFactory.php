@@ -54,7 +54,8 @@ class PaymentSourceFactory extends AbstractFactory {
 			$key            = $this->payment_method->get_payment_method_type();
 			$payment_source = new PaymentSource( [
 				$key => [
-					'vault_id' => $id,
+					'vault_id'   => $id,
+					'attributes' => new \stdClass()
 				]
 			] );
 
@@ -68,6 +69,13 @@ class PaymentSourceFactory extends AbstractFactory {
 					$payment_source->$key->stored_credential->payment_type      = 'RECURRING';
 				}
 			}
+
+			/*if ( $this->payment_method->supports( '3ds' ) && $this->payment_method->is_3ds_enabled() ) {
+				//is_force_3ds_enabled
+				$payment_source->$key->attributes->verification = (object) [
+					'method' => $this->payment_method->is_force_3ds_enabled() ? 'SCA_ALWAYS' : 'SCA_WHEN_REQUIRED'
+				];
+			}*/
 		} else {
 			$id = $this->order->get_meta( Constants::BILLING_AGREEMENT_ID );
 			if ( ! $id ) {
@@ -96,7 +104,7 @@ class PaymentSourceFactory extends AbstractFactory {
 	}
 
 	/**
-	 * @param bool $store_in_vault
+	 * @param bool          $store_in_vault
 	 * @param Customer|null $customer
 	 *
 	 * @return \PaymentPlugins\PayPalSDK\PaymentSource|null

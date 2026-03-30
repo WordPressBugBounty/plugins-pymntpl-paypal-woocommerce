@@ -38,6 +38,7 @@ class ProductDataController {
 			if ( $product ) {
 				$option = new ProductSettings( $product );
 				$product->delete_meta_data( $option->get_option_key() );
+				$product->delete_meta_data( '_ppcp_button_position' );
 				$product->save();
 			}
 		}

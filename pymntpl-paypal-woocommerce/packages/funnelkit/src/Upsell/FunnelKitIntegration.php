@@ -118,9 +118,13 @@ class FunnelKitIntegration implements PluginIntegrationType {
 			$order_id  = isset( $_GET['order_id'] ) ? absint( wc_clean( wp_unslash( $_GET['order_id'] ) ) ) : null;
 			$order_key = isset( $_GET['order_key'] ) ? wc_clean( wp_unslash( $_GET['order_key'] ) ) : null;
 			$token     = isset( $_GET['token'] ) ? wc_clean( wp_unslash( $_GET['token'] ) ) : null;
-			if ( $order_id && $order_key && $token ) {
+			if ( $order_id && $order_key ) {
 				$order = wc_get_order( $order_id );
 				if ( $order && $order->key_is_valid( $order_key ) ) {
+					// token wasn't included in the query parameters so check the WooCommerce order.
+					if ( ! $token ) {
+						$token = $order->get_meta( '_ppcp_funnelkit_order_id' );
+					}
 					$paypal_order = $this->client->orderMode( $order )->orders->retrieve( $token );
 					if ( ! is_wp_error( $paypal_order ) ) {
 						add_filter( 'wfocu_valid_state_for_data_setup', '__return_true' );
