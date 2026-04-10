@@ -57,6 +57,7 @@ class BillingAgreementToken extends AbstractRoute {
 	}
 
 	public function handle_post_request( \WP_REST_Request $request ) {
+		$this->populate_post_data( $request );
 		// create the token
 		$customer = WC()->customer;
 

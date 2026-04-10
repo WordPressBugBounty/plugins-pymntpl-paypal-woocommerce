@@ -2,9 +2,9 @@
 Contributors: mr.clayton
 Tags: paypal, paylater, venmo, credit cards
 Requires at least: 4.7
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 2.0.13
+Stable tag: 2.0.14
 Copyright: Payment Plugins
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -51,6 +51,10 @@ Our documentation has a step-by-step guide on how to connect the plugin to your 
 Payment Plugins is the team behind several of the highest reviewed and installed Payment integrations for WooCommerce.
 
 == Changelog ==
+= 2.0.14 - 04/10/26 =
+* Updated - WP 7.0
+* Fixed - Added authorization check to the admin webhook registration REST endpoint per security best practices.
+* Fixed - If billing agreements are being used instead of Vault option, billing agreement ID was not being saved on Funnelkit upsell page if a subscription product was part of the upsell.
 = 2.0.13 - 03/30/26 =
 * Updated - Improved logic for handling 3DS authentication if required during Funnelkit upsell
 = 2.0.12 - 03/20/26 =

@@ -105,7 +105,15 @@ class PaymentGatewaysController {
 	 */
 	public function update_subscription_meta( $subscription, $product_hash, $order ) {
 		if ( $this->is_supported_gateway( $subscription->get_payment_method() ) ) {
-			$subscription->update_meta_data( Constants::PAYMENT_METHOD_TOKEN, $order->get_meta( Constants::PAYMENT_METHOD_TOKEN ) );
+			$payment_token = $order->get_meta( Constants::PAYMENT_METHOD_TOKEN );
+			if ( $payment_token ) {
+				$subscription->update_meta_data( Constants::PAYMENT_METHOD_TOKEN, $payment_token );
+			} else {
+				$billing_agreement_id = $order->get_meta( Constants::BILLING_AGREEMENT_ID );
+				if ( $billing_agreement_id ) {
+					$subscription->update_meta_data( Constants::BILLING_AGREEMENT_ID, $billing_agreement_id );
+				}
+			}
 			$subscription->save();
 		}
 	}

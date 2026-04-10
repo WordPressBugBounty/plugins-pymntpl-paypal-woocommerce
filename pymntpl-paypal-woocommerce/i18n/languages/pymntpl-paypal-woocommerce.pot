@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Payment Plugins for PayPal WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Payment Plugins for PayPal WooCommerce 2.0.13\n"
+"Project-Id-Version: Payment Plugins for PayPal WooCommerce 2.0.14\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pymntpl-paypal-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-03-30T20:34:46+00:00\n"
+"POT-Creation-Date: 2026-04-10T22:27:22+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: pymntpl-paypal-woocommerce\n"
@@ -143,15 +143,15 @@ msgstr ""
 msgid "Please enter a valid email address before using Fastlane."
 msgstr ""
 
-#: packages/blocks/src/Payments/Gateways/PayPalGateway.php:49
+#: packages/blocks/src/Payments/Gateways/PayPalGateway.php:50
 msgid "After clicking \"%1$s\", you will be redirected to PayPal to complete your purchase securely."
 msgstr ""
 
-#: packages/blocks/src/Payments/Gateways/PayPalGateway.php:91
+#: packages/blocks/src/Payments/Gateways/PayPalGateway.php:92
 msgid "Some required fields are missing. Please review your details and then complete your order with PayPal."
 msgstr ""
 
-#: packages/blocks/src/Payments/Gateways/PayPalGateway.php:123
+#: packages/blocks/src/Payments/Gateways/PayPalGateway.php:124
 #: src/Payments/Gateways/PayPalGateway.php:195
 msgid "Pay with PayPal"
 msgstr ""

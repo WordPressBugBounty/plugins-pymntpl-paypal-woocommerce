@@ -45,6 +45,7 @@ class PayPalGateway extends AbstractGateway {
 			'buttonOrder'             => $this->get_setting( 'buttons_order' ),
 			'placeOrderButtonEnabled' => wc_string_to_bool( $this->get_setting( 'use_place_order' ) ),
 			'redirectIcon'            => $this->assets_api->assets_url( '../../assets/img/popup.svg' ),
+			'redirectNoticeEnabled'   => $this->get_setting( 'show_popup_icon', 'yes' ) === 'yes',
 			'i18n'                    => [
 				'redirectText' => sprintf( esc_html__( 'After clicking "%1$s", you will be redirected to PayPal to complete your purchase securely.', 'pymntpl-paypal-woocommerce' ), $this->get_order_button_text() ),
 				'buttonLabel'  => esc_html( $this->get_order_button_text() )

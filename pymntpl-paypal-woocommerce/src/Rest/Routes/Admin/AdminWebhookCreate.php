@@ -27,7 +27,7 @@ class AdminWebhookCreate extends \PaymentPlugins\WooCommerce\PPCP\Rest\Routes\Ad
 			[
 				'methods'              => \WP_REST_Server::EDITABLE,
 				'callback'             => [ $this, 'handle_request' ],
-				'permissions_callback' => [ $this, 'get_admin_permission_check' ],
+				'permission_callback' => [ $this, 'get_admin_permission_check' ],
 				'args'                 => [
 					'environment' => [
 						'required' => true
