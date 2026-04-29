@@ -1,1 +1,1 @@
-<?php return array('dependencies' => array('jquery', 'wc-ppcp-actions', 'wp-polyfill'), 'version' => 'e2b8cd18ab3c59c6cb7e');
+<?php return array('dependencies' => array('jquery', 'wc-ppcp-actions'), 'version' => '0879bb91f44de0dcb379');

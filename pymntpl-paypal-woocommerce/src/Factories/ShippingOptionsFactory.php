@@ -17,15 +17,19 @@ class ShippingOptionsFactory extends AbstractFactory {
 		$incl_tax                = $this->display_prices_including_tax();
 		$chosen_shipping_methods = WC()->session->get( 'chosen_shipping_methods', [] );
 		$shipping_options        = [];
+		$packages                = WC()->shipping()->get_packages();
+		if ( empty( $packages ) ) {
+			$packages = WC()->shipping()->calculate_shipping( $this->cart->get_shipping_packages() );
+		}
 
-		foreach ( WC()->shipping()->get_packages() as $i => $package ) {
+		foreach ( $packages as $i => $package ) {
 			foreach ( $package['rates'] as $method ) {
 				/**
 				 *
 				 * @var \WC_Shipping_Rate $method
 				 */
-				$amount   = $incl_tax ? (float) $method->get_cost() + (float) $method->get_shipping_tax() : (float) $method->get_cost();
-				$selected = isset( $chosen_shipping_methods[ $i ] ) && $chosen_shipping_methods[ $i ] === $method->id;
+				$amount             = $incl_tax ? (float) $method->get_cost() + (float) $method->get_shipping_tax() : (float) $method->get_cost();
+				$selected           = isset( $chosen_shipping_methods[ $i ] ) && $chosen_shipping_methods[ $i ] === $method->id;
 				$shipping_options[] = $this->get_shipping_method_option( $amount, $method, $i, $selected );
 			}
 		}

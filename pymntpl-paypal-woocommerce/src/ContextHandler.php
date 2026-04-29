@@ -64,6 +64,10 @@ class ContextHandler {
 				$this->context = self::SHOP;
 			} elseif ( is_account_page() ) {
 				$this->context = self::ACCOUNT;
+			} elseif ( $this->is_checkout_block() ) {
+				$this->context = self::CHECKOUT;
+			} elseif ( $this->is_cart_block() ) {
+				$this->context = self::CART;
 			}
 			do_action( 'wc_ppcp_initialize_page_context', $this );
 		}
@@ -142,6 +146,14 @@ class ContextHandler {
 		return \is_int( $id )
 		       && class_exists( '\WC_Blocks_Utils' )
 		       && \WC_Blocks_Utils::has_block_in_page( $id, 'woocommerce/checkout' );
+	}
+
+	public function is_cart_block() {
+		$id = get_queried_object_id();
+
+		return \is_int( $id )
+		       && class_exists( '\WC_Blocks_Utils' )
+		       && \WC_Blocks_Utils::has_block_in_page( $id, 'woocommerce/cart' );
 	}
 
 }

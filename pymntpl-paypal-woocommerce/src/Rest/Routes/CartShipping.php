@@ -152,7 +152,11 @@ class CartShipping extends AbstractCart {
 	 * @throws \Exception If no shipping methods available for complete address
 	 */
 	private function validate_shipping_availability( \WP_REST_Request $request ) {
-		if ( ! $this->validate_shipping_methods( WC()->shipping()->get_packages() ) ) {
+		$packages = WC()->shipping()->get_packages();
+		if ( empty( $packages ) ) {
+			$packages = WC()->shipping()->calculate_shipping( WC()->cart->get_shipping_packages() );
+		}
+		if ( ! $this->validate_shipping_methods( $packages ) ) {
 			if ( $this->is_intermediate_address_complete( $request->get_param( 'address' ) ) ) {
 				// only throw exception if this is a complete intermediary address
 				throw new ShippingException(
@@ -298,13 +302,22 @@ class CartShipping extends AbstractCart {
 		}
 
 		foreach ( $shipping_methods as $idx => $method ) {
-			// Parse format: "0:flat_rate:1" -> index: 0, id: flat_rate:1
-			// Or format: "flat_rate:1" -> use $idx as index, id: flat_rate:1
-			if ( preg_match( '/^(?:(?P<index>\d+):)?(?P<id>.+)$/', $method, $matches ) ) {
-				$index                             = $matches['index'] !== '' ? $matches['index'] : $idx;
-				$id                                = $matches['id'];
-				$chosen_shipping_methods[ $index ] = $id;
+			if ( empty( $method ) ) {
+				continue;
 			}
+			// Format: "{package_index}:{method_id}:{instance_id}" or "{method_id}:{instance_id}"
+			// Rate IDs always have exactly one colon, so more than one colon means a package index is present.
+			// The index can be an integer (WC default) or a word string (e.g. WC Subscriptions recurring cart key).
+			if ( substr_count( $method, ':' ) > 1 ) {
+				$pos   = strpos( $method, ':' );
+				$index = substr( $method, 0, $pos );
+				$id    = substr( $method, $pos + 1 );
+			} else {
+				$index = $idx;
+				$id    = $method;
+			}
+			$chosen_shipping_methods[ $index ] = $id;
+
 		}
 
 		WC()->session->set( 'chosen_shipping_methods', $chosen_shipping_methods );

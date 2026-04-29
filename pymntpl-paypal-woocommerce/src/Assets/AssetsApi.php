@@ -51,6 +51,21 @@ class AssetsApi {
 		}
 	}
 
+	public function register_script_module( $handle, $relative_path, $deps = [] ) {
+		$file_name = str_replace( '.js', '.asset.php', $relative_path );
+		$file      = $this->config->get_path( $file_name );
+		$version   = $this->config->version();
+		if ( file_exists( $file ) ) {
+			$assets  = include $file;
+			$version = isset( $assets['version'] ) ? $assets['version'] : $version;
+			if ( isset( $assets['dependencies'] ) ) {
+				$deps = array_merge( $assets['dependencies'], $deps );
+			}
+		}
+
+		wp_register_script_module( $handle, $this->assets_url( $relative_path ), $deps, $version );
+	}
+
 	public function enqueue_script( $handle, $relative_path, $deps = [], $footer = true ) {
 		$this->add_script( 'enqueue', $handle, $relative_path, $deps, $this->config->version(), $footer );
 	}

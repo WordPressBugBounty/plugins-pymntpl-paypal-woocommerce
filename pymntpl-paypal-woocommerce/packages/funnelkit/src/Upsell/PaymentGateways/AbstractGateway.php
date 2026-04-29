@@ -79,7 +79,7 @@ class AbstractGateway extends \WFOCU_Gateway {
 					throw new \Exception( $paypal_order->get_error_message() );
 				}
 				// Store a reference to the PayPal Order ID.
-				$order->update_meta_data( '_ppcp_funnelkit_order_id', $paypal_order->getId() );
+				WFOCU_Core()->data->set( 'paypal_order_id', $paypal_order->getId(), 'paypal' );
 			}
 			if ( $paypal_order->isApproved() || $paypal_order->isCreated() ) {
 				if ( $paypal_order->getPaymentSource() ) {
@@ -99,10 +99,11 @@ class AbstractGateway extends \WFOCU_Gateway {
 				return $this->handle_result( true );
 			} else {
 				if ( $result->needs_approval() ) {
-					// Save the package to the order so that it's not lost during the redirect.
+					// Save the package to the funnelkit session so that it's not lost during the redirect.
 					$package = WFOCU_Core()->data->get( '_upsell_package' );
-					$order->update_meta_data( '_upsell_package', $package );
-					$order->save();
+					WFOCU_Core()->data->set( 'upsell_package', $package, 'paypal' );
+					WFOCU_Core()->data->save( 'paypal' );
+					WFOCU_Core()->data->save();
 					$response = $result->get_approval_response();
 					\wp_send_json( [
 						'success' => true,

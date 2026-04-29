@@ -4,7 +4,6 @@
 namespace PaymentPlugins\PPCP\Blocks;
 
 use Automattic\WooCommerce\Blocks\Assets\AssetDataRegistry;
-use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
 use Automattic\WooCommerce\StoreApi\Schemas\ExtendSchema;
 use Automattic\WooCommerce\StoreApi\StoreApi;
 use PaymentPlugins\PayPalSDK\PayPalClient;
@@ -26,13 +25,13 @@ class Package extends AbstractPackage {
 
 	public $id = 'blocks';
 
-	const ASSETS_API = 'blockAssets';
+	const ASSETS_API = 'BLOCK_ASSETS';
 
 	/**
 	 * Package constructor.
 	 *
 	 * @param Container $container
-	 * @param string $version
+	 * @param string    $version
 	 */
 	public function __construct( Container $container, $version ) {
 		$this->container = $container;
@@ -40,6 +39,9 @@ class Package extends AbstractPackage {
 	}
 
 	public function register_dependencies() {
+		$this->container->register( BlocksController::class, function ( $container ) {
+			return new BlocksController( $container );
+		} );
 		$this->container->register( self::ASSETS_API, function ( $container ) {
 			return new AssetsApi( new Config( $this->version, dirname( __FILE__ ) ) );
 		} );
@@ -118,6 +120,7 @@ class Package extends AbstractPackage {
 		$this->container->get( PayLaterMessaging::class );
 		$this->container->get( QueryParams::class );
 		$this->container->get( Rest\Controller::class );
+		$this->container->get( BlocksController::class )->initialize();
 		$this->container->get( SchemaController::class )->initialize();
 		$this->container->get( FrontendScripts::class )->initialize();
 	}

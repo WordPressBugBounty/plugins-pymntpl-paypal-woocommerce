@@ -123,14 +123,18 @@ class FunnelKitIntegration implements PluginIntegrationType {
 				if ( $order && $order->key_is_valid( $order_key ) ) {
 					// token wasn't included in the query parameters so check the WooCommerce order.
 					if ( ! $token ) {
-						$token = $order->get_meta( '_ppcp_funnelkit_order_id' );
+						$token = WFOCU_Core()->data->get( 'paypal_order_id', null, 'paypal' );
 					}
 					$paypal_order = $this->client->orderMode( $order )->orders->retrieve( $token );
 					if ( ! is_wp_error( $paypal_order ) ) {
 						add_filter( 'wfocu_valid_state_for_data_setup', '__return_true' );
 						WFOCU_Core()->template_loader->set_offer_id( WFOCU_Core()->data->get_current_offer() );
 						WFOCU_Core()->template_loader->maybe_setup_offer();
-						WFOCU_Core()->data->set( '_upsell_package', $order->get_meta( '_upsell_package' ) );
+						$package = WFOCU_Core()->data->get( 'upsell_package', null, 'paypal' );
+
+						if ( $package ) {
+							WFOCU_Core()->data->set( '_upsell_package', $package );
+						}
 
 						$payment_method = WFOCU_Core()->gateways->get_integration( $order->get_payment_method() );
 						$payment_method->set_paypal_order( $paypal_order );
@@ -140,8 +144,6 @@ class FunnelKitIntegration implements PluginIntegrationType {
 						} else {
 							$data = WFOCU_Core()->process_offer->_handle_upsell_charge( false );
 						}
-						$order->delete_meta_data( '_upsell_package' );
-						$order->save();
 						wp_safe_redirect( $data['redirect_url'] );
 						exit;
 					}

@@ -246,6 +246,9 @@ class PayPalDataTransformer {
 
 		$options  = [];
 		$packages = WC()->shipping()->get_packages();
+		if ( empty( $packages ) ) {
+			$packages = WC()->shipping()->calculate_shipping( $cart->get_shipping_packages() );
+		}
 		$incl_tax = wc_tax_enabled() && $cart->display_prices_including_tax();
 
 		foreach ( $packages as $i => $package ) {

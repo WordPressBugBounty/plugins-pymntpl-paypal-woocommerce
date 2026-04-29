@@ -13,6 +13,7 @@ use PaymentPlugins\PPCP\Blocks\Payments\Gateways\GooglePayGateway;
 use PaymentPlugins\PPCP\Blocks\Payments\Gateways\PayPalGateway;
 use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\APISettings;
 use PaymentPlugins\WooCommerce\PPCP\Container\Container;
+use PaymentPlugins\WooCommerce\PPCP\ContextHandler;
 use PaymentPlugins\WooCommerce\PPCP\Messages;
 use PaymentPlugins\WooCommerce\PPCP\Rest\RestController;
 
@@ -62,15 +63,21 @@ class Api {
 	}
 
 	public function add_cart_payment_method_data() {
-		$this->add_payment_method_data( 'cart' );
+		$this->add_payment_method_data();
 	}
 
 	public function add_checkout_payment_method_data() {
-		$this->add_payment_method_data( 'checkout' );
+		$this->add_payment_method_data();
 	}
 
-	public function add_payment_method_data( $context ) {
+	public function add_payment_method_data() {
 		if ( ! $this->data_api->exists( 'ppcpGeneralData' ) ) {
+			/**
+			 * @var ContextHandler $context_handler
+			 */
+			$context_handler = wc_ppcp_get_container()->get( ContextHandler::class );
+			$context_handler->initialize();
+			$context    = $context_handler->get_context();
 			$admin_only = false;
 			if ( wc_ppcp_get_container()->get( APISettings::class )->is_admin_only_mode() ) {
 				if ( ! current_user_can( 'manage_woocommerce' ) ) {
