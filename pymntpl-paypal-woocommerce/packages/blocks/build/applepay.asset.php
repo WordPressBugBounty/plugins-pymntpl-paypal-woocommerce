@@ -1,1 +1,1 @@
-<?php return array('dependencies' => array('wc-ppcp-blocks-vendors', 'react', 'wc-blocks-registry', 'wc-ppcp-utils', 'wc-settings', 'wp-api-fetch', 'wp-data', 'wp-element', 'wp-i18n'), 'version' => '60e8cd8ff4868c34efac');
+<?php return array('dependencies' => array('wc-ppcp-blocks-vendors', 'react', 'wc-blocks-registry', 'wc-ppcp-utils', 'wc-settings', 'wp-api-fetch', 'wp-data', 'wp-element', 'wp-i18n'), 'version' => 'ac4f7abddd977b888740');

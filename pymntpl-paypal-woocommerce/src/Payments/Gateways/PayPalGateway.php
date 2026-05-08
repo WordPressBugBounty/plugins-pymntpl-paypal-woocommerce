@@ -428,6 +428,10 @@ class PayPalGateway extends AbstractGateway {
 
 			return [ 'wc-ppcp-checkout-gateway' ];
 		}
+		/**
+		 * Added in 2.0.16 to ensure styling is enqueued even if no JS scripts are needed.
+		 */
+		wp_enqueue_style( 'wc-ppcp-style' );
 
 		return [];
 	}
@@ -660,7 +664,7 @@ class PayPalGateway extends AbstractGateway {
 
 	/**
 	 * @param \PaymentPlugins\WooCommerce\PPCP\PayPalQueryParams $query_params
-	 * @param \PaymentPlugins\WooCommerce\PPCP\ContextHandler $context
+	 * @param \PaymentPlugins\WooCommerce\PPCP\ContextHandler    $context
 	 */
 	public function add_query_params( PayPalQueryParams $query_params, $context ) {
 		if ( $query_params->flow === 'checkout' ) {
@@ -705,7 +709,7 @@ class PayPalGateway extends AbstractGateway {
 
 	/**
 	 * @param \PaymentPlugins\PayPalSDK\Order $paypal_order
-	 * @param \WC_Order $order
+	 * @param \WC_Order                       $order
 	 *
 	 * @return void
 	 */

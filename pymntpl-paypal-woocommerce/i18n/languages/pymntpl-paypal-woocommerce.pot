@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Payment Plugins for PayPal WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Payment Plugins for PayPal WooCommerce 2.0.15\n"
+"Project-Id-Version: Payment Plugins for PayPal WooCommerce 2.0.16\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pymntpl-paypal-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-04-29T19:30:50+00:00\n"
+"POT-Creation-Date: 2026-05-08T00:53:49+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: pymntpl-paypal-woocommerce\n"
@@ -665,7 +665,7 @@ msgstr ""
 #: src/Payments/Gateways/CreditCardGateway.php:74
 #: src/Payments/Gateways/GooglePayGateway.php:124
 #: src/Payments/Gateways/PayPalGateway.php:88
-#: src/Payments/Gateways/PayPalGateway.php:598
+#: src/Payments/Gateways/PayPalGateway.php:602
 msgid "Capture"
 msgstr ""
 
@@ -1573,7 +1573,7 @@ msgstr ""
 #: src/Payments/Gateways/CreditCardGateway.php:71
 #: src/Payments/Gateways/GooglePayGateway.php:121
 #: src/Payments/Gateways/PayPalGateway.php:85
-#: src/Payments/Gateways/PayPalGateway.php:594
+#: src/Payments/Gateways/PayPalGateway.php:598
 msgid "Transaction Type"
 msgstr ""
 
@@ -1581,7 +1581,7 @@ msgstr ""
 #: src/Payments/Gateways/CreditCardGateway.php:75
 #: src/Payments/Gateways/GooglePayGateway.php:125
 #: src/Payments/Gateways/PayPalGateway.php:89
-#: src/Payments/Gateways/PayPalGateway.php:599
+#: src/Payments/Gateways/PayPalGateway.php:603
 msgid "Authorize"
 msgstr ""
 
@@ -1589,7 +1589,7 @@ msgstr ""
 #: src/Payments/Gateways/CreditCardGateway.php:78
 #: src/Payments/Gateways/GooglePayGateway.php:128
 #: src/Payments/Gateways/PayPalGateway.php:92
-#: src/Payments/Gateways/PayPalGateway.php:602
+#: src/Payments/Gateways/PayPalGateway.php:606
 msgid ""
 "If set to capture, funds will be captured immediately during checkout. Authorized transactions put a hold on the customer's funds but\n"
 "\t\t\t\t\t\tno payment is taken until the charge is captured. Authorized charges can be captured on the Admin Order page."
@@ -1630,38 +1630,38 @@ msgstr ""
 
 #: src/Payments/Gateways/ApplePayGateway.php:156
 #: src/Payments/Gateways/GooglePayGateway.php:179
-#: src/Payments/Gateways/PayPalGateway.php:645
+#: src/Payments/Gateways/PayPalGateway.php:649
 msgid "Checkout Page"
 msgstr ""
 
 #: src/Payments/Gateways/ApplePayGateway.php:157
 #: src/Payments/Gateways/GooglePayGateway.php:180
-#: src/Payments/Gateways/PayPalGateway.php:643
+#: src/Payments/Gateways/PayPalGateway.php:647
 msgid "Product Page"
 msgstr ""
 
 #: src/Payments/Gateways/ApplePayGateway.php:158
 #: src/Payments/Gateways/GooglePayGateway.php:181
-#: src/Payments/Gateways/PayPalGateway.php:644
+#: src/Payments/Gateways/PayPalGateway.php:648
 msgid "Cart Page"
 msgstr ""
 
 #: src/Payments/Gateways/ApplePayGateway.php:159
 #: src/Payments/Gateways/GooglePayGateway.php:182
-#: src/Payments/Gateways/PayPalGateway.php:648
+#: src/Payments/Gateways/PayPalGateway.php:652
 msgid "Minicart"
 msgstr ""
 
 #: src/Payments/Gateways/ApplePayGateway.php:160
 #: src/Payments/Gateways/GooglePayGateway.php:183
-#: src/Payments/Gateways/PayPalGateway.php:646
+#: src/Payments/Gateways/PayPalGateway.php:650
 #: templates/checkout/express-checkout.php:12
 msgid "Express Checkout"
 msgstr ""
 
 #: src/Payments/Gateways/ApplePayGateway.php:161
 #: src/Payments/Gateways/GooglePayGateway.php:184
-#: src/Payments/Gateways/PayPalGateway.php:647
+#: src/Payments/Gateways/PayPalGateway.php:651
 msgid "Order Pay"
 msgstr ""
 
@@ -1874,7 +1874,7 @@ msgid "Fastlane Enabled"
 msgstr ""
 
 #: src/Payments/Gateways/CreditCardGateway.php:202
-msgid "Available for US PayPal Business accounts. When enabled, Fastlane by PayPal will be available on the checkout page."
+msgid "When enabled, Fastlane by PayPal will be available on the checkout page."
 msgstr ""
 
 #: src/Payments/Gateways/CreditCardGateway.php:205
@@ -2246,35 +2246,35 @@ msgstr ""
 msgid "Credit Card Payment Sections"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:608
+#: src/Payments/Gateways/PayPalGateway.php:612
 msgid "PayPal Enabled"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:613
+#: src/Payments/Gateways/PayPalGateway.php:617
 msgid "Pay Later Enabled"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:619
+#: src/Payments/Gateways/PayPalGateway.php:623
 msgid "Credit Card Enabled"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:625
+#: src/Payments/Gateways/PayPalGateway.php:629
 msgid "Button Width"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:629
+#: src/Payments/Gateways/PayPalGateway.php:633
 msgid "Match add to cart button width"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:630
+#: src/Payments/Gateways/PayPalGateway.php:634
 msgid "Match width of container"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:633
+#: src/Payments/Gateways/PayPalGateway.php:637
 msgid "This option allows you to control the width of the payment buttons."
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:700
+#: src/Payments/Gateways/PayPalGateway.php:704
 msgid "Place order"
 msgstr ""
 

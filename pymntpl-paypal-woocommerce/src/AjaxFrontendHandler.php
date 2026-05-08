@@ -8,6 +8,10 @@ use PaymentPlugins\PayPalSDK\PayPalClient;
 use PaymentPlugins\WooCommerce\PPCP\Cache\CacheInterface;
 use PaymentPlugins\WooCommerce\PPCP\Payments\PaymentGateways;
 
+/**
+ * @deprecated 4.0.0 - This class is no longer needed since the plugin triggers the 'update_checkout' event client side
+ * to ensure the checkout fields get updated.
+ */
 class AjaxFrontendHandler {
 
 	private $client;

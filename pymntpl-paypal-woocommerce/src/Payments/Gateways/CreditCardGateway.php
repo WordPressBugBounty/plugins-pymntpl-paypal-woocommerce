@@ -199,7 +199,7 @@ class CreditCardGateway extends AbstractGateway {
 				'type'        => 'checkbox',
 				'default'     => 'no',
 				'value'       => 'yes',
-				'description' => __( 'Available for US PayPal Business accounts. When enabled, Fastlane by PayPal will be available on the checkout page.', 'pymntpl-paypal-woocommerce' )
+				'description' => __( 'When enabled, Fastlane by PayPal will be available on the checkout page.', 'pymntpl-paypal-woocommerce' )
 			],
 			'fastlane_flow'            => [
 				'title'             => __( 'Fastlane Type', 'pymntpl-paypal-woocommerce' ),

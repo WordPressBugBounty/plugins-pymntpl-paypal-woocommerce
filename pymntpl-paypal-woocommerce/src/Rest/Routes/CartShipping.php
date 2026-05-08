@@ -263,8 +263,6 @@ class CartShipping extends AbstractCart {
 		$result = $this->client->orders->update( $order->getId(), $patches );
 		if ( ! is_wp_error( $result ) ) {
 			$this->logger->info( sprintf( 'Shipping updated for PayPal order %s. Patches: %s', $order->getId(), print_r( $patches, true ) ), 'payment' );
-
-			$this->cache->delete( Constants::PPCP_ORDER_SESSION_KEY );
 		}
 	}
 
