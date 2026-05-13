@@ -9,6 +9,26 @@ use PaymentPlugins\WooCommerce\PPCP\Utilities\NumberUtil;
 
 class ShippingOptionsFactory extends AbstractFactory {
 
+	private $packages = [];
+
+	/**
+	 * @return array
+	 * @since 2.0.17
+	 */
+	public function get_shipping_packages() {
+		if ( ! empty( $this->packages ) ) {
+			return $this->packages;
+		}
+		$packages = WC()->shipping()->get_packages();
+		if ( empty( $packages ) ) {
+			$packages = WC()->shipping()->calculate_shipping( $this->cart->get_shipping_packages() );
+		}
+
+		$this->packages = apply_filters( 'wc_ppcp_cart_shipping_packages', $packages );
+
+		return $this->packages;
+	}
+
 	/**
 	 * @return \PaymentPlugins\PayPalSDK\Collection
 	 */
@@ -17,10 +37,7 @@ class ShippingOptionsFactory extends AbstractFactory {
 		$incl_tax                = $this->display_prices_including_tax();
 		$chosen_shipping_methods = WC()->session->get( 'chosen_shipping_methods', [] );
 		$shipping_options        = [];
-		$packages                = WC()->shipping()->get_packages();
-		if ( empty( $packages ) ) {
-			$packages = WC()->shipping()->calculate_shipping( $this->cart->get_shipping_packages() );
-		}
+		$packages                = $this->get_shipping_packages();
 
 		foreach ( $packages as $i => $package ) {
 			foreach ( $package['rates'] as $method ) {

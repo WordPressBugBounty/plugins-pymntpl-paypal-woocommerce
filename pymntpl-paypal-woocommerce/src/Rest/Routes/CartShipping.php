@@ -8,7 +8,6 @@ use PaymentPlugins\PayPalSDK\Order;
 use PaymentPlugins\PayPalSDK\PatchRequest;
 use PaymentPlugins\PayPalSDK\PurchaseUnit;
 use PaymentPlugins\WooCommerce\PPCP\Assets\PayPalDataTransformer;
-use PaymentPlugins\WooCommerce\PPCP\Constants;
 use PaymentPlugins\WooCommerce\PPCP\Rest\Exceptions\ShippingException;
 use PaymentPlugins\WooCommerce\PPCP\Utils;
 
@@ -152,10 +151,8 @@ class CartShipping extends AbstractCart {
 	 * @throws \Exception If no shipping methods available for complete address
 	 */
 	private function validate_shipping_availability( \WP_REST_Request $request ) {
-		$packages = WC()->shipping()->get_packages();
-		if ( empty( $packages ) ) {
-			$packages = WC()->shipping()->calculate_shipping( WC()->cart->get_shipping_packages() );
-		}
+		$this->factories->initialize( WC()->cart );
+		$packages = $this->factories->shippingOptions->get_shipping_packages();
 		if ( ! $this->validate_shipping_methods( $packages ) ) {
 			if ( $this->is_intermediate_address_complete( $request->get_param( 'address' ) ) ) {
 				// only throw exception if this is a complete intermediary address

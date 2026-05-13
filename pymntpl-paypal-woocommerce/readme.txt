@@ -4,7 +4,7 @@ Tags: paypal, paylater, venmo, credit cards
 Requires at least: 4.7
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 2.0.16
+Stable tag: 2.0.17
 Copyright: Payment Plugins
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -51,9 +51,11 @@ Our documentation has a step-by-step guide on how to connect the plugin to your 
 Payment Plugins is the team behind several of the highest reviewed and installed Payment integrations for WooCommerce.
 
 == Changelog ==
+= 2.0.17 - 05/12/26 =
+* Fixed - Shipping options were not showing in wallet based payment methods for free trial subscriptions that have a signup fee configured
 = 2.0.16 - 05/07/26 =
 * Fixed - Make sure the core plugin style sheet is loaded if the "Use place order button" option is enabled. [https://wordpress.org/support/topic/use-a-new-payment-method-radio-button-on-checkout/](https://wordpress.org/support/topic/use-a-new-payment-method-radio-button-on-checkout/)
-* Fixed - Deprecate the AjaxFrontendHandler class as it's no longer needed.
+* Updated - Deprecate the AjaxFrontendHandler class as it's no longer needed.
 = 2.0.15 - 04/29/26 =
 * Added - Support for the new WooCommerce interactivity mini-cart introduced in WooCommerce 10.4. PayPal, Google Pay, and Apple Pay payment buttons are supported.
 * Updated - Reduced JS file sizes on product, cart shortcode, and checkout shortcode by 68% resulting in faster frontend page loads

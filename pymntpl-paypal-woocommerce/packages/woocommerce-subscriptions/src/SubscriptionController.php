@@ -91,11 +91,13 @@ class SubscriptionController {
 		 * Filter called when cart or checkout block is enabled.
 		 */
 		add_filter( 'wc_ppcp_blocks_get_extended_data', [ $this, 'get_extended_schema_data' ] );
+
+		add_filter( 'wc_ppcp_cart_shipping_packages', [ $this, 'get_shipping_packages' ] );
 	}
 
 	/**
-	 * @param mixed $result
-	 * @param \WC_Order $order
+	 * @param mixed           $result
+	 * @param \WC_Order       $order
 	 * @param AbstractGateway $payment_method
 	 */
 	public function process_payment( $result, \WC_Order $order, AbstractGateway $payment_method ) {
@@ -178,7 +180,7 @@ class SubscriptionController {
 	}
 
 	/**
-	 * @param float $amount
+	 * @param float     $amount
 	 * @param \WC_Order $order
 	 */
 	public function scheduled_subscription_payment( $amount, \WC_Order $order ) {
@@ -186,7 +188,7 @@ class SubscriptionController {
 	}
 
 	/**
-	 * @param array $payment_meta
+	 * @param array            $payment_meta
 	 * @param \WC_Subscription $subscription
 	 */
 	public function add_subscription_payment_meta( $payment_meta, $subscription ) {
@@ -218,7 +220,7 @@ class SubscriptionController {
 	}
 
 	/**
-	 * @param array $data
+	 * @param array      $data
 	 * @param array|null $cart_item
 	 *
 	 * @return mixed
@@ -235,7 +237,7 @@ class SubscriptionController {
 
 	/**
 	 * @param \WC_Subscription $subscription
-	 * @param \WC_Order $renewal_order
+	 * @param \WC_Order        $renewal_order
 	 */
 	public function update_failing_payment_method( $subscription, $renewal_order ) {
 		$payment_method = wc_get_payment_gateway_by_order( $renewal_order );
@@ -323,9 +325,9 @@ class SubscriptionController {
 	}
 
 	/**
-	 * @param bool $bool
+	 * @param bool                                                               $bool
 	 * @param \PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\AbstractGateway $payment_method
-	 * @param \WC_Order $order
+	 * @param \WC_Order                                                          $order
 	 *
 	 * @return bool|mixed
 	 */
@@ -344,9 +346,9 @@ class SubscriptionController {
 	}
 
 	/**
-	 * @param array $data
+	 * @param array                                           $data
 	 * @param \PaymentPlugins\WooCommerce\PPCP\ContextHandler $context
-	 * @param AbstractGateway $payment_method
+	 * @param AbstractGateway                                 $payment_method
 	 *
 	 * @return void
 	 */
@@ -377,8 +379,8 @@ class SubscriptionController {
 	}
 
 	/**
-	 * @param string $new_payment_method_title
-	 * @param string $gateway_id
+	 * @param string           $new_payment_method_title
+	 * @param string           $gateway_id
 	 * @param \WC_Subscription $subscription
 	 *
 	 * @return void
@@ -469,6 +471,32 @@ class SubscriptionController {
 	 */
 	private function is_manual_renewal_required() {
 		return function_exists( 'wcs_is_manual_renewal_required' ) && \wcs_is_manual_renewal_required();
+	}
+
+	/**
+	 * @param $packages
+	 *
+	 * @return array
+	 */
+	public function get_shipping_packages( $packages ) {
+		if ( ! empty( $packages ) ) {
+			return $packages;
+		}
+		if ( \WC_Subscriptions_Cart::cart_contains_free_trial() ) {
+			if ( isset( WC()->cart->recurring_carts ) ) {
+				$count = 0;
+				\WC_Subscriptions_Cart::set_calculation_type( 'recurring_total' );
+				foreach ( WC()->cart->recurring_carts as $recurring_cart_key => $recurring_cart ) {
+					foreach ( $recurring_cart->get_shipping_packages() as $i => $base_package ) {
+						$packages[ $recurring_cart_key . '_' . $count ] = WC()->shipping()->calculate_shipping_for_package( $base_package );
+					}
+					$count ++;
+				}
+				\WC_Subscriptions_Cart::set_calculation_type( 'none' );
+			}
+		}
+
+		return $packages;
 	}
 
 }

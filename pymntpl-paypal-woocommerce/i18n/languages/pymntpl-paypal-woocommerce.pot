@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Payment Plugins for PayPal WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Payment Plugins for PayPal WooCommerce 2.0.16\n"
+"Project-Id-Version: Payment Plugins for PayPal WooCommerce 2.0.17\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pymntpl-paypal-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-08T00:53:49+00:00\n"
+"POT-Creation-Date: 2026-05-13T01:20:23+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: pymntpl-paypal-woocommerce\n"
@@ -548,7 +548,7 @@ msgid "Payment for pre-order failed. Reason: %s"
 msgstr ""
 
 #: packages/woocommerce-preorders/src/PreOrdersController.php:105
-#: packages/woocommerce-subscriptions/src/SubscriptionController.php:280
+#: packages/woocommerce-subscriptions/src/SubscriptionController.php:282
 #: src/Integrations/WooCommercePreOrders.php:179
 #: src/Integrations/WooCommerceSubscriptions.php:327
 msgid "Please select a shipping method for your order."
@@ -574,11 +574,11 @@ msgstr ""
 msgid "Error saving payment method for subscription. Reason: %s"
 msgstr ""
 
-#: packages/woocommerce-subscriptions/src/SubscriptionController.php:204
+#: packages/woocommerce-subscriptions/src/SubscriptionController.php:206
 msgid "Payment Method Token"
 msgstr ""
 
-#: packages/woocommerce-subscriptions/src/SubscriptionController.php:212
+#: packages/woocommerce-subscriptions/src/SubscriptionController.php:214
 #: src/Conversion/GeneralPayPalPlugin.php:85
 #: src/Integrations/WooCommerceSubscriptions.php:273
 msgid "Billing Agreement ID"
@@ -1281,28 +1281,28 @@ msgstr ""
 msgid "Create Ticket"
 msgstr ""
 
-#: src/Assets/PayPalDataTransformer.php:114
-#: src/Assets/PayPalDataTransformer.php:178
+#: src/Assets/PayPalDataTransformer.php:116
+#: src/Assets/PayPalDataTransformer.php:180
 #: src/Traits/DisplayItemsTrait.php:47
 #: src/Traits/DisplayItemsTrait.php:96
 msgid "Shipping"
 msgstr ""
 
-#: src/Assets/PayPalDataTransformer.php:136
-#: src/Assets/PayPalDataTransformer.php:187
+#: src/Assets/PayPalDataTransformer.php:138
+#: src/Assets/PayPalDataTransformer.php:189
 #: src/Traits/DisplayItemsTrait.php:61
 #: src/Traits/DisplayItemsTrait.php:105
 msgid "Discount"
 msgstr ""
 
-#: src/Assets/PayPalDataTransformer.php:145
-#: src/Assets/PayPalDataTransformer.php:209
+#: src/Assets/PayPalDataTransformer.php:147
+#: src/Assets/PayPalDataTransformer.php:211
 #: src/Traits/DisplayItemsTrait.php:66
 #: src/Traits/DisplayItemsTrait.php:123
 msgid "Tax"
 msgstr ""
 
-#: src/Assets/PayPalDataTransformer.php:200
+#: src/Assets/PayPalDataTransformer.php:202
 #: src/Factories/ItemsFactory.php:53
 #: src/Factories/ItemsFactory.php:132
 #: src/Traits/DisplayItemsTrait.php:116
@@ -2356,11 +2356,11 @@ msgstr ""
 msgid "Please enter a valid shipping address."
 msgstr ""
 
-#: src/Rest/Routes/CartShipping.php:163
+#: src/Rest/Routes/CartShipping.php:160
 msgid "There are no shipping options available for the provided address."
 msgstr ""
 
-#: src/Rest/Routes/CartShipping.php:206
+#: src/Rest/Routes/CartShipping.php:203
 msgid "Error fetching order %s. Reason: %s"
 msgstr ""
 

@@ -2,6 +2,8 @@
 
 namespace PaymentPlugins\WooCommerce\PPCP\Assets;
 
+use PaymentPlugins\WooCommerce\PPCP\Factories\CoreFactories;
+use PaymentPlugins\WooCommerce\PPCP\Factories\ShippingOptionsFactory;
 use PaymentPlugins\WooCommerce\PPCP\Utilities\NumberUtil;
 
 /**
@@ -244,11 +246,13 @@ class PayPalDataTransformer {
 			return [];
 		}
 
-		$options  = [];
-		$packages = WC()->shipping()->get_packages();
-		if ( empty( $packages ) ) {
-			$packages = WC()->shipping()->calculate_shipping( $cart->get_shipping_packages() );
-		}
+		$options = [];
+		/**
+		 * @var ShippingOptionsFactory $shipping_factory
+		 */
+		$shipping_factory = wc_ppcp_get_container()->get( CoreFactories::class )->shippingOptions;
+		$shipping_factory->set_cart( $cart );
+		$packages = $shipping_factory->get_shipping_packages();
 		$incl_tax = wc_tax_enabled() && $cart->display_prices_including_tax();
 
 		foreach ( $packages as $i => $package ) {
