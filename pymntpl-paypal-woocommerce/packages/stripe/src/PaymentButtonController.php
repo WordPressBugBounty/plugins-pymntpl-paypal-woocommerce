@@ -55,9 +55,11 @@ class PaymentButtonController {
 			foreach ( $gateways as $idx => $gw ) {
 				if ( $gw->id === $gateway->id ) {
 					$gateways[ $idx ] = $gateway;
-					break;
+
+					return $gateways;
 				}
 			}
+			$gateways[ $gateway->id ] = $gateway;
 		}
 
 		return $gateways;
