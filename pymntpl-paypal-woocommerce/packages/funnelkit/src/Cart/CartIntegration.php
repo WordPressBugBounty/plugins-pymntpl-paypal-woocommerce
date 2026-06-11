@@ -33,7 +33,9 @@ class CartIntegration {
 		$this->btn_ctrl->render_minicart_buttons();
 		?>
         <style>
-            .wc-ppcp-minicart-ppcp {
+            .wc-ppcp-minicart-ppcp,
+            .wc-ppcp-minicart-ppcp_googlepay,
+            .wc-ppcp-minicart-ppcp_applepay {
                 display: block;
                 margin-top: 10px;
                 padding-left: 16px;

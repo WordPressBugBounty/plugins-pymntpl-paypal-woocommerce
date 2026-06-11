@@ -40,15 +40,15 @@ class Order {
 			] )
 		     && isset( $payment_methods[ $order->get_payment_method() ] )
 		) {
-			$payment_method = $payment_methods[ $order->get_payment_method() ];
-			$base_country   = WC()->countries->get_base_country();
-			$carriers       = ShippingUtil::get_carriers();
-			$shop_carriers  = isset( $carriers[ $base_country ] ) ? $carriers[ $base_country ] : [];
-			$carriers       = array_merge(
-				[ $base_country => $shop_carriers ],
-				[ 'global' => $carriers['global'] ?? [] ],
-				[ 'other' => $carriers['other'] ?? [] ]
-			);
+			$payment_method   = $payment_methods[ $order->get_payment_method() ];
+			$all_countries    = WC()->countries->get_countries();
+			$shipping_country = $order->get_shipping_country() ?: WC()->countries->get_base_country();
+			$all_carriers     = ShippingUtil::get_carriers();
+			$carriers         = array_filter( [
+				'global'          => $all_carriers['global'] ?? [],
+				$shipping_country => $all_carriers[ $shipping_country ] ?? [],
+				'other'           => $all_carriers['other'] ?? [],
+			] );
 
 			if ( $payment_method instanceof AbstractGateway ) {
 				$this->assets_api->enqueue_script( 'wc-ppcp-order-metabox', 'build/js/admin-order-metabox.js', [
@@ -121,14 +121,24 @@ class Order {
 														<?php endforeach; ?>
                                                     </select>
                                                 </div>
+                                                <div class="wc-ppcp-action-item">
+                                                    <label><?php esc_html_e( 'Shipping Country', 'pymntpl-paypal-woocommerce' ) ?></label>
+                                                    <select id="ppcp_shipping_country" class="wc-enhanced-select"
+                                                            style="width: 100%">
+														<?php foreach ( $all_countries as $code => $name ): ?>
+                                                            <option value="<?php echo esc_attr( $code ) ?>" <#if(data.shipping_country === "<?php echo esc_attr( $code ) ?>"){#>selected<#}#>><?php echo esc_html( $name ) ?></option>
+														<?php endforeach; ?>
+                                                    </select>
+                                                </div>
                                                 <div class="wc-ppcp-action-item shipping-carrier">
                                                     <label><?php esc_html_e( 'Carrier', 'pymntpl-paypal-woocommerce' ) ?></label>
                                                     <select id="ppcp_carrier" class="wc-enhanced-select"
-                                                            style="width: 100%">
+                                                            style="width: 100%"
+                                                            data-loading-text="<?php esc_attr_e( 'Loading...', 'pymntpl-paypal-woocommerce' ) ?>">
 														<?php foreach ( $carriers as $optgroup ): ?>
-                                                            <optgroup label="<?php echo $optgroup['name']; ?>">
+                                                            <optgroup label="<?php echo esc_attr( $optgroup['name'] ) ?>">
 																<?php foreach ( $optgroup['items'] as $key => $value ): ?>
-                                                                    <option value="<?php echo esc_attr( $key ) ?>" <#if(data.tracker.carrier === "<?php echo esc_attr( $key ) ?>" ){#>selected<#}#>><?php echo esc_html( $value ) ?></option>
+                                                                    <option value="<?php echo esc_attr( $key ) ?>" <#if(data.tracker.carrier === "<?php echo esc_attr( $key ) ?>"){#>selected<#}#>><?php echo esc_html( $value ) ?></option>
 																<?php endforeach; ?>
                                                             </optgroup>
 														<?php endforeach; ?>
@@ -156,9 +166,9 @@ class Order {
                                 <div data-section="transaction">
                                     <#if(data.can_capture){#>
                                     <button class="button button-secondary ppcp-capture"
-                                            data-processing-text="<?php echo esc_attr_e( 'Processing...', 'pymntpl-paypal-woocommerce' ) ?>"><?php esc_html_e( 'Capture', 'pymntpl-paypal-woocommerce' ); ?></button>
+                                            data-processing-text="<?php esc_attr_e( 'Processing...', 'pymntpl-paypal-woocommerce' ) ?>"><?php esc_html_e( 'Capture', 'pymntpl-paypal-woocommerce' ); ?></button>
                                     <button class="button button-secondary ppcp-void"
-                                            data-processing-text="<?php echo esc_attr_e( 'Processing...', 'pymntpl-paypal-woocommerce' ) ?>"><?php esc_html_e( 'Void', 'pymntpl-paypal-woocommerce' ); ?></button>
+                                            data-processing-text="<?php esc_attr_e( 'Processing...', 'pymntpl-paypal-woocommerce' ) ?>"><?php esc_html_e( 'Void', 'pymntpl-paypal-woocommerce' ); ?></button>
                                     <#}#>
                                 </div>
                                 <div data-section="shipping" style="display: none">

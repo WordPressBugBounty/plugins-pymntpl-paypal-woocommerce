@@ -24,10 +24,10 @@ class CartOrder extends AbstractCart {
 	 */
 	private $checkout_validator;
 
-	public function __construct( AdvancedSettings $settings, ...$args ) {
+	public function __construct( AdvancedSettings $settings, CheckoutValidator $checkout_validator, ...$args ) {
 		parent::__construct( ...$args );
 		$this->settings           = $settings;
-		$this->checkout_validator = new CheckoutValidator();
+		$this->checkout_validator = $checkout_validator;
 	}
 
 	public function get_path() {
@@ -75,17 +75,10 @@ class CartOrder extends AbstractCart {
 				throw new \Exception( __( 'Invalid payment method provided.', 'pymntpl-paypal-woocommerce' ) );
 			}
 
-			if ( $this->is_checkout_initiated( $request ) ) {
-				if ( $this->is_checkout_validation_enabled( $request ) && $request->get_param( 'payment_method' ) === 'ppcp' ) {
-					$this->checkout_validator->validate_checkout( $request );
-				}
-				/**
-				 * 3rd party code can use this action to perform custom validations.
-				 *
-				 * @since 1.0.31
-				 */
-				do_action( 'wc_ppcp_validate_checkout_fields', $request, $this->checkout_validator );
-			}
+			$this->checkout_validator->run(
+				$request,
+				$this->is_checkout_initiated( $request ) && $this->is_checkout_validation_enabled( $request ) && $request->get_param( 'payment_method' ) === 'ppcp'
+			);
 
 			$result = $this->client->orders->create( $order );
 			if ( is_wp_error( $result ) ) {

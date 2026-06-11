@@ -27,11 +27,11 @@ class VaultSetupTokensRoute extends AbstractRoute {
 
 	private $validator;
 
-	public function __construct( WPPayPalClient $client, CoreFactories $factories, AdvancedSettings $settings ) {
+	public function __construct( WPPayPalClient $client, CoreFactories $factories, AdvancedSettings $settings, CheckoutValidator $validator ) {
 		$this->client    = $client;
 		$this->factories = $factories;
 		$this->settings  = $settings;
-		$this->validator = new CheckoutValidator();
+		$this->validator = $validator;
 	}
 
 	public function get_path() {
@@ -75,21 +75,12 @@ class VaultSetupTokensRoute extends AbstractRoute {
 
 		if ( $context->is_checkout() ) {
 			$this->populate_post_data( $request );
-
-			if ( $this->is_checkout_validation_enabled( $request ) ) {
-				$this->validator->validate_checkout( $request, false );
-			}
-			/**
-			 * 3rd party code can use this action to perform custom validations.
-			 *
-			 * @since 1.0.31
-			 */
-			do_action( 'wc_ppcp_validate_checkout_fields', $request, $this->validator );
-
-			if ( $this->validator->has_errors() ) {
-				return $this->validator->get_failure_response();
-			}
 		}
+
+		$this->validator->run(
+			$request,
+			$context->is_checkout() && $this->is_checkout_validation_enabled( $request )
+		);
 
 		$this->factories->initialize( $payment_method );
 

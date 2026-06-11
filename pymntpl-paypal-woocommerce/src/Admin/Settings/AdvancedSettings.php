@@ -81,12 +81,47 @@ class AdvancedSettings extends AbstractSettings {
 				'description' => __( 'For orders that are authorized, when the order is set to this status, it will trigger a capture. When set to manual, the payment must be manually captured.', 'pymntpl-paypal-woocommerce' ),
 			],
 			'3ds_config'                         => [
-				'type'              => 'configure_3ds',
+				'type'              => 'react_app',
+				'title'             => __( '3DS Config', 'pymntpl-paypal-woocommerce' ),
 				'label'             => __( 'Configure 3DS', 'pymntpl-paypal-woocommerce' ),
+				'class'             => 'show3DSModal',
+				'app_id'            => '3ds-app',
 				'default'           => $this->get_3ds_actions(),
 				'sanitize_callback' => function ( $value ) {
 					return ! is_array( $value ) ? [] : array_map( 'wc_clean', array_map( 'stripslashes', $value ) );
 				}
+			],
+			'recaptcha_config'                   => [
+				'type'              => 'react_app',
+				'title'             => __( 'reCAPTCHA', 'pymntpl-paypal-woocommerce' ),
+				'label'             => __( 'Configure reCAPTCHA', 'pymntpl-paypal-woocommerce' ),
+				'class'             => 'showReCAPTCHA',
+				'app_id'            => 'recaptcha-app',
+				'default'           => [
+					'enabled'          => 'no',
+					'verify_logged_in' => 'no',
+					'v3_site_key'      => '',
+					'v3_secret_key'    => '',
+					'v3_score'         => 0.5,
+					'v2_site_key'      => '',
+					'v2_secret_key'    => '',
+				],
+				'sanitize_callback' => function ( $value ) {
+					if ( ! is_array( $value ) ) {
+						return [];
+					}
+					$value = array_map( 'wc_clean', array_map( 'stripslashes', $value ) );
+					if ( isset( $value['v3_score'] ) ) {
+						$value['v3_score'] = min( 1.0, max( 0.0, (float) $value['v3_score'] ) );
+					}
+
+					return $value;
+				},
+				'description'       => sprintf(
+					__( 'Create your V3 Google reCAPTCHA site %1$shere%2$s', 'pymntpl-paypal-woocommerce' ),
+					'<a href="https://www.google.com/recaptcha/admin" target="_blank" rel="noopener noreferrer">',
+					'</a>'
+				)
 			],
 			'cart_location'                      => [
 				'title'       => __( 'Cart Button Location', 'pymntpl-paypal-woocommerce' ),
@@ -167,18 +202,26 @@ class AdvancedSettings extends AbstractSettings {
 	public function get_settings_script_data() {
 		return [
 			'i18n' => [
-				'save'                  => __( 'Save', 'pymntpl-paypal-woocommerce' ),
-				'cancel'                => __( 'Cancel', 'pymntpl-paypal-woocommerce' ),
-				'reset'                 => __( 'Reset Settings', 'pymntpl-paypal-woocommerce' ),
-				'description'           => __( 'These settings define how payment transactions should be handled based on the customer\'s 3D 
+				'save'                       => __( 'Save', 'pymntpl-paypal-woocommerce' ),
+				'cancel'                     => __( 'Cancel', 'pymntpl-paypal-woocommerce' ),
+				'reset'                      => __( 'Reset Settings', 'pymntpl-paypal-woocommerce' ),
+				'description'                => __( 'These settings define how payment transactions should be handled based on the customer\'s 3D 
 				Secure enrollment status, authentication outcome, and liability shift result.', 'pymntpl-paypal-woocommerce' ),
-				'continue'              => __( 'Continue', 'pymntpl-paypal-woocommerce' ),
-				'reject'                => __( 'Reject', 'pymntpl-paypal-woocommerce' ),
-				'enrollment_status'     => __( 'Enrollment Status', 'pymntpl-paypal-woocommerce' ),
-				'authentication_status' => __( 'Authentication Status', 'pymntpl-paypal-woocommerce' ),
-				'liability_shift'       => __( 'Liability Shift', 'pymntpl-paypal-woocommerce' ),
-				'action'                => __( 'Action', 'pymntpl-paypal-woocommerce' ),
-				'desc2'                 => sprintf( __( 'For a full description of each response code, click %1$shere%2$s.' ), '<a href="https://developer.paypal.com/docs/checkout/advanced/customize/3d-secure/response-parameters/#supported-parameters" target="_blank">', '<a/>' )
+				'continue'                   => __( 'Continue', 'pymntpl-paypal-woocommerce' ),
+				'reject'                     => __( 'Reject', 'pymntpl-paypal-woocommerce' ),
+				'enrollment_status'          => __( 'Enrollment Status', 'pymntpl-paypal-woocommerce' ),
+				'authentication_status'      => __( 'Authentication Status', 'pymntpl-paypal-woocommerce' ),
+				'liability_shift'            => __( 'Liability Shift', 'pymntpl-paypal-woocommerce' ),
+				'action'                     => __( 'Action', 'pymntpl-paypal-woocommerce' ),
+				'desc2'                      => sprintf( __( 'For a full description of each response code, click %1$shere%2$s.' ), '<a href="https://developer.paypal.com/docs/checkout/advanced/customize/3d-secure/response-parameters/#supported-parameters" target="_blank">', '<a/>' ),
+				'recaptcha_title'            => __( 'reCAPTCHA Settings', 'pymntpl-paypal-woocommerce' ),
+				'recaptcha_enabled'          => __( 'Enabled', 'pymntpl-paypal-woocommerce' ),
+				'recaptcha_v3_site_key'      => __( 'Site Key (v3)', 'pymntpl-paypal-woocommerce' ),
+				'recaptcha_v3_secret_key'    => __( 'Secret Key (v3)', 'pymntpl-paypal-woocommerce' ),
+				'recaptcha_v3_score'         => __( 'Minimum Score (v3)', 'pymntpl-paypal-woocommerce' ),
+				'recaptcha_v3_score_desc'    => __( 'Score threshold between 0.0 and 1.0. Requests below this score are blocked.', 'pymntpl-paypal-woocommerce' ),
+				'recaptcha_verify_logged_in' => __( 'Verify Logged In Users', 'pymntpl-paypal-woocommerce' ),
+				'recaptcha_logged_in_desc'   => __( 'If enabled, verification for logged in users will occur.', 'pymntpl-paypal-woocommerce' )
 			]
 		];
 	}
@@ -240,7 +283,7 @@ class AdvancedSettings extends AbstractSettings {
 	}
 
 	/**
-	 * @param array $data
+	 * @param array                                           $data
 	 * @param \PaymentPlugins\WooCommerce\PPCP\ContextHandler $context
 	 *
 	 * @return void
@@ -285,31 +328,34 @@ class AdvancedSettings extends AbstractSettings {
 	 * @return string
 	 * @since 1.1.5
 	 */
-	public function generate_configure_3ds_html( $key, $data ) {
+	public function generate_react_app_html( $key, $data ) {
 		$field_key = $this->get_field_key( $key );
 		$data      = wp_parse_args( $data, [
+			'title'       => '',
 			'label'       => '',
+			'class'       => '',
+			'app_id'      => '',
 			'desc_tip'    => false,
 			'description' => ''
 		] );
 
-		$value = $this->get_option( $key, [] );
+		$value          = $this->get_option( $key );
+		$default_values = $this->get_field_default( $this->form_fields[ $key ] );
 		if ( ! \is_array( $value ) ) {
 			$value = [];
 		}
-		$actions = $this->get_3ds_actions();
-		$value   = wp_parse_args( $value, $actions );
+		$value = array_merge( $default_values, $value );
 
 		ob_start();
 		?>
         <tr valign="top">
-            <th scope="row" class="titledesc"></th>
+            <th scope="row" class="titledesc"><?php echo wp_kses_post( $data['title'] ) ?></th>
             <td class="forminp">
                 <fieldset>
-                    <button class="button-secondary show3DSModal">
+                    <button class="button-secondary <?php echo esc_attr( $data['class'] ) ?>">
 						<?php echo wp_kses_post( $data['label'] ) ?>
                     </button>
-                    <div id="3ds-app"></div>
+                    <div id="<?php echo esc_attr( $data['app_id'] ) ?>"></div>
 					<?php
 					// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 					echo $this->get_description_html( $data ); // WPCS: XSS ok.

@@ -10,11 +10,13 @@ use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\AdvancedSettings;
 use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\APISettings;
 use PaymentPlugins\WooCommerce\PPCP\Cache\CacheHandler;
 use PaymentPlugins\WooCommerce\PPCP\Config;
+use PaymentPlugins\WooCommerce\PPCP\CheckoutValidator;
 use PaymentPlugins\WooCommerce\PPCP\Container\Container;
 use PaymentPlugins\WooCommerce\PPCP\ContextHandler;
 use PaymentPlugins\WooCommerce\PPCP\Factories\CoreFactories;
 use PaymentPlugins\WooCommerce\PPCP\Logger;
 use PaymentPlugins\WooCommerce\PPCP\Rest\Routes\AbstractRoute;
+use PaymentPlugins\WooCommerce\PPCP\Rest\Routes\Admin\AdminCarriers;
 use PaymentPlugins\WooCommerce\PPCP\Rest\Routes\Admin\AdminOrder;
 use PaymentPlugins\WooCommerce\PPCP\Rest\Routes\Admin\AdminOrderTracking;
 use PaymentPlugins\WooCommerce\PPCP\Rest\Routes\Admin\AdminWebhookCreate;
@@ -71,7 +73,7 @@ class RestController {
 			'cart/billing'            => new CartBilling(),
 			'cart/checkout'           => new CartCheckout( ...$cart_args ),
 			'cart/refresh'            => new CartRefresh( $this->container->get( ContextHandler::class ) ),
-			'cart/order'              => new CartOrder( $this->container->get( AdvancedSettings::class ), ...$cart_args ),
+			'cart/order'              => new CartOrder( $this->container->get( AdvancedSettings::class ), $this->container->get( CheckoutValidator::class ), ...$cart_args ),
 			'order/pay'               => new OrderPay(
 				$this->container->get( CoreFactories::class ),
 				$this->container->get( PayPalClient::class ),
@@ -80,7 +82,8 @@ class RestController {
 				$this->container->get( PayPalClient::class ),
 				$this->container->get( Logger::class ),
 				$this->container->get( AdvancedSettings::class ),
-				$this->container->get( CoreFactories::class )
+				$this->container->get( CoreFactories::class ),
+				$this->container->get( CheckoutValidator::class )
 			),
 			'billing-agreement'       => new BillingAgreementRoute( $this->container->get( PayPalClient::class ) ),
 			'webhook'                 => new WebhookRoute(
@@ -90,6 +93,7 @@ class RestController {
 			),
 			'admin/order'             => new AdminOrder( $this->container->get( PayPalClient::class ) ),
 			'admin/tracking'          => new AdminOrderTracking( $this->container->get( PayPalClient::class ) ),
+			'admin/carriers'          => new AdminCarriers(),
 			'admin/webhook'           => new AdminWebhookCreate(
 				$this->container->get( PayPalClient::class ),
 				$this->container->get( APISettings::class )
@@ -97,10 +101,11 @@ class RestController {
 			'setup-tokens'            => new VaultSetupTokensRoute(
 				$this->container->get( PayPalClient::class ),
 				$this->container->get( CoreFactories::class ),
-				$this->container->get( AdvancedSettings::class )
+				$this->container->get( AdvancedSettings::class ),
+				$this->container->get( CheckoutValidator::class )
 			),
 			'payment-tokens'          => new VaultPaymentTokensRoute( $this->container->get( PayPalClient::class ) ),
-			'checkout/validation'     => new CheckoutFormValidation()
+			'checkout/validation'     => new CheckoutFormValidation( $this->container->get( CheckoutValidator::class ) )
 		];
 	}
 

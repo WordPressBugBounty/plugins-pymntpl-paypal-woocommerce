@@ -51,6 +51,25 @@ class CheckoutValidator {
 		}
 	}
 
+	/**
+	 * Run optional standard validation and always fire wc_ppcp_validate_checkout_fields.
+	 * Throws if any errors were added.
+	 *
+	 * @param \WP_REST_Request $request
+	 * @param bool             $run_validation
+	 *
+	 * @throws \Exception
+	 */
+	public function run( \WP_REST_Request $request, bool $run_validation = false ) {
+		if ( $run_validation ) {
+			$this->validate_checkout( $request, false );
+		}
+		do_action( 'wc_ppcp_validate_checkout_fields', $request, $this );
+		if ( $this->has_errors() ) {
+			throw new \Exception( 'validation_errors', self::VALIDATION_ERRORS );
+		}
+	}
+
 	public function get_errors() {
 		return $this->errors->get_error_messages();
 	}

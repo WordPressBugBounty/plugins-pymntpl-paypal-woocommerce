@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Payment Plugins for PayPal WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Payment Plugins for PayPal WooCommerce 2.0.18\n"
+"Project-Id-Version: Payment Plugins for PayPal WooCommerce 2.0.19\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pymntpl-paypal-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-06-03T15:21:13+00:00\n"
+"POT-Creation-Date: 2026-06-11T14:44:13+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: pymntpl-paypal-woocommerce\n"
@@ -95,7 +95,7 @@ msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:53
 #: packages/blocks/src/Payments/Gateways/FastlaneGateway.php:55
-#: src/Admin/Settings/AdvancedSettings.php:171
+#: src/Admin/Settings/AdvancedSettings.php:206
 #: src/Messages.php:27
 #: templates/checkout/applepay.php:16
 #: templates/checkout/googlepay.php:13
@@ -118,7 +118,7 @@ msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:56
 #: packages/blocks/src/Payments/Gateways/FastlaneGateway.php:57
-#: src/Admin/Settings/AdvancedSettings.php:175
+#: src/Admin/Settings/AdvancedSettings.php:210
 #: templates/fastlane/modal.php:13
 msgid "Continue"
 msgstr ""
@@ -236,6 +236,7 @@ msgid "Pay Later Options"
 msgstr ""
 
 #: packages/elementor/src/Widget/ProductPayLaterMessageWidget.php:44
+#: src/Admin/Settings/AdvancedSettings.php:218
 #: src/Admin/Settings/PayLaterMessageSettings.php:53
 #: src/Admin/Settings/PayLaterMessageSettings.php:183
 #: src/Admin/Settings/PayLaterMessageSettings.php:312
@@ -564,7 +565,7 @@ msgid "Recurring payment failed. Reason: %s"
 msgstr ""
 
 #: packages/woocommerce-subscriptions/src/PaymentController.php:272
-#: src/Payments/Gateways/AbstractGateway.php:282
+#: src/Payments/Gateways/AbstractGateway.php:284
 msgid "A payment token ID is required when adding a payment method."
 msgstr ""
 
@@ -642,25 +643,33 @@ msgid "Shipping Status"
 msgstr ""
 
 #: src/Admin/MetaBoxes/Order.php:125
+msgid "Shipping Country"
+msgstr ""
+
+#: src/Admin/MetaBoxes/Order.php:134
 msgid "Carrier"
 msgstr ""
 
-#: src/Admin/MetaBoxes/Order.php:140
+#: src/Admin/MetaBoxes/Order.php:137
+msgid "Loading..."
+msgstr ""
+
+#: src/Admin/MetaBoxes/Order.php:150
 msgid "Carrier Name"
 msgstr ""
 
-#: src/Admin/MetaBoxes/Order.php:145
+#: src/Admin/MetaBoxes/Order.php:155
 msgid "Notify Buyer"
 msgstr ""
 
-#: src/Admin/MetaBoxes/Order.php:159
-#: src/Admin/MetaBoxes/Order.php:161
-#: src/Admin/MetaBoxes/Order.php:166
+#: src/Admin/MetaBoxes/Order.php:169
+#: src/Admin/MetaBoxes/Order.php:171
+#: src/Admin/MetaBoxes/Order.php:176
 #: src/Payments/Gateways/ApplePayGateway.php:368
 msgid "Processing..."
 msgstr ""
 
-#: src/Admin/MetaBoxes/Order.php:159
+#: src/Admin/MetaBoxes/Order.php:169
 #: src/Payments/Gateways/ApplePayGateway.php:102
 #: src/Payments/Gateways/CreditCardGateway.php:74
 #: src/Payments/Gateways/GooglePayGateway.php:124
@@ -669,19 +678,19 @@ msgstr ""
 msgid "Capture"
 msgstr ""
 
-#: src/Admin/MetaBoxes/Order.php:161
+#: src/Admin/MetaBoxes/Order.php:171
 msgid "Void"
 msgstr ""
 
-#: src/Admin/MetaBoxes/Order.php:167
+#: src/Admin/MetaBoxes/Order.php:177
 msgid "Submit"
 msgstr ""
 
-#: src/Admin/MetaBoxes/Order.php:190
+#: src/Admin/MetaBoxes/Order.php:200
 msgid "PayPal Fee"
 msgstr ""
 
-#: src/Admin/MetaBoxes/Order.php:196
+#: src/Admin/MetaBoxes/Order.php:206
 msgid "Net payout"
 msgstr ""
 
@@ -796,115 +805,159 @@ msgid "For orders that are authorized, when the order is set to this status, it 
 msgstr ""
 
 #: src/Admin/Settings/AdvancedSettings.php:85
+msgid "3DS Config"
+msgstr ""
+
+#: src/Admin/Settings/AdvancedSettings.php:86
 msgid "Configure 3DS"
 msgstr ""
 
-#: src/Admin/Settings/AdvancedSettings.php:92
+#: src/Admin/Settings/AdvancedSettings.php:96
+msgid "reCAPTCHA"
+msgstr ""
+
+#: src/Admin/Settings/AdvancedSettings.php:97
+msgid "Configure reCAPTCHA"
+msgstr ""
+
+#: src/Admin/Settings/AdvancedSettings.php:121
+msgid "Create your V3 Google reCAPTCHA site %1$shere%2$s"
+msgstr ""
+
+#: src/Admin/Settings/AdvancedSettings.php:127
 msgid "Cart Button Location"
 msgstr ""
 
-#: src/Admin/Settings/AdvancedSettings.php:96
-#: src/Admin/Settings/AdvancedSettings.php:107
+#: src/Admin/Settings/AdvancedSettings.php:131
+#: src/Admin/Settings/AdvancedSettings.php:142
 #: src/Admin/Settings/PayLaterMessageSettings.php:457
 msgid "Below checkout button"
 msgstr ""
 
-#: src/Admin/Settings/AdvancedSettings.php:97
-#: src/Admin/Settings/AdvancedSettings.php:108
+#: src/Admin/Settings/AdvancedSettings.php:132
+#: src/Admin/Settings/AdvancedSettings.php:143
 msgid "Above checkout button"
 msgstr ""
 
-#: src/Admin/Settings/AdvancedSettings.php:100
+#: src/Admin/Settings/AdvancedSettings.php:135
 msgid "The location of the payment buttons in relation to the Proceed to checkout button."
 msgstr ""
 
-#: src/Admin/Settings/AdvancedSettings.php:103
+#: src/Admin/Settings/AdvancedSettings.php:138
 msgid "Mini-Cart Button Location"
 msgstr ""
 
-#: src/Admin/Settings/AdvancedSettings.php:111
+#: src/Admin/Settings/AdvancedSettings.php:146
 msgid "The location of the payment buttons in relation to the mini-cart checkout button."
 msgstr ""
 
-#: src/Admin/Settings/AdvancedSettings.php:114
+#: src/Admin/Settings/AdvancedSettings.php:149
 msgid "Validate Checkout Fields"
 msgstr ""
 
-#: src/Admin/Settings/AdvancedSettings.php:118
+#: src/Admin/Settings/AdvancedSettings.php:153
 msgid ""
 "Enable this option if you want the PayPal plugin to validate the checkout page required fields when the PayPal button is clicked. If required fields are missing,\n"
 "\t\t\t\ta notice will be shown to the customer on the checkout page. PayPal has the ability to provide the billing and shipping address info automatically so we recommend leaving this option off. \n"
 "\t\t\t\tThe checkout fields won't be validated if your customer clicks the express checkout PayPal buttons since the fields will be populated by PayPal automatically."
 msgstr ""
 
-#: src/Admin/Settings/AdvancedSettings.php:123
+#: src/Admin/Settings/AdvancedSettings.php:158
 msgid "Disable PayPal Shipping Address"
 msgstr ""
 
-#: src/Admin/Settings/AdvancedSettings.php:128
+#: src/Admin/Settings/AdvancedSettings.php:163
 msgid "If enabled, the customer will not be able to change their shipping address in the PayPal popup. This option has no effect on express checkout on the checkout page."
 msgstr ""
 
-#: src/Admin/Settings/AdvancedSettings.php:131
+#: src/Admin/Settings/AdvancedSettings.php:166
 msgid "Dispute Settings"
 msgstr ""
 
-#: src/Admin/Settings/AdvancedSettings.php:135
+#: src/Admin/Settings/AdvancedSettings.php:170
 msgid "Dispute Created"
 msgstr ""
 
-#: src/Admin/Settings/AdvancedSettings.php:138
+#: src/Admin/Settings/AdvancedSettings.php:173
 msgid "If enabled, the plugin will listen for the <strong>dispute.created</strong> webhook event and set the order's status to on-hold by default."
 msgstr ""
 
-#: src/Admin/Settings/AdvancedSettings.php:142
+#: src/Admin/Settings/AdvancedSettings.php:177
 msgid "Dispute Created Order Status"
 msgstr ""
 
-#: src/Admin/Settings/AdvancedSettings.php:146
+#: src/Admin/Settings/AdvancedSettings.php:181
 msgid "The status assigned to an order when a dispute is created."
 msgstr ""
 
-#: src/Admin/Settings/AdvancedSettings.php:152
+#: src/Admin/Settings/AdvancedSettings.php:187
 msgid "Dispute Resolved"
 msgstr ""
 
-#: src/Admin/Settings/AdvancedSettings.php:155
+#: src/Admin/Settings/AdvancedSettings.php:190
 msgid "If enabled, the plugin will listen for the <strong>dispute.closed</strong> webhook event and set the order's status back to the status before the dispute was opened."
 msgstr ""
 
-#: src/Admin/Settings/AdvancedSettings.php:170
+#: src/Admin/Settings/AdvancedSettings.php:205
 msgid "Save"
 msgstr ""
 
-#: src/Admin/Settings/AdvancedSettings.php:172
+#: src/Admin/Settings/AdvancedSettings.php:207
 msgid "Reset Settings"
 msgstr ""
 
-#: src/Admin/Settings/AdvancedSettings.php:173
+#: src/Admin/Settings/AdvancedSettings.php:208
 msgid ""
 "These settings define how payment transactions should be handled based on the customer's 3D \n"
 "\t\t\t\tSecure enrollment status, authentication outcome, and liability shift result."
 msgstr ""
 
-#: src/Admin/Settings/AdvancedSettings.php:176
+#: src/Admin/Settings/AdvancedSettings.php:211
 msgid "Reject"
 msgstr ""
 
-#: src/Admin/Settings/AdvancedSettings.php:177
+#: src/Admin/Settings/AdvancedSettings.php:212
 msgid "Enrollment Status"
 msgstr ""
 
-#: src/Admin/Settings/AdvancedSettings.php:178
+#: src/Admin/Settings/AdvancedSettings.php:213
 msgid "Authentication Status"
 msgstr ""
 
-#: src/Admin/Settings/AdvancedSettings.php:179
+#: src/Admin/Settings/AdvancedSettings.php:214
 msgid "Liability Shift"
 msgstr ""
 
-#: src/Admin/Settings/AdvancedSettings.php:180
+#: src/Admin/Settings/AdvancedSettings.php:215
 msgid "Action"
+msgstr ""
+
+#: src/Admin/Settings/AdvancedSettings.php:217
+msgid "reCAPTCHA Settings"
+msgstr ""
+
+#: src/Admin/Settings/AdvancedSettings.php:219
+msgid "Site Key (v3)"
+msgstr ""
+
+#: src/Admin/Settings/AdvancedSettings.php:220
+msgid "Secret Key (v3)"
+msgstr ""
+
+#: src/Admin/Settings/AdvancedSettings.php:221
+msgid "Minimum Score (v3)"
+msgstr ""
+
+#: src/Admin/Settings/AdvancedSettings.php:222
+msgid "Score threshold between 0.0 and 1.0. Requests below this score are blocked."
+msgstr ""
+
+#: src/Admin/Settings/AdvancedSettings.php:223
+msgid "Verify Logged In Users"
+msgstr ""
+
+#: src/Admin/Settings/AdvancedSettings.php:224
+msgid "If enabled, verification for logged in users will occur."
 msgstr ""
 
 #: src/Admin/Settings/APISettings.php:21
@@ -1343,18 +1396,18 @@ msgid "PayPal capture status is pending. Reason: %1$s. Payment will complete whe
 msgstr ""
 
 #: src/Legacy/LegacyPaymentHandler.php:196
-#: src/Payments/Gateways/AbstractGateway.php:431
+#: src/Payments/Gateways/AbstractGateway.php:433
 msgid "PayPal order %s created. %s"
 msgstr ""
 
 #: src/Legacy/LegacyPaymentHandler.php:197
-#: src/Payments/Gateways/AbstractGateway.php:433
+#: src/Payments/Gateways/AbstractGateway.php:435
 #: src/Traits/CardPaymentNoteTrait.php:28
 msgid "Capture ID: %s"
 msgstr ""
 
 #: src/Legacy/LegacyPaymentHandler.php:197
-#: src/Payments/Gateways/AbstractGateway.php:433
+#: src/Payments/Gateways/AbstractGateway.php:435
 #: src/Traits/CardPaymentNoteTrait.php:30
 msgid "Authorization ID: %s"
 msgstr ""
@@ -2282,6 +2335,20 @@ msgstr ""
 msgid "Payment Plugins for PayPal WooCommerce requires PHP 7.1 or greater."
 msgstr ""
 
+#: src/ReCaptcha/ReCaptchaController.php:93
+#: src/ReCaptcha/ReCaptchaController.php:109
+#: src/ReCaptcha/ReCaptchaController.php:114
+msgid "reCAPTCHA verification failed. Please try again."
+msgstr ""
+
+#: src/ReCaptcha/ReCaptchaController.php:104
+msgid "reCAPTCHA verification request failed. Please try again."
+msgstr ""
+
+#: src/ReCaptcha/ReCaptchaController.php:129
+msgid "reCAPTCHA error: %s"
+msgstr ""
+
 #: src/Rest/Routes/Admin/AbstractRoute.php:15
 msgid "You do not have permission to access this resource."
 msgstr ""
@@ -2342,17 +2409,17 @@ msgstr ""
 msgid "Please fill out all required fields then click Place Order."
 msgstr ""
 
-#: src/Rest/Routes/CartItem.php:62
+#: src/Rest/Routes/CartItem.php:66
 #: src/Rest/Routes/CartOrder.php:75
 #: src/Rest/Routes/VaultSetupTokensRoute.php:73
 msgid "Invalid payment method provided."
 msgstr ""
 
-#: src/Rest/Routes/CartItem.php:68
+#: src/Rest/Routes/CartItem.php:72
 msgid "Error adding product to cart."
 msgstr ""
 
-#: src/Rest/Routes/CartOrder.php:96
+#: src/Rest/Routes/CartOrder.php:89
 msgid "Please enter a valid shipping address."
 msgstr ""
 

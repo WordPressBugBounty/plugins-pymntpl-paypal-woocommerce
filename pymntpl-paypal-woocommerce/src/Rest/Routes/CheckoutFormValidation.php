@@ -8,8 +8,8 @@ class CheckoutFormValidation extends AbstractRoute {
 
 	private CheckoutValidator $validator;
 
-	public function __construct() {
-		$this->validator = new CheckoutValidator();
+	public function __construct( CheckoutValidator $validator ) {
+		$this->validator = $validator;
 	}
 
 	public function get_path() {

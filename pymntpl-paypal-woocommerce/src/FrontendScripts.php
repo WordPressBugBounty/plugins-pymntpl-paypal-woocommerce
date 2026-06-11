@@ -28,6 +28,7 @@ class FrontendScripts {
 		$this->assets->register_script( 'wc-ppcp-payment-methods', 'build/js/payment-methods.js' );
 		$this->assets->register_script( 'wc-ppcp-fastlane-checkout', 'build/js/fastlane-checkout.js', [ 'wc-ppcp-card-gateway' ] );
 		$this->assets->register_script( 'wc-ppcp-paylater-messages', 'build/js/paylater-messages.js' );
+		$this->assets->register_script( 'wc-ppcp-recaptcha', 'build/js/recaptcha.js' );
 
 		wp_register_script( 'wc-ppcp-googlepay-external', 'https://pay.google.com/gp/p/js/pay.js' );
 

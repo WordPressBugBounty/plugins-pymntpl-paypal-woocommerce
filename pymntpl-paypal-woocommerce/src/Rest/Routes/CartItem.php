@@ -5,6 +5,7 @@ namespace PaymentPlugins\WooCommerce\PPCP\Rest\Routes;
 
 
 use PaymentPlugins\WooCommerce\PPCP\Assets\PayPalDataTransformer;
+use PaymentPlugins\WooCommerce\PPCP\CheckoutValidator;
 use PaymentPlugins\WooCommerce\PPCP\Constants;
 use PaymentPlugins\WooCommerce\PPCP\ContextHandler;
 use PaymentPlugins\WooCommerce\PPCP\PaymentMethodRegistry;
@@ -49,13 +50,16 @@ class CartItem extends AbstractCart {
 	 * @param $request
 	 */
 	public function handle_post_request( \WP_REST_Request $request ) {
+		$validator = new CheckoutValidator();
 		wc_maybe_define_constant( 'WOOCOMMERCE_CART', true );
 		$this->populate_post_data( $request );
 		list( $product_id, $qty, $variation_id, $variation ) = $cart_params = $this->get_add_to_cart_params( $request );
-		// remove item before adding, ensuring qty's are accurate
-		WC()->cart->remove_cart_item( WC()->cart->generate_cart_id( $product_id, $variation_id, $variation ) );
 
 		try {
+			$validator->run( $request, false );
+
+			// remove item before adding, ensuring qty's are accurate
+			WC()->cart->remove_cart_item( WC()->cart->generate_cart_id( $product_id, $variation_id, $variation ) );
 			$payment_method = $this->get_payment_method_from_request( $request );
 
 			if ( ! $payment_method ) {

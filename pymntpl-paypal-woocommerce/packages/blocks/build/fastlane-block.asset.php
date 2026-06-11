@@ -1,1 +1,1 @@
-<?php return array('dependencies' => array('wc-ppcp-blocks-vendors', 'wc-blocks-checkout', 'wc-blocks-data-store', 'wc-ppcp-block-data', 'wc-ppcp-utils', 'wc-settings', 'wp-api-fetch', 'wp-data', 'wp-element', 'wp-i18n', 'wp-url'), 'version' => '1e62d925235b4b46e8f7');
+<?php return array('dependencies' => array('wc-ppcp-blocks-vendors', 'wc-blocks-checkout', 'wc-blocks-checkout-events', 'wc-blocks-data-store', 'wc-ppcp-block-data', 'wc-ppcp-utils', 'wc-settings', 'wp-api-fetch', 'wp-data', 'wp-element', 'wp-i18n', 'wp-url'), 'version' => '6ddf2ef9cb4fbaad804b');

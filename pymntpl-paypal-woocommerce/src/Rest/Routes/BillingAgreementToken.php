@@ -30,13 +30,14 @@ class BillingAgreementToken extends AbstractRoute {
 		WPPayPalClient $client,
 		Logger $logger,
 		AdvancedSettings $settings,
-		CoreFactories $factories
+		CoreFactories $factories,
+		CheckoutValidator $validator
 	) {
 		$this->client    = $client;
 		$this->logger    = $logger;
 		$this->settings  = $settings;
 		$this->factories = $factories;
-		$this->validator = new CheckoutValidator();
+		$this->validator = $validator;
 	}
 
 	public function get_path() {
@@ -73,21 +74,9 @@ class BillingAgreementToken extends AbstractRoute {
 				$this->factories->billingAgreement->set_needs_shipping( false );
 			}
 			$this->update_customer_data( $customer, $request );
-
-			if ( $this->is_checkout_validation_enabled( $request ) ) {
-				$this->validator->validate_checkout( $request, false );
-			}
-			/**
-			 * 3rd party code can use this action to perform custom validations.
-			 *
-			 * @since 1.0.31
-			 */
-			do_action( 'wc_ppcp_validate_checkout_fields', $request, $this->validator );
-
-			if ( $this->validator->has_errors() ) {
-				return $this->validator->get_failure_response();
-			}
 		}
+
+		$this->validator->run( $request, $this->is_checkout_initiated( $request ) && $this->is_checkout_validation_enabled( $request ) );
 
 		if ( $request['context'] === 'order_pay' ) {
 			/**

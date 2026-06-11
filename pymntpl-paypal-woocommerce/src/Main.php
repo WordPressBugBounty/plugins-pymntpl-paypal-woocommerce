@@ -31,6 +31,7 @@ use PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\PayPalGateway;
 use PaymentPlugins\WooCommerce\PPCP\Payments\PaymentGateways;
 use PaymentPlugins\WooCommerce\PPCP\Assets\AssetsApi;
 use PaymentPlugins\WooCommerce\PPCP\Products\ProductDataController;
+use PaymentPlugins\WooCommerce\PPCP\ReCaptcha\ReCaptchaController;
 use PaymentPlugins\WooCommerce\PPCP\Rest\RestController;
 use PaymentPlugins\WooCommerce\PPCP\Shortcodes\CartPayLaterMessage;
 use PaymentPlugins\WooCommerce\PPCP\Shortcodes\CartPaymentButtons;
@@ -97,6 +98,7 @@ class Main {
 		$this->container->get( OrderAttributionController::class )->initialize();
 		$this->container->get( ProductDataController::class )->initialize();
 		$this->container->get( PaymentButtonController::class )->initialize();
+		$this->container->get( ReCaptchaController::class )->initialize();
 		$this->container->get( PaymentGateways::class );
 		$this->container->get( RestApi::class );
 		$this->container->get( OrderStatusController::class );
@@ -359,6 +361,14 @@ class Main {
 		$this->container->register( ProductDataController::class, function ( $container ) {
 			return new ProductDataController(
 				$container->get( PaymentMethodRegistry::class ),
+			);
+		} );
+		$this->container->register( CheckoutValidator::class, function () {
+			return new CheckoutValidator();
+		} );
+		$this->container->register( ReCaptchaController::class, function ( $container ) {
+			return new ReCaptchaController(
+				$container->get( PaymentMethodRegistry::class )
 			);
 		} );
 	}

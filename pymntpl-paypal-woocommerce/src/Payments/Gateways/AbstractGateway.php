@@ -276,6 +276,8 @@ abstract class AbstractGateway extends \WC_Payment_Gateway {
 				throw new \Exception( __( 'This payment method does not supports vaulting.', 'pymntpl-paypal-woocommerce' ) );
 			}
 
+			do_action( 'wc_ppcp_before_add_payment_method', $this );
+
 			$payment_token_id = $this->get_payment_token_id_from_request();
 
 			if ( ! $payment_token_id ) {

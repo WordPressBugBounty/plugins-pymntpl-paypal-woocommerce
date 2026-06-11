@@ -92,8 +92,9 @@ class AdminOrder extends \PaymentPlugins\WooCommerce\PPCP\Rest\Routes\Admin\Abst
 			throw new \Exception( $paypal_order->get_error_message(), 200 );
 		}
 
-		$data['has_shipping'] = ! ! $order->has_shipping_address();
-		$data['order']        = $paypal_order;
+		$data['has_shipping']     = ! ! $order->has_shipping_address();
+		$data['shipping_country'] = $order->get_shipping_country() ?: WC()->countries->get_base_country();
+		$data['order']            = $paypal_order;
 
 		return $data;
 	}
