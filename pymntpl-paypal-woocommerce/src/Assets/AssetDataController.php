@@ -4,6 +4,7 @@ namespace PaymentPlugins\WooCommerce\PPCP\Assets;
 
 use PaymentPlugins\WooCommerce\PPCP\ContextHandler;
 use PaymentPlugins\WooCommerce\PPCP\Utils;
+use PaymentPlugins\WooCommerce\PPCP\Utilities\ShippingUtil;
 
 /**
  * Controller responsible for managing asset data output:
@@ -29,7 +30,7 @@ class AssetDataController {
 	private $transformer;
 
 	/**
-	 * @param AssetDataApi $data_api
+	 * @param AssetDataApi   $data_api
 	 * @param ContextHandler $context_handler
 	 */
 	public function __construct( AssetDataApi $data_api, ContextHandler $context_handler ) {
@@ -62,7 +63,7 @@ class AssetDataController {
 		/**
 		 * Add script data that's output to frontend pages.
 		 *
-		 * @param AssetDataApi $data_api The data API for adding data
+		 * @param AssetDataApi   $data_api The data API for adding data
 		 * @param ContextHandler $context_handler The context handler
 		 */
 		do_action( 'wc_ppcp_add_script_data', $this->data_api, $this->context_handler );

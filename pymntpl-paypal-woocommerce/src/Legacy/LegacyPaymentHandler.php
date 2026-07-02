@@ -444,10 +444,39 @@ class LegacyPaymentHandler {
 	 * @return void
 	 */
 	private function validate_paypal_order( $paypal_order, $order ) {
-		// Only validate orders with a CREATED status because that means they haven't been approved yet.
-		// An order with an APPROVED status means the customer clicked complete payment in the PayPal popup
-		if ( $paypal_order instanceof Order && $paypal_order->isCreated() ) {
+		if ( ! $paypal_order instanceof Order ) {
+			return;
+		}
+		// Validate if this is a COMPLETED PayPal order. If it is, compare the PayPal order's custom_id
+		// to the WooCommerce order ID. If they don't match, reject this request.
+		if ( $paypal_order->isComplete() ) {
+			$ids_match = false;
+			foreach ( $paypal_order->getPurchaseUnits() as $purchase_unit ) {
+				/**
+				 * @var PurchaseUnit $purchase_unit
+				 */
+				$custom_id = $purchase_unit->getCustomId();
+				if ( (int) $custom_id === (int) $order->get_id() ) {
+					$ids_match = true;
+					break;
+				}
+			}
+			if ( ! $ids_match ) {
+				throw new \Exception(
+					sprintf(
+						__( 'PayPal order %1$s has already been completed and does not match store order ID %2$s.', 'pymntpl-paypal-woocommerce' ),
+						$paypal_order->getId(),
+						$order->get_id()
+					)
+				);
+			}
+		}
+		// Skip gateway validation for already-completed orders; those are handled by the ID check above.
+		if ( $paypal_order->isCreated() ) {
 			$this->factories->initialize( $order );
+			/**
+			 * @var Order $new_order
+			 */
 			$new_order           = $this->factories->order->from_order( $this->payment_method->get_option( 'intent' ) );
 			$shipping_preference = $this->cache->get( Constants::SHIPPING_PREFERENCE );
 			/**
@@ -456,7 +485,7 @@ class LegacyPaymentHandler {
 			 * should be created. This ensures the shipping address can't be edited on the PayPal redirect based payment page.
 			 */
 			if ( $shipping_preference === OrderApplicationContext::GET_FROM_FILE ) {
-				if ( $new_order->getApplicationContext()->getShippingPreference() === OrderApplicationContext::SET_PROVIDED_ADDRESS ) {
+				if ( $new_order->getPaymentSource()->getExperienceContext()->getShippingPreference() === OrderApplicationContext::SET_PROVIDED_ADDRESS ) {
 					$this->cache->delete( Constants::PAYPAL_ORDER_ID );
 					$this->cache->delete( Constants::SHIPPING_PREFERENCE );
 					throw new RetryException( 'Create new order' );

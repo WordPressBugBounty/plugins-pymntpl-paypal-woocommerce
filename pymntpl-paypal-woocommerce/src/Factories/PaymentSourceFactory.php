@@ -20,6 +20,12 @@ class PaymentSourceFactory extends AbstractFactory {
 			$customer
 		);
 
+		$experience_context = $this->factories->experienceContext->from_cart();
+		if ( $experience_context ) {
+			$payment_type                              = $this->payment_method->get_payment_method_type();
+			$source->$payment_type->experience_context = $experience_context;
+		}
+
 		return $source;
 	}
 
@@ -32,6 +38,12 @@ class PaymentSourceFactory extends AbstractFactory {
 			$this->payment_method->is_payment_method_save_required( $this->order ),
 			$customer
 		);
+
+		$experience_context = $this->factories->experienceContext->from_order();
+		if ( $experience_context ) {
+			$payment_type                              = $this->payment_method->get_payment_method_type();
+			$source->$payment_type->experience_context = $experience_context;
+		}
 
 		/**
 		 * If there is a payment token ID in the request then this is a Fastlane payment request.

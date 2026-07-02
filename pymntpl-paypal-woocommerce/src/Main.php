@@ -368,7 +368,8 @@ class Main {
 		} );
 		$this->container->register( ReCaptchaController::class, function ( $container ) {
 			return new ReCaptchaController(
-				$container->get( PaymentMethodRegistry::class )
+				$container->get( PaymentMethodRegistry::class ),
+				$container->get( Logger::class )
 			);
 		} );
 	}

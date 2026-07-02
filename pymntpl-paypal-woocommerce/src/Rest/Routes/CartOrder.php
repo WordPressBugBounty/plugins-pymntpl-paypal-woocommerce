@@ -57,12 +57,7 @@ class CartOrder extends AbstractCart {
 			$this->update_customer_data( WC()->customer, $request );
 
 			if ( $this->settings->is_shipping_address_disabled() ) {
-				add_action( 'wc_ppcp_get_order_from_cart', function ( Order $order ) {
-					// If the application context is allowing the address to be changed, override that.
-					if ( $order->getApplicationContext()->getShippingPreference() === OrderApplicationContext::GET_FROM_FILE ) {
-						$order->getApplicationContext()->setShippingPreference( OrderApplicationContext::SET_PROVIDED_ADDRESS );
-					}
-				} );
+				$this->factories->experienceContext->set_shipping_preference( 'SET_PROVIDED_ADDRESS' );
 			}
 		}
 		$this->populate_post_data( $request );
@@ -91,7 +86,7 @@ class CartOrder extends AbstractCart {
 				throw new \Exception( $result->get_error_message() );
 			}
 			$this->cache->set( sprintf( '%s_%s', $payment_method->id, Constants::PAYPAL_ORDER_ID ), $result->id );
-			$this->cache->set( Constants::SHIPPING_PREFERENCE, $order->getApplicationContext()->getShippingPreference() );
+			$this->cache->set( Constants::SHIPPING_PREFERENCE, $order->getPaymentSource()->getExperienceContext() );
 
 			$this->logger->info(
 				sprintf( 'PayPal order created via %s. Args: %s', __METHOD__, print_r( $result->toArray(), true ) ),

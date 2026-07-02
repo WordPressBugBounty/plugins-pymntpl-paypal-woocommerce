@@ -427,6 +427,14 @@ abstract class AbstractGateway extends \WC_Payment_Gateway {
 		return $this->payment_method_type;
 	}
 
+	/**
+	 * Returns the experience_context keys this gateway supports.
+	 * ExperienceContextFactory only builds keys present in this list.
+	 */
+	public function get_experience_context_keys(): array {
+		return [ 'return_url', 'cancel_url' ];
+	}
+
 	public function add_payment_complete_note( \WC_Order $order, PaymentResult $result ) {
 		$order->add_order_note(
 			sprintf(

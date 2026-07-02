@@ -99,7 +99,9 @@ class OrderPay extends AbstractRoute {
 			if ( $purchase_unit->getShipping() ) {
 				if ( ! Utils::is_valid_address( $purchase_unit->getShipping()->getAddress(), 'shipping' ) ) {
 					unset( $purchase_unit->shipping );
-					$paypal_order->getApplicationContext()->setShippingPreference( OrderApplicationContext::NO_SHIPPING );
+					$paypal_order->getPaymentSource()
+					             ->getExperienceContext()
+					             ->setShippingPreference( OrderApplicationContext::NO_SHIPPING );
 				}
 			}
 			OrderFilterUtil::filter_order( $paypal_order );

@@ -34,7 +34,7 @@ class Logger {
 		if ( ! $this->settings ) {
 			$this->settings = wc_ppcp_get_container()->get( APISettings::class );
 		}
-		$write = $this->is_debug_context_enabled( null );
+
 		if ( count( $args ) === 1 ) {
 			list( $context ) = $args;
 			$write = $this->is_debug_context_enabled( $context );
@@ -44,13 +44,19 @@ class Logger {
 			if ( $write ) {
 				$msg = $msg . $msg2;
 			}
+		} else {
+			$write = $this->is_debug_context_enabled( null );
+		}
+
+		if ( ! $write ) {
+			return;
 		}
 		/**
 		 * 1. If log should be written then proceed.
 		 * 2. If not $write, then still write if $args are empty. That's because when args are empty, it's just a lone message.
 		 * 3. If there is a message, and arg count is greater than one, then still write the lone message
 		 */
-		if ( $write || empty( $args ) || ( $msg && count( $args ) > 1 ) ) {
+		if ( $msg ) {
 			$this->log->log( $lvl, $msg, [ 'source' => $this->get_source() ] );
 		}
 	}
@@ -76,7 +82,7 @@ class Logger {
 				$enabled = $this->settings->debug_webhook_enabled();
 				break;
 			default:
-				$enabled = true;
+				$enabled = wc_string_to_bool( $this->settings->get_option( 'debug', 'yes' ) );
 		}
 
 		return $enabled;

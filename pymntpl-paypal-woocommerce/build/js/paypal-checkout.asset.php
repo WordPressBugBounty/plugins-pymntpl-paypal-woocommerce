@@ -1,1 +1,1 @@
-<?php return array('dependencies' => array('jquery', 'wc-ppcp-actions', 'wc-ppcp-cart', 'wc-ppcp-context', 'wc-ppcp-controllers', 'wc-ppcp-order', 'wc-ppcp-payment-methods', 'wc-ppcp-utils'), 'version' => '17fefc05679ab99577b8');
+<?php return array('dependencies' => array('jquery', 'wc-ppcp-actions', 'wc-ppcp-cart', 'wc-ppcp-context', 'wc-ppcp-controllers', 'wc-ppcp-order', 'wc-ppcp-payment-methods', 'wc-ppcp-utils'), 'version' => '9e501a9c0aa3fa78f099');

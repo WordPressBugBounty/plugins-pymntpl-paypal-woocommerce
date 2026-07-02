@@ -25,7 +25,8 @@ class Update {
 		'1.1.0',
 		'1.1.9',
 		'2.0.0',
-		'2.0.1'
+		'2.0.1',
+		'2.0.20'
 	];
 
 	public function __construct( $version, $update_path ) {

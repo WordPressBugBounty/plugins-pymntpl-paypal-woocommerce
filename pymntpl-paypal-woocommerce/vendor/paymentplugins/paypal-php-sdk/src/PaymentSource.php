@@ -8,9 +8,12 @@ namespace PaymentPlugins\PayPalSDK;
  *
  * @package PaymentPlugins\PayPalSDK
  *
- * @property \PaymentPlugins\PayPalSDK\Token $token
- * @property \PaymentPlugins\PayPalSDK\Token $paypal
+ * @property \PaymentPlugins\PayPalSDK\Token      $token
+ * @property \PaymentPlugins\PayPalSDK\Token      $paypal
  * @property \PaymentPlugins\PayPalSDK\CreditCard $card
+ * @property                                      $apple_pay
+ * @property                                      $google_pay
+ * @property                                      $venmo
  */
 class PaymentSource extends AbstractObject {
 
@@ -52,5 +55,18 @@ class PaymentSource extends AbstractObject {
 		$this->card = $card;
 
 		return $this;
+	}
+
+	/**
+	 * @return ExperienceContext
+	 */
+	public function getExperienceContext() {
+		foreach ( $this->_values as $key => $value ) {
+			if ( property_exists( $value, 'experience_context' ) ) {
+				return $this->_values[ $key ]->experience_context;
+			}
+		}
+
+		return null;
 	}
 }

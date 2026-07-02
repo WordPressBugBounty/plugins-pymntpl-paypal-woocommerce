@@ -3,6 +3,7 @@
 namespace PaymentPlugins\WooCommerce\PPCP\ReCaptcha;
 
 use PaymentPlugins\WooCommerce\PPCP\Assets\AssetDataApi;
+use PaymentPlugins\WooCommerce\PPCP\Logger;
 use PaymentPlugins\WooCommerce\PPCP\PaymentMethodRegistry;
 
 class ReCaptchaController {
@@ -11,8 +12,11 @@ class ReCaptchaController {
 
 	private $payment_method_registry;
 
-	public function __construct( PaymentMethodRegistry $payment_method_registry ) {
+	private $log;
+
+	public function __construct( PaymentMethodRegistry $payment_method_registry, Logger $log ) {
 		$this->payment_method_registry = $payment_method_registry;
+		$this->log                     = $log;
 		$this->settings                = get_option( 'woocommerce_ppcp_advanced_settings', [ 'recaptcha_config' => [] ] );
 	}
 
@@ -111,6 +115,7 @@ class ReCaptchaController {
 
 		$min_score = (float) $this->get_setting( 'v3_score', 0.5 );
 		if ( (float) $body->score < $min_score ) {
+			$this->log->info( sprintf( 'reCAPTHCA verification failed due to low verification score. Score: %1$s', $body->score ) );
 			throw new \Exception( __( 'reCAPTCHA verification failed. Please try again.', 'pymntpl-paypal-woocommerce' ) );
 		}
 	}

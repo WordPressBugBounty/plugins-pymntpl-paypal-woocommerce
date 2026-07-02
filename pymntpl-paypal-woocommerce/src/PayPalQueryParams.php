@@ -10,7 +10,7 @@ use PaymentPlugins\WooCommerce\PPCP\Assets\AssetDataApi;
  * @property string $intent
  * @property string $vault
  * @property string $commit
- * @property array $components
+ * @property array  $components
  * @property string $currency
  * @property string $enableFunding;
  * @protected string $locale
@@ -48,7 +48,7 @@ class PayPalQueryParams {
 
 	public function __set( string $name, $value ): void {
 		switch ( $name ) {
-			case 'enableFunding';
+			case 'enableFunding':
 				$name = 'enable-funding';
 				break;
 		}

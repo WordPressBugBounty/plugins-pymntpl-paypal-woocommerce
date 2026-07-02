@@ -18,6 +18,7 @@ use PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\AbstractGateway;
  * @property \PaymentPlugins\WooCommerce\PPCP\Factories\ApplicationContextFactory    $applicationContext
  * @property \PaymentPlugins\WooCommerce\PPCP\Factories\PurchaseUnitFactory          $purchaseUnit
  * @property \PaymentPlugins\WooCommerce\PPCP\Factories\NameFactory                  $name
+ * @property \PaymentPlugins\WooCommerce\PPCP\Factories\ExperienceContextFactory      $experienceContext
  * @property \PaymentPlugins\WooCommerce\PPCP\Factories\PaymentSourceFactory         $paymentSource
  * @property \PaymentPlugins\WooCommerce\PPCP\Factories\BillingAgreementTokenFactory $billingAgreement
  * @property \PaymentPlugins\WooCommerce\PPCP\Factories\RefundFactory                $refunds
@@ -56,6 +57,7 @@ class CoreFactories {
 				$this
 			),
 			'name'               => new NameFactory( $this ),
+			'experienceContext'   => new ExperienceContextFactory( $container->get( AdvancedSettings::class ), $this ),
 			'paymentSource'      => new PaymentSourceFactory( $this ),
 			'billingAgreement'   => new BillingAgreementTokenFactory( $this ),
 			'refunds'            => new RefundFactory( $container->get( AdvancedSettings::class ), $this ),

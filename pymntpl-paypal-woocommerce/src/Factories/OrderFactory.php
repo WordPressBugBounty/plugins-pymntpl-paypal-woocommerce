@@ -16,13 +16,11 @@ class OrderFactory extends AbstractFactory {
 	 * @return \PaymentPlugins\PayPalSDK\Order
 	 */
 	public function from_cart( $intent ) {
-		$needs_shipping = $this->cart->needs_shipping();
-		$order          = ( new Order() )
+		$order = ( new Order() )
 			->setIntent( $intent )
 			->setPayer( $this->factories->payer->from_customer() )
 			->setPaymentSource( $this->factories->paymentSource->from_cart() )
-			->setPurchaseUnits( ( new Collection() )->add( $this->factories->purchaseUnit->from_cart() ) )
-			->setApplicationContext( $this->factories->applicationContext->get( $needs_shipping ) );
+			->setPurchaseUnits( ( new Collection() )->add( $this->factories->purchaseUnit->from_cart() ) );
 
 		/**
 		 * @since 1.0.13
@@ -36,15 +34,12 @@ class OrderFactory extends AbstractFactory {
 	 * @return \PaymentPlugins\PayPalSDK\Order
 	 */
 	public function from_order( $intent ) {
-		$needs_shipping = $this->order->needs_shipping_address();
 
 		$order = ( new Order() )
 			->setIntent( $intent )
 			->setPayer( $this->factories->payer->from_order() )
-			->setPurchaseUnits( new Collection( [ $this->factories->purchaseUnit->from_order() ] ) )
-			->setApplicationContext( $this->factories->applicationContext->get( $needs_shipping, true ) );
+			->setPurchaseUnits( new Collection( [ $this->factories->purchaseUnit->from_order() ] ) );
 
-		$order->getApplicationContext()->setUserAction( OrderApplicationContext::PAY_NOW );
 
 		/**
 		 * @since 1.0.13

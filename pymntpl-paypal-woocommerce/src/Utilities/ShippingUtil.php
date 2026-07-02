@@ -1415,4 +1415,45 @@ class ShippingUtil {
 		];
 	}
 
+	/**
+	 * Returns true when the WooCommerce session handler required for server-side callbacks is available.
+	 */
+	public static function is_session_handler_available(): bool {
+		return class_exists( \Automattic\WooCommerce\StoreApi\SessionHandler::class );
+	}
+
+	/**
+	 * Returns true when the environment can receive PayPal's server-side order update callbacks.
+	 * Requires HTTPS, a non-localhost host, and the WC SessionHandler class.
+	 */
+	public static function is_server_side_callback_supported(): bool {
+		if ( ! self::is_session_handler_available() ) {
+			return false;
+		}
+
+		if ( ! is_ssl() ) {
+			return false;
+		}
+		$host = parse_url( home_url(), PHP_URL_HOST );
+
+		// Exact localhost matches
+		if ( in_array( $host, [ 'localhost', '127.0.0.1', '::1' ], true ) ) {
+			return false;
+		}
+
+		// Subdomains of localhost (e.g. store.localhost)
+		if ( str_ends_with( $host, '.localhost' ) ) {
+			return false;
+		}
+
+		// Common local dev TLDs (.local, .test, .internal, .dev)
+		foreach ( [ '.local', '.test', '.internal', '.dev' ] as $tld ) {
+			if ( str_ends_with( $host, $tld ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 }

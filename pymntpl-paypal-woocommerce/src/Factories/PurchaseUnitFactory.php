@@ -25,6 +25,9 @@ class PurchaseUnitFactory extends AbstractFactory {
 		parent::__construct( ...$args );
 	}
 
+	/**
+	 * @return PurchaseUnit
+	 */
 	public function from_cart() {
 		$purchase_unit = ( new PurchaseUnit() )
 			->setAmount( ( new Amount() )
