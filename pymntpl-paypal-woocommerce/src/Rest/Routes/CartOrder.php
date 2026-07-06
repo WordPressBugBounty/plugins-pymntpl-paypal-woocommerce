@@ -86,7 +86,8 @@ class CartOrder extends AbstractCart {
 				throw new \Exception( $result->get_error_message() );
 			}
 			$this->cache->set( sprintf( '%s_%s', $payment_method->id, Constants::PAYPAL_ORDER_ID ), $result->id );
-			$this->cache->set( Constants::SHIPPING_PREFERENCE, $order->getPaymentSource()->getExperienceContext() );
+			$experience_context = $order->getPaymentSource()->getExperienceContext();
+			$this->cache->set( Constants::SHIPPING_PREFERENCE, $experience_context ? $experience_context->getShippingPreference() : null );
 
 			$this->logger->info(
 				sprintf( 'PayPal order created via %s. Args: %s', __METHOD__, print_r( $result->toArray(), true ) ),

@@ -62,7 +62,7 @@ class PaymentSource extends AbstractObject {
 	 */
 	public function getExperienceContext() {
 		foreach ( $this->_values as $key => $value ) {
-			if ( property_exists( $value, 'experience_context' ) ) {
+			if ( ! empty( $value->experience_context ) ) {
 				return $this->_values[ $key ]->experience_context;
 			}
 		}

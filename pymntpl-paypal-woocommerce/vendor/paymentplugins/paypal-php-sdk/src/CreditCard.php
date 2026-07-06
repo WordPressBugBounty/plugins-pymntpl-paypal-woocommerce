@@ -3,15 +3,16 @@
 namespace PaymentPlugins\PayPalSDK;
 
 /**
- * @property string $name
- * @property string $last_digits
- * @property string $available_networks
- * @property string $brand
- * @property string $type
+ * @property string               $name
+ * @property string               $last_digits
+ * @property string               $available_networks
+ * @property string               $brand
+ * @property string               $type
  * @property AuthenticationResult $authentication_result
- * @property $attributes
- * @property string $expiry
- * @property BinDetails $bin_details
+ * @property                      $attributes
+ * @property ExperienceContext    $experience_context
+ * @property string               $expiry
+ * @property BinDetails           $bin_details
  */
 class CreditCard extends AbstractObject {
 	/**
@@ -157,4 +158,21 @@ class CreditCard extends AbstractObject {
 
 		return $this;
 	}
+
+	/**
+	 * @return ExperienceContext
+	 */
+	public function getExperienceContext() {
+		return $this->experience_context;
+	}
+
+	/**
+	 * @param ExperienceContext $experience_context
+	 */
+	public function setExperienceContext( $experience_context ) {
+		$this->experience_context = $experience_context;
+
+		return $this;
+	}
+	
 }

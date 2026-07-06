@@ -232,23 +232,19 @@ class PaymentHandler extends LegacyPaymentHandler {
 			unset( $purchase_unit->items );
 		}
 
-		if ( $this->payment_method->supports( 'vault' ) ) {
-			if ( $this->payment_method->should_use_saved_payment_method() ) {
-				$id = $this->payment_method->get_saved_payment_method_token_id_from_request( $order );
-				$this->payment_method->set_payment_token_id( $id );
-				$order->update_meta_data( Constants::PAYMENT_METHOD_TOKEN, $id );
-				$payment_source = $this->factories->paymentSource->from_order();
-				$paypal_order->setPaymentSource( $payment_source );
-			} else {
-				$paypal_order->setPaymentSource( $this->factories->paymentSource->from_checkout() );
-			}
+		if ( $this->payment_method->supports( 'vault' ) && $this->payment_method->should_use_saved_payment_method() ) {
+			$id = $this->payment_method->get_saved_payment_method_token_id_from_request( $order );
+			$this->payment_method->set_payment_token_id( $id );
+			$order->update_meta_data( Constants::PAYMENT_METHOD_TOKEN, $id );
+			$payment_source = $this->factories->paymentSource->from_order();
+			$paypal_order->setPaymentSource( $payment_source );
+		} elseif ( $this->use_billing_agreement ) {
+			$id             = $order->get_meta( Constants::BILLING_AGREEMENT_ID );
+			$payment_source = ( new PaymentSource() )
+				->setToken( ( new Token() )->setId( $id )->setType( Token::BILLING_AGREEMENT ) );
+			$paypal_order->setPaymentSource( $payment_source );
 		} else {
-			if ( $this->use_billing_agreement ) {
-				$id             = $order->get_meta( Constants::BILLING_AGREEMENT_ID );
-				$payment_source = ( new PaymentSource() )
-					->setToken( ( new Token() )->setId( $id )->setType( Token::BILLING_AGREEMENT ) );
-				$paypal_order->setPaymentSource( $payment_source );
-			}
+			$paypal_order->setPaymentSource( $this->factories->paymentSource->from_checkout() );
 		}
 
 		return apply_filters( 'wc_ppcp_create_order_params', $paypal_order, $order, $this );
