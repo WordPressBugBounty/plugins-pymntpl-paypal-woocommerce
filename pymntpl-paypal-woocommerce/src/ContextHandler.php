@@ -15,6 +15,8 @@ class ContextHandler {
 
 	const ADD_PAYMENT_METHOD = 'add_payment_method';
 
+	const PAYMENT_METHODS = 'payment_methods';
+
 	const PRODUCT = 'product';
 
 	const ORDER_RECEIVED = 'order_received';
@@ -54,7 +56,9 @@ class ContextHandler {
 				} else {
 					$this->context = self::CHECKOUT;
 				}
-			} elseif ( is_add_payment_method_page() && ! is_payment_methods_page() ) {
+			} elseif ( function_exists( 'is_payment_methods_page' ) && is_payment_methods_page() ) {
+				$this->context = self::PAYMENT_METHODS;
+			} elseif ( is_add_payment_method_page() ) {
 				$this->context = self::ADD_PAYMENT_METHOD;
 			} elseif ( is_cart() ) {
 				$this->context = self::CART;
