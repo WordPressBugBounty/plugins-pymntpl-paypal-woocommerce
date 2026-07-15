@@ -41,7 +41,7 @@ trait FeaturesTrait {
 		}
 
 		if ( $this->id === 'ppcp_applepay' ) {
-			$supports = array_diff( $supports, [ 'subscription_payment_method_change_customer' ] );
+			//$supports = array_diff( $supports, [ 'subscription_payment_method_change_customer' ] );
 		}
 
 		if ( ! $vault_enabled && \in_array( 'billing_agreement', $supports ) ) {

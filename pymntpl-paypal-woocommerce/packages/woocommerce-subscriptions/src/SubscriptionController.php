@@ -12,8 +12,10 @@ use PaymentPlugins\WooCommerce\PPCP\PaymentHandler;
 use PaymentPlugins\WooCommerce\PPCP\PaymentMethodRegistry;
 use PaymentPlugins\WooCommerce\PPCP\PaymentResult;
 use PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\AbstractGateway;
+use PaymentPlugins\WooCommerce\PPCP\Payments\PaymentGateways;
 use PaymentPlugins\WooCommerce\PPCP\Rest\Routes\CartCheckout;
 use PaymentPlugins\WooCommerce\PPCP\Tokens\AbstractToken;
+use PaymentPlugins\WooCommerce\PPCP\Utilities\NumberUtil;
 use PaymentPlugins\WooCommerce\PPCP\Utilities\PayPalFee;
 use PaymentPlugins\WooCommerce\PPCP\Utils;
 use PaymentPlugins\WooCommerce\PPCP\WPPayPalClient;
@@ -85,7 +87,10 @@ class SubscriptionController {
 		add_filter( 'wc_ppcp_product_payment_gateways', [ $this, 'filter_product_payment_gateways' ], 10, 2 );
 		add_filter( 'wc_ppcp_express_checkout_payment_gateways', [ $this, 'filter_express_payment_gateways' ] );
 		add_filter( 'wc_ppcp_cart_payment_gateways', [ $this, 'filter_cart_payment_gateways' ] );
-		add_filter( 'woocommerce_available_payment_gateways', [ $this, 'get_available_payment_gateways' ] );
+		//add_filter( 'woocommerce_available_payment_gateways', [ $this, 'get_available_payment_gateways' ] );
+		add_action( 'wc_ppcp_get_order_from_cart', [ $this, 'maybe_authorize_order_for_vaulting' ], 10, 2 );
+		add_filter( 'wc_ppcp_cart_data', [ $this, 'add_recurring_total_to_cart_data' ], 10, 2 );
+		add_action( 'wc_ppcp_get_order_from_order_pay', [ $this, 'maybe_authorize_order_pay_for_vaulting' ], 10, 3 );
 
 		/**
 		 * Filter called when cart or checkout block is enabled.
@@ -106,10 +111,18 @@ class SubscriptionController {
 		} elseif ( wcs_order_contains_subscription( $order ) || wcs_order_contains_renewal( $order ) ) {
 			if ( $payment_method->supports( 'vault' ) ) {
 				$result = $this->payment_controller->process_payment( $result, $order, $payment_method );
-			} else {
-				if ( ! $this->is_manual_renewal_required() ) {
-					$result = $this->payment_controller->process_payment_for_billing_agreement( $result, $order, $payment_method );
+			} elseif ( $this->is_manual_renewal_enabled() && ! $payment_method->supports( 'subscriptions' ) ) {
+				// Gateway can't do automatic recurring billing (e.g. Google Pay) and the customer will
+				// pay renewals manually anyway.
+				if ( 0 == $order->get_total() ) {
+					// Nothing due today and no payment method to save for automatic billing - complete
+					// the order directly instead of asking PayPal to create a $0 order.
+					$result = $this->payment_controller->process_zero_total_order( $order, $payment_method );
 				}
+				// Otherwise (immediate payment due) fall through unchanged - the gateway already
+				// created/confirmed its own PayPal order before submitting checkout.
+			} else {
+				$result = $this->payment_controller->process_payment_for_billing_agreement( $result, $order, $payment_method );
 			}
 		}
 
@@ -118,6 +131,14 @@ class SubscriptionController {
 
 	private function process_change_payment_method_request( \WC_Order $order, AbstractGateway $payment_method ) {
 		if ( $payment_method->supports( 'vault' ) ) {
+			if ( ! $payment_method->should_use_saved_payment_method() && ! $payment_method->supports( 'vault_setup_token' ) ) {
+				// This gateway can only be vaulted as an attribute of a real, authorized order
+				// (e.g. Apple Pay) - it was already created/authorized client-side against the
+				// subscription's real total, with intent forced to AUTHORIZE. See
+				// maybe_authorize_order_pay_for_vaulting().
+				return $this->payment_controller->process_change_payment_method_via_order( $order, $payment_method );
+			}
+
 			return $this->payment_controller->process_change_payment_method( $order, $payment_method );
 		} else {
 			return $this->payment_controller->process_change_payment_method_with_billing_agreement( $order, $payment_method );
@@ -334,7 +355,12 @@ class SubscriptionController {
 	public function get_checkout_payment_method_save_required( $bool, AbstractGateway $payment_method, \WC_Order $order ) {
 		if ( ! $bool && $payment_method->supports( 'subscriptions' ) ) {
 			if ( ! $this->is_manual_renewal_required() ) {
-				if ( wcs_order_contains_subscription( $order ) ) {
+				// wcs_order_contains_subscription()/wcs_order_contains_renewal() check whether
+				// $order is a parent/renewal/resubscribe/switch order that relates to a
+				// subscription - neither is true when $order IS the subscription itself, as it is
+				// on the "Change Payment Method" page (which uses the subscription's own ID as
+				// the order/pay target - see SubscriptionController::maybe_authorize_order_pay_for_vaulting()).
+				if ( wcs_order_contains_subscription( $order ) || \wcs_is_subscription( $order ) ) {
 					$bool = true;
 				} elseif ( wcs_order_contains_renewal( $order ) ) {
 					$bool = true;
@@ -350,7 +376,7 @@ class SubscriptionController {
 	 * @param \PaymentPlugins\WooCommerce\PPCP\ContextHandler $context
 	 * @param AbstractGateway                                 $payment_method
 	 *
-	 * @return void
+	 * @return array
 	 */
 	public function add_payment_method_data( $data, $context, $payment_method ) {
 		if ( ! $this->is_manual_renewal_required() ) {
@@ -366,7 +392,8 @@ class SubscriptionController {
 			} elseif ( \WC_Subscriptions_Change_Payment_Gateway::$is_request_to_change_payment ) {
 				$data['needsSetupToken'] = true;
 			} elseif ( $context->is_order_pay() ) {
-				// @todo - add code for order pay
+				// When there is a subscription associated with the order, the order pay page redirects to the checkout page.
+				// The same applies for failed renewal orders.
 			} else {
 				if ( \WC_Subscriptions_Cart::cart_contains_free_trial() && WC()->cart->get_total( 'edit' ) == 0 ) {
 					$data['needsSetupToken'] = true;
@@ -374,6 +401,49 @@ class SubscriptionController {
 			}
 		}
 
+
+		return $data;
+	}
+
+	/**
+	 * Returns the highest recurring total across the cart's recurring carts (i.e. the largest
+	 * future charge amount for a multi-subscription cart), formatted the same way the "vault via
+	 * order" authorization amount is built (see maybe_authorize_order_for_vaulting()) - both must
+	 * match exactly, since PayPal rejects the payment if a wallet's displayed amount doesn't match
+	 * the order it's confirming.
+	 *
+	 * @return string
+	 */
+	private function get_recurring_cart_total() {
+		$recurring_total = 0;
+		if ( ! empty( WC()->cart->recurring_carts ) ) {
+			foreach ( WC()->cart->recurring_carts as $recurring_cart ) {
+				$recurring_total = max( $recurring_total, (float) $recurring_cart->total );
+			}
+		}
+
+		return NumberUtil::round_incl_currency( $recurring_total, get_woocommerce_currency() );
+	}
+
+	/**
+	 * Exposes the recurring cart total on the cart data sent to the client (via
+	 * PayPalDataTransformer::transform_cart(), so it stays current across cart/shipping/item AJAX
+	 * updates - not just the initial page load). Gateways that can only vault a payment method as
+	 * part of a real order (e.g. Apple Pay) need this to show the same amount in their own payment
+	 * sheet that the server will use to build that order - see
+	 * packages/woocommerce-subscriptions/assets/js/checkout.js.
+	 *
+	 * @param array    $data
+	 * @param \WC_Cart $cart
+	 *
+	 * @return array
+	 * @since 2.0.23
+	 *
+	 */
+	public function add_recurring_total_to_cart_data( $data, $cart ) {
+		if ( ! $this->is_manual_renewal_required() && \WC_Subscriptions_Cart::cart_contains_free_trial() && 0 == $cart->get_total( 'edit' ) ) {
+			$data['recurringTotal'] = $this->get_recurring_cart_total();
+		}
 
 		return $data;
 	}
@@ -421,9 +491,18 @@ class SubscriptionController {
 
 	public function filter_product_payment_gateways( $payment_gateways, $product ) {
 		if ( \WC_Subscriptions_Product::is_subscription( $product ) ) {
-			foreach ( $payment_gateways as $gateway ) {
-				if ( ! $gateway->supports( 'subscriptions' ) ) {
-					unset( $payment_gateways[ $gateway->id ] );
+			if ( $this->is_manual_renewal_required() && \WC_Subscriptions_Product::get_trial_length( $product ) > 0 ) {
+				// WC Subscriptions itself doesn't require a payment method here (a free trial
+				// with automatic payments turned off site-wide) - no gateway should be offered.
+				return [];
+			}
+			if ( ! $this->is_manual_renewal_enabled() ) {
+				// Manual renewals aren't accepted, so a gateway must be able to bill the
+				// subscription automatically to be usable here.
+				foreach ( $payment_gateways as $gateway ) {
+					if ( ! $gateway->supports( 'subscriptions' ) ) {
+						unset( $payment_gateways[ $gateway->id ] );
+					}
 				}
 			}
 		}
@@ -433,9 +512,18 @@ class SubscriptionController {
 
 	public function filter_express_payment_gateways( $payment_gateways ) {
 		if ( \WC_Subscriptions_Cart::cart_contains_subscription() ) {
-			foreach ( $payment_gateways as $gateway ) {
-				if ( ! $gateway->supports( 'subscriptions' ) ) {
-					unset( $payment_gateways[ $gateway->id ] );
+			if ( WC()->cart && ! WC()->cart->needs_payment() ) {
+				// WC Subscriptions itself doesn't require a payment method here (e.g. a $0 cart
+				// with automatic payments turned off site-wide) - no gateway should be offered.
+				return [];
+			}
+			if ( ! $this->is_manual_renewal_enabled() ) {
+				// Manual renewals aren't accepted, so a gateway must be able to bill the
+				// subscription automatically to be usable here.
+				foreach ( $payment_gateways as $gateway ) {
+					if ( ! $gateway->supports( 'subscriptions' ) ) {
+						unset( $payment_gateways[ $gateway->id ] );
+					}
 				}
 			}
 		}
@@ -445,9 +533,18 @@ class SubscriptionController {
 
 	public function filter_cart_payment_gateways( $payment_gateways ) {
 		if ( \WC_Subscriptions_Cart::cart_contains_subscription() ) {
-			foreach ( $payment_gateways as $gateway ) {
-				if ( ! $gateway->supports( 'subscriptions' ) ) {
-					unset( $payment_gateways[ $gateway->id ] );
+			if ( WC()->cart && ! WC()->cart->needs_payment() ) {
+				// WC Subscriptions itself doesn't require a payment method here (e.g. a $0 cart
+				// with automatic payments turned off site-wide) - no gateway should be offered.
+				return [];
+			}
+			if ( ! $this->is_manual_renewal_enabled() ) {
+				// Manual renewals aren't accepted, so a gateway must be able to bill the
+				// subscription automatically to be usable here.
+				foreach ( $payment_gateways as $gateway ) {
+					if ( ! $gateway->supports( 'subscriptions' ) ) {
+						unset( $payment_gateways[ $gateway->id ] );
+					}
 				}
 			}
 		}
@@ -474,6 +571,14 @@ class SubscriptionController {
 	}
 
 	/**
+	 * @return bool
+	 * @since 2.0.23
+	 */
+	private function is_manual_renewal_enabled() {
+		return function_exists( 'wcs_is_manual_renewal_enabled' ) && \wcs_is_manual_renewal_enabled();
+	}
+
+	/**
 	 * @param $packages
 	 *
 	 * @return array
@@ -497,6 +602,94 @@ class SubscriptionController {
 		}
 
 		return $packages;
+	}
+
+	/**
+	 * Some gateways (e.g. Apple Pay - see VaultSetupTokenTrait) can only vault a payment method
+	 * as an attribute of a real, authorized order - PayPal's Orders API rejects a $0 amount, so a
+	 * free trial with nothing due today has no real amount to create an order against. Override
+	 * the order to authorize the subscription's recurring total instead. This order is voided
+	 * immediately after the payment method is vaulted (see PaymentController::process_vault_via_order()),
+	 * so only the amount needs to be correct - the breakdown/items are dropped since PayPal
+	 * requires them to reconcile with the amount and neither is meaningful for a throwaway
+	 * authorization.
+	 *
+	 * @param \PaymentPlugins\PayPalSDK\Order $order
+	 * @param \WP_REST_Request                $request
+	 */
+	public function maybe_authorize_order_for_vaulting( $order, $request ) {
+		$payment_gateways = wc_ppcp_get_container()->get( PaymentGateways::class );
+		$payment_method   = $payment_gateways->get_gateway( $request->get_param( 'payment_method' ) );
+
+		if ( ! $payment_method || ! $payment_method->supports( 'vault' ) || $payment_method->supports( 'vault_setup_token' ) ) {
+			return;
+		}
+
+		if ( ! $payment_method->is_payment_method_save_required() ) {
+			return;
+		}
+
+		if ( ! \WC_Subscriptions_Cart::cart_contains_free_trial() || 0 != WC()->cart->get_total( 'edit' ) ) {
+			return;
+		}
+
+		if ( empty( WC()->cart->recurring_carts ) ) {
+			return;
+		}
+
+		$recurring_total = $this->get_recurring_cart_total();
+
+		if ( $recurring_total <= 0 ) {
+			return;
+		}
+
+		$order->setIntent( Order::AUTHORIZE );
+
+		/**
+		 * @var \PaymentPlugins\PayPalSDK\PurchaseUnit $purchase_unit
+		 */
+		$purchase_unit = $order->getPurchaseUnits()->get( 0 );
+		$purchase_unit->getAmount()->setValue( $recurring_total );
+		unset( $purchase_unit->getAmount()->breakdown );
+		unset( $purchase_unit->items );
+	}
+
+	/**
+	 * Same problem as maybe_authorize_order_for_vaulting(), but for the "Change Payment Method"
+	 * page - which reuses WC's "pay for order" page/route (order/pay - see OrderPay.php) with the
+	 * subscription ID standing in as the order ID, rather than cart/order. Unlike the free-trial
+	 * signup case, the amount here is already correct - WC Subscriptions only zeroes the
+	 * subscription's total on the final form POST (WC_Subscriptions_Change_Payment_Gateway::maybe_zero_total()),
+	 * not on this REST call - so only the intent needs to be forced to AUTHORIZE.
+	 *
+	 * Can't use is_change_payment_method_request() here - this fires from a REST request to
+	 * order/pay (made when confirming the wallet payment, before the checkout form ever submits),
+	 * a separate HTTP request from the original page load that doesn't carry the
+	 * change_payment_method query arg WC_Subscriptions_Change_Payment_Gateway's flag depends on.
+	 * Checking whether $order is itself a subscription is reliable instead - the change-payment
+	 * flow is the only order/pay scenario where the "order" being paid is the subscription's own
+	 * ID rather than a derived order.
+	 *
+	 * @param \PaymentPlugins\PayPalSDK\Order $paypal_order
+	 * @param \WC_Order                       $order
+	 * @param AbstractGateway                 $payment_method
+	 */
+	public function maybe_authorize_order_pay_for_vaulting( $paypal_order, $order, $payment_method ) {
+		if ( \wcs_is_subscription( $order )
+		     && $payment_method->supports( 'vault' )
+		     && ! $payment_method->supports( 'vault_setup_token' ) ) {
+			$paypal_order->setIntent( Order::AUTHORIZE );
+
+			// This order never represents a real invoice - it's voided immediately after
+			// vaulting - so its deterministic invoice_id (derived from the subscription's order
+			// number, see PurchaseUnitFactory::generate_invoice_id()) would collide with any
+			// other attempt for the same subscription (e.g. a retry) and get rejected by PayPal
+			// as a duplicate. Give it a unique one instead.
+			$purchase_unit = $paypal_order->getPurchaseUnits()->get( 0 );
+			if ( $purchase_unit->getInvoiceId() ) {
+				$purchase_unit->setInvoiceId( $purchase_unit->getInvoiceId() . '-' . Utils::random_string( 6 ) );
+			}
+		}
 	}
 
 }

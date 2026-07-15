@@ -67,7 +67,7 @@ class LegacyPaymentHandler {
 			} else {
 				$paypal_order_id = $this->get_paypal_order_id_from_request();
 				if ( ! $paypal_order_id ) {
-					$paypal_order_id = $this->cache->get( Constants::PAYPAL_ORDER_ID );
+					$paypal_order_id = $this->cache->get( sprintf( '%s_%s', $this->payment_method->id, Constants::PAYPAL_ORDER_ID ) );
 					// If there isn't an existing PayPal order ID button, create a PayPal order.
 					if ( ! $paypal_order_id ) {
 						$args = $this->get_create_order_params( $order );
@@ -87,6 +87,13 @@ class LegacyPaymentHandler {
 				}
 			}
 			if ( is_wp_error( $paypal_order ) ) {
+				/**
+				 * @var \WP_Error $paypal_order
+				 */
+				if ( 'INVALID_RESOURCE_ID' === $paypal_order->get_error_code() ) {
+					$this->cache->delete( sprintf( '%s_%s', $this->payment_method->id, Constants::PAYPAL_ORDER_ID ) );
+					throw new RetryException( 'Create new order' );
+				}
 				throw new \Exception( $paypal_order->get_error_message() );
 			}
 			$paypal_order_id = $paypal_order->getId();
@@ -486,7 +493,7 @@ class LegacyPaymentHandler {
 			 */
 			if ( $shipping_preference === OrderApplicationContext::GET_FROM_FILE ) {
 				if ( $new_order->getPaymentSource()->getExperienceContext()->getShippingPreference() === OrderApplicationContext::SET_PROVIDED_ADDRESS ) {
-					$this->cache->delete( Constants::PAYPAL_ORDER_ID );
+					$this->cache->delete( sprintf( '%s_%s', $this->payment_method->id, Constants::PAYPAL_ORDER_ID ) );
 					$this->cache->delete( Constants::SHIPPING_PREFERENCE );
 					throw new RetryException( 'Create new order' );
 				}

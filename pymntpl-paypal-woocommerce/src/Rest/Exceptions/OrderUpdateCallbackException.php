@@ -31,7 +31,7 @@ class OrderUpdateCallbackException extends \Exception {
 
 	private string $issue;
 
-	public function __construct( string $issue, string $message = '', \Throwable $previous = null ) {
+	public function __construct( string $issue, string $message = '', ?\Throwable $previous = null ) {
 		parent::__construct( $message, 422, $previous );
 		$this->issue = $issue;
 	}

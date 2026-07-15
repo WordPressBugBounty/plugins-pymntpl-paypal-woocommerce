@@ -16,6 +16,7 @@ use PaymentPlugins\WooCommerce\PPCP\ProductSettings;
 use PaymentPlugins\WooCommerce\PPCP\Tokens\PayPalToken;
 use PaymentPlugins\WooCommerce\PPCP\Traits\BillingAgreementTrait;
 use PaymentPlugins\WooCommerce\PPCP\Traits\TokenizationTrait;
+use PaymentPlugins\WooCommerce\PPCP\Traits\VaultSetupTokenTrait;
 use PaymentPlugins\WooCommerce\PPCP\Traits\VaultTokenTrait;
 use PaymentPlugins\WooCommerce\PPCP\Utilities\ShippingUtil;
 use PaymentPlugins\WooCommerce\PPCP\Utils;
@@ -29,6 +30,7 @@ class PayPalGateway extends AbstractGateway {
 
 	use TokenizationTrait;
 	use VaultTokenTrait;
+	use VaultSetupTokenTrait;
 	use BillingAgreementTrait;
 	use SubscriptionTrait;
 	use PreOrdersTrait;

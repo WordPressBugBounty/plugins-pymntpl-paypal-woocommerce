@@ -8,12 +8,14 @@ use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\AdvancedSettings;
 use PaymentPlugins\WooCommerce\PPCP\Tokens\CreditCardToken;
 use PaymentPlugins\WooCommerce\PPCP\Traits\CardPaymentNoteTrait;
 use PaymentPlugins\WooCommerce\PPCP\Traits\TokenizationTrait;
+use PaymentPlugins\WooCommerce\PPCP\Traits\VaultSetupTokenTrait;
 use PaymentPlugins\WooCommerce\PPCP\Traits\VaultTokenTrait;
 use PaymentPlugins\WooCommerce\PPCP\Traits\ThreeDSecureTrait;
 
 class CreditCardGateway extends AbstractGateway {
 
 	use VaultTokenTrait;
+	use VaultSetupTokenTrait;
 	use TokenizationTrait;
 	use ThreeDSecureTrait;
 	use CardPaymentNoteTrait;

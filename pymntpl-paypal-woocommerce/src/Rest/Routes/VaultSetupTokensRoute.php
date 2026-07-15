@@ -79,14 +79,14 @@ class VaultSetupTokensRoute extends AbstractRoute {
 
 		$this->validator->run(
 			$request,
-			$context->is_checkout() && $this->is_checkout_validation_enabled( $request )
+			$context->is_checkout() && $this->is_checkout_validation_enabled( $request ) && ! \wc_string_to_bool( $request->get_param( 'checkout_blocks' ) )
 		);
 
 		$this->factories->initialize( $payment_method );
 
-		$request = $this->factories->setupToken->create( $context->get_context() );
+		$setup_token = $this->factories->setupToken->create( $context->get_context() );
 
-		$result = $this->client->setupTokens->create( $request );
+		$result = $this->client->setupTokens->create( $setup_token );
 
 		return $result;
 	}

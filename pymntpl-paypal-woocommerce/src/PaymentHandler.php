@@ -9,7 +9,6 @@ use PaymentPlugins\PayPalSDK\Order;
 use PaymentPlugins\PayPalSDK\PatchRequest;
 use PaymentPlugins\PayPalSDK\PaymentSource;
 use PaymentPlugins\PayPalSDK\PurchaseUnit;
-use PaymentPlugins\PayPalSDK\ShippingAddress;
 use PaymentPlugins\PayPalSDK\Token;
 use PaymentPlugins\WooCommerce\PPCP\Cache\CacheInterface;
 use PaymentPlugins\WooCommerce\PPCP\Exception\RetryException;
@@ -73,6 +72,13 @@ class PaymentHandler extends LegacyPaymentHandler {
 				$paypal_order = $this->client->orderMode( $order )->orders->retrieve( $paypal_order_id );
 			}
 			if ( is_wp_error( $paypal_order ) ) {
+				/**
+				 * @var \WP_Error $paypal_order
+				 */
+				if ( 'INVALID_RESOURCE_ID' === $paypal_order->get_error_code() ) {
+					$this->cache->delete( sprintf( '%s_%s', $this->payment_method->id, Constants::PAYPAL_ORDER_ID ) );
+					throw new RetryException( 'Create new order' );
+				}
 				throw new \Exception( $paypal_order->get_error_message() );
 			}
 
@@ -434,7 +440,7 @@ class PaymentHandler extends LegacyPaymentHandler {
 		return $this->current_status === $status;
 	}
 
-	protected function get_payment_method_token_from_paypal_order( Order $order ) {
+	public function get_payment_method_token_from_paypal_order( Order $order ) {
 		$token = $this->payment_method->get_payment_method_token_instance();
 		$token->initialize_from_paypal_order( $order );
 		if ( ! $token->get_token() && $this->payment_method->supports( 'vault' ) ) {

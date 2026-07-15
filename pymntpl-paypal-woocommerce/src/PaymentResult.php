@@ -43,7 +43,7 @@ class PaymentResult {
 	 * @param AbstractGateway                           $payment_method
 	 * @param string                                    $error_message
 	 */
-	public function __construct( $paypal_order, \WC_Order $order, AbstractGateway $payment_method = null, $error_message = '' ) {
+	public function __construct( $paypal_order, \WC_Order $order, ?AbstractGateway $payment_method = null, $error_message = '' ) {
 		$this->order          = $order;
 		$this->payment_method = $payment_method;
 		$this->initialize( $paypal_order, $error_message );

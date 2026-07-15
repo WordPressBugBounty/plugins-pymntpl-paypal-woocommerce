@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Payment Plugins for PayPal WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Payment Plugins for PayPal WooCommerce 2.0.22\n"
+"Project-Id-Version: Payment Plugins for PayPal WooCommerce 2.0.23\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pymntpl-paypal-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-08T16:17:26+00:00\n"
+"POT-Creation-Date: 2026-07-15T03:47:17+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: pymntpl-paypal-woocommerce\n"
@@ -36,30 +36,30 @@ msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:30
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:42
-#: src/Payments/Gateways/CreditCardGateway.php:316
+#: src/Payments/Gateways/CreditCardGateway.php:318
 #: templates/checkout/credit-card.php:17
 msgid "Cardholder name"
 msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:30
-#: src/Payments/Gateways/CreditCardGateway.php:316
+#: src/Payments/Gateways/CreditCardGateway.php:318
 msgid "Cardholder name (optional)"
 msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:33
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:43
-#: src/Payments/Gateways/CreditCardGateway.php:319
+#: src/Payments/Gateways/CreditCardGateway.php:321
 #: templates/checkout/credit-card.php:27
 msgid "Card number"
 msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:36
-#: src/Payments/Gateways/CreditCardGateway.php:322
+#: src/Payments/Gateways/CreditCardGateway.php:324
 msgid "CVV"
 msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:38
-#: src/Payments/Gateways/CreditCardGateway.php:324
+#: src/Payments/Gateways/CreditCardGateway.php:326
 msgid "MM / YY"
 msgstr ""
 
@@ -78,22 +78,22 @@ msgid "The credit card form is incomplete."
 msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:48
-#: src/Payments/Gateways/CreditCardGateway.php:328
+#: src/Payments/Gateways/CreditCardGateway.php:330
 msgid "Your card name is incomplete"
 msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:49
-#: src/Payments/Gateways/CreditCardGateway.php:329
+#: src/Payments/Gateways/CreditCardGateway.php:331
 msgid "Your card number is incomplete"
 msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:50
-#: src/Payments/Gateways/CreditCardGateway.php:330
+#: src/Payments/Gateways/CreditCardGateway.php:332
 msgid "Your card's expiration date is incomplete."
 msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:51
-#: src/Payments/Gateways/CreditCardGateway.php:331
+#: src/Payments/Gateways/CreditCardGateway.php:333
 msgid "Your card's security code is incomplete."
 msgstr ""
 
@@ -128,12 +128,12 @@ msgid "Continue"
 msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:57
-#: src/Payments/Gateways/CreditCardGateway.php:333
+#: src/Payments/Gateways/CreditCardGateway.php:335
 msgid "Advanced card processing is not available. Login to developer.paypal.com > Apps & Credentials and click your application. Under \"Features\" check \"Advanced Card Processing\"."
 msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/CreditCardGateway.php:58
-#: src/Payments/Gateways/CreditCardGateway.php:334
+#: src/Payments/Gateways/CreditCardGateway.php:336
 msgid "Credit card processing is not available. Please use another payment method."
 msgstr ""
 
@@ -157,7 +157,7 @@ msgid "Some required fields are missing. Please review your details and then com
 msgstr ""
 
 #: packages/blocks/src/Payments/Gateways/PayPalGateway.php:124
-#: src/Payments/Gateways/PayPalGateway.php:197
+#: src/Payments/Gateways/PayPalGateway.php:199
 msgid "Pay with PayPal"
 msgstr ""
 
@@ -172,14 +172,14 @@ msgid "General"
 msgstr ""
 
 #: packages/elementor/src/Widget/AbstractButtonWidget.php:116
-#: src/Payments/Gateways/PayPalGateway.php:251
+#: src/Payments/Gateways/PayPalGateway.php:253
 msgid "Button Shape"
 msgstr ""
 
 #: packages/elementor/src/Widget/AbstractButtonWidget.php:122
-#: src/Payments/Gateways/ApplePayGateway.php:243
-#: src/Payments/Gateways/GooglePayGateway.php:325
-#: src/Payments/Gateways/PayPalGateway.php:273
+#: src/Payments/Gateways/ApplePayGateway.php:245
+#: src/Payments/Gateways/GooglePayGateway.php:327
+#: src/Payments/Gateways/PayPalGateway.php:275
 msgid "Button Height"
 msgstr ""
 
@@ -197,7 +197,7 @@ msgstr ""
 
 #: packages/elementor/src/Widget/AbstractButtonWidget.php:144
 #: packages/elementor/src/Widget/AbstractButtonWidget.php:224
-#: src/Payments/Gateways/PayPalGateway.php:261
+#: src/Payments/Gateways/PayPalGateway.php:263
 msgid "Button Label"
 msgstr ""
 
@@ -206,9 +206,9 @@ msgstr ""
 #: packages/elementor/src/Widget/AbstractButtonWidget.php:190
 #: packages/elementor/src/Widget/AbstractButtonWidget.php:230
 #: packages/elementor/src/Widget/AbstractButtonWidget.php:236
-#: src/Payments/Gateways/ApplePayGateway.php:216
-#: src/Payments/Gateways/GooglePayGateway.php:251
-#: src/Payments/Gateways/PayPalGateway.php:238
+#: src/Payments/Gateways/ApplePayGateway.php:218
+#: src/Payments/Gateways/GooglePayGateway.php:253
+#: src/Payments/Gateways/PayPalGateway.php:240
 msgid "Button Color"
 msgstr ""
 
@@ -237,7 +237,7 @@ msgid "PayPal Product Pay Later Messaging"
 msgstr ""
 
 #: packages/elementor/src/Widget/ProductPayLaterMessageWidget.php:41
-#: src/Payments/Gateways/PayPalGateway.php:322
+#: src/Payments/Gateways/PayPalGateway.php:324
 msgid "Pay Later Options"
 msgstr ""
 
@@ -248,10 +248,10 @@ msgstr ""
 #: src/Admin/Settings/PayLaterMessageSettings.php:312
 #: src/Admin/Settings/PayLaterMessageSettings.php:444
 #: src/Admin/Settings/PayLaterMessageSettings.php:573
-#: src/Payments/Gateways/ApplePayGateway.php:75
-#: src/Payments/Gateways/CreditCardGateway.php:47
-#: src/Payments/Gateways/GooglePayGateway.php:97
-#: src/Payments/Gateways/PayPalGateway.php:63
+#: src/Payments/Gateways/ApplePayGateway.php:77
+#: src/Payments/Gateways/CreditCardGateway.php:49
+#: src/Payments/Gateways/GooglePayGateway.php:99
+#: src/Payments/Gateways/PayPalGateway.php:65
 msgid "Enabled"
 msgstr ""
 
@@ -303,11 +303,11 @@ msgstr ""
 #: src/Admin/Settings/PayLaterMessageSettings.php:537
 #: src/Admin/Settings/PayLaterMessageSettings.php:604
 #: src/Admin/Settings/PayLaterMessageSettings.php:666
-#: src/Payments/Gateways/ApplePayGateway.php:220
-#: src/Payments/Gateways/GooglePayGateway.php:256
-#: src/Payments/Gateways/PayPalGateway.php:245
-#: src/Payments/Gateways/PayPalGateway.php:345
-#: src/Payments/Gateways/PayPalGateway.php:386
+#: src/Payments/Gateways/ApplePayGateway.php:222
+#: src/Payments/Gateways/GooglePayGateway.php:258
+#: src/Payments/Gateways/PayPalGateway.php:247
+#: src/Payments/Gateways/PayPalGateway.php:347
+#: src/Payments/Gateways/PayPalGateway.php:388
 msgid "Black"
 msgstr ""
 
@@ -323,12 +323,12 @@ msgstr ""
 #: src/Admin/Settings/PayLaterMessageSettings.php:538
 #: src/Admin/Settings/PayLaterMessageSettings.php:605
 #: src/Admin/Settings/PayLaterMessageSettings.php:667
-#: src/Payments/Gateways/ApplePayGateway.php:221
-#: src/Payments/Gateways/ApplePayGateway.php:222
-#: src/Payments/Gateways/GooglePayGateway.php:257
-#: src/Payments/Gateways/PayPalGateway.php:246
-#: src/Payments/Gateways/PayPalGateway.php:346
-#: src/Payments/Gateways/PayPalGateway.php:387
+#: src/Payments/Gateways/ApplePayGateway.php:223
+#: src/Payments/Gateways/ApplePayGateway.php:224
+#: src/Payments/Gateways/GooglePayGateway.php:259
+#: src/Payments/Gateways/PayPalGateway.php:248
+#: src/Payments/Gateways/PayPalGateway.php:348
+#: src/Payments/Gateways/PayPalGateway.php:389
 msgid "White"
 msgstr ""
 
@@ -473,8 +473,8 @@ msgstr ""
 #: src/Admin/Settings/PayLaterMessageSettings.php:395
 #: src/Admin/Settings/PayLaterMessageSettings.php:536
 #: src/Admin/Settings/PayLaterMessageSettings.php:665
-#: src/Payments/Gateways/PayPalGateway.php:243
-#: src/Payments/Gateways/PayPalGateway.php:343
+#: src/Payments/Gateways/PayPalGateway.php:245
+#: src/Payments/Gateways/PayPalGateway.php:345
 msgid "Blue"
 msgstr ""
 
@@ -511,11 +511,11 @@ msgstr ""
 
 #: packages/funnelkit/src/Upsell/FunnelKitIntegration.php:155
 #: packages/funnelkit/src/Upsell/FunnelKitIntegration.php:161
-#: src/Legacy/LegacyPaymentHandler.php:132
 #: src/Legacy/LegacyPaymentHandler.php:139
-#: src/PaymentHandler.php:124
-#: src/PaymentHandler.php:131
-#: src/PaymentHandler.php:152
+#: src/Legacy/LegacyPaymentHandler.php:146
+#: src/PaymentHandler.php:130
+#: src/PaymentHandler.php:137
+#: src/PaymentHandler.php:158
 #, php-format
 msgid "Error processing payment. Reason: %s"
 msgstr ""
@@ -541,12 +541,12 @@ msgid "A valid payment method ID is required to process this order."
 msgstr ""
 
 #: packages/woocommerce-preorders/src/PaymentController.php:66
-#: packages/woocommerce-subscriptions/src/PaymentController.php:69
+#: packages/woocommerce-subscriptions/src/PaymentController.php:86
 msgid "A payment token is required to process this order."
 msgstr ""
 
 #: packages/woocommerce-preorders/src/PaymentController.php:86
-#: packages/woocommerce-subscriptions/src/PaymentController.php:91
+#: packages/woocommerce-subscriptions/src/PaymentController.php:108
 msgid "Customer ID for payment method does not match customer ID for logged in user."
 msgstr ""
 
@@ -557,39 +557,56 @@ msgid "Payment for pre-order failed. Reason: %s"
 msgstr ""
 
 #: packages/woocommerce-preorders/src/PreOrdersController.php:105
-#: packages/woocommerce-subscriptions/src/SubscriptionController.php:282
+#: packages/woocommerce-subscriptions/src/SubscriptionController.php:303
 #: src/Integrations/WooCommercePreOrders.php:179
 #: src/Integrations/WooCommerceSubscriptions.php:327
 msgid "Please select a shipping method for your order."
 msgstr ""
 
-#: packages/woocommerce-subscriptions/src/PaymentController.php:58
+#: packages/woocommerce-subscriptions/src/PaymentController.php:61
 msgid "The selected payment method could not be used. Please try another payment method."
 msgstr ""
 
-#: packages/woocommerce-subscriptions/src/PaymentController.php:249
+#: packages/woocommerce-subscriptions/src/PaymentController.php:169
+#: packages/woocommerce-subscriptions/src/PaymentController.php:455
+msgid "A PayPal order ID is required to save this payment method."
+msgstr ""
+
+#: packages/woocommerce-subscriptions/src/PaymentController.php:179
+#: packages/woocommerce-subscriptions/src/PaymentController.php:465
+msgid "The payment method could not be verified."
+msgstr ""
+
+#: packages/woocommerce-subscriptions/src/PaymentController.php:214
+#: packages/woocommerce-subscriptions/src/PaymentController.php:482
+#, php-format
+msgid "Failed to void the PayPal authorization (ID: %1$s) created to save the payment method. Reason: %2$s. This authorization may still be held on the customer's account and should be voided manually in PayPal if it does not expire on its own."
+msgstr ""
+
+#: packages/woocommerce-subscriptions/src/PaymentController.php:388
 #: src/Integrations/WooCommerceSubscriptions.php:260
 #, php-format
 msgid "Recurring payment failed. Reason: %s"
 msgstr ""
 
-#: packages/woocommerce-subscriptions/src/PaymentController.php:272
+#: packages/woocommerce-subscriptions/src/PaymentController.php:411
 #: src/Payments/Gateways/AbstractGateway.php:284
 msgid "A payment token ID is required when adding a payment method."
 msgstr ""
 
-#: packages/woocommerce-subscriptions/src/PaymentController.php:293
-#: packages/woocommerce-subscriptions/src/PaymentController.php:338
+#: packages/woocommerce-subscriptions/src/PaymentController.php:432
+#: packages/woocommerce-subscriptions/src/PaymentController.php:494
+#: packages/woocommerce-subscriptions/src/PaymentController.php:539
 #: src/Integrations/WooCommerceSubscriptions.php:169
 #, php-format
 msgid "Error saving payment method for subscription. Reason: %s"
 msgstr ""
 
-#: packages/woocommerce-subscriptions/src/SubscriptionController.php:206
+#: packages/woocommerce-subscriptions/src/SubscriptionController.php:227
 msgid "Payment Method Token"
 msgstr ""
 
-#: packages/woocommerce-subscriptions/src/SubscriptionController.php:214
+#: packages/woocommerce-subscriptions/src/SubscriptionController.php:235
 #: src/Conversion/GeneralPayPalPlugin.php:85
 #: src/Integrations/WooCommerceSubscriptions.php:273
 msgid "Billing Agreement ID"
@@ -675,16 +692,16 @@ msgstr ""
 #: src/Admin/MetaBoxes/Order.php:169
 #: src/Admin/MetaBoxes/Order.php:171
 #: src/Admin/MetaBoxes/Order.php:176
-#: src/Payments/Gateways/ApplePayGateway.php:368
+#: src/Payments/Gateways/ApplePayGateway.php:370
 msgid "Processing..."
 msgstr ""
 
 #: src/Admin/MetaBoxes/Order.php:169
-#: src/Payments/Gateways/ApplePayGateway.php:102
-#: src/Payments/Gateways/CreditCardGateway.php:74
-#: src/Payments/Gateways/GooglePayGateway.php:124
-#: src/Payments/Gateways/PayPalGateway.php:90
-#: src/Payments/Gateways/PayPalGateway.php:624
+#: src/Payments/Gateways/ApplePayGateway.php:104
+#: src/Payments/Gateways/CreditCardGateway.php:76
+#: src/Payments/Gateways/GooglePayGateway.php:126
+#: src/Payments/Gateways/PayPalGateway.php:92
+#: src/Payments/Gateways/PayPalGateway.php:626
 msgid "Capture"
 msgstr ""
 
@@ -705,7 +722,7 @@ msgid "Net payout"
 msgstr ""
 
 #: src/Admin/MetaBoxes/ProductData.php:29
-#: src/Payments/Gateways/PayPalGateway.php:49
+#: src/Payments/Gateways/PayPalGateway.php:51
 #: src/ProductSettings.php:40
 msgid "PayPal Settings"
 msgstr ""
@@ -753,7 +770,7 @@ msgid ""
 msgstr ""
 
 #: src/Admin/Settings/AdvancedSettings.php:37
-#: src/Payments/Gateways/ApplePayGateway.php:135
+#: src/Payments/Gateways/ApplePayGateway.php:137
 msgid "Display Name"
 msgstr ""
 
@@ -1347,28 +1364,28 @@ msgstr ""
 msgid "Create Ticket"
 msgstr ""
 
-#: src/Assets/PayPalDataTransformer.php:116
-#: src/Assets/PayPalDataTransformer.php:180
+#: src/Assets/PayPalDataTransformer.php:126
+#: src/Assets/PayPalDataTransformer.php:190
 #: src/Traits/DisplayItemsTrait.php:47
 #: src/Traits/DisplayItemsTrait.php:96
 msgid "Shipping"
 msgstr ""
 
-#: src/Assets/PayPalDataTransformer.php:138
-#: src/Assets/PayPalDataTransformer.php:189
+#: src/Assets/PayPalDataTransformer.php:148
+#: src/Assets/PayPalDataTransformer.php:199
 #: src/Traits/DisplayItemsTrait.php:61
 #: src/Traits/DisplayItemsTrait.php:105
 msgid "Discount"
 msgstr ""
 
-#: src/Assets/PayPalDataTransformer.php:147
-#: src/Assets/PayPalDataTransformer.php:211
+#: src/Assets/PayPalDataTransformer.php:157
+#: src/Assets/PayPalDataTransformer.php:221
 #: src/Traits/DisplayItemsTrait.php:66
 #: src/Traits/DisplayItemsTrait.php:123
 msgid "Tax"
 msgstr ""
 
-#: src/Assets/PayPalDataTransformer.php:202
+#: src/Assets/PayPalDataTransformer.php:212
 #: src/Factories/ItemsFactory.php:53
 #: src/Factories/ItemsFactory.php:132
 #: src/Traits/DisplayItemsTrait.php:116
@@ -1407,74 +1424,74 @@ msgstr ""
 msgid "Reconciliation"
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:180
-#: src/PaymentHandler.php:176
+#: src/Legacy/LegacyPaymentHandler.php:187
+#: src/PaymentHandler.php:182
 #, php-format
 msgid "PayPal capture status is pending. Reason: %1$s. Payment will complete when capture.completed webhook is received."
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:196
+#: src/Legacy/LegacyPaymentHandler.php:203
 #: src/Payments/Gateways/AbstractGateway.php:441
 #, php-format
 msgid "PayPal order %s created. %s"
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:197
+#: src/Legacy/LegacyPaymentHandler.php:204
 #: src/Payments/Gateways/AbstractGateway.php:443
 #: src/Traits/CardPaymentNoteTrait.php:28
 #, php-format
 msgid "Capture ID: %s"
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:197
+#: src/Legacy/LegacyPaymentHandler.php:204
 #: src/Payments/Gateways/AbstractGateway.php:443
 #: src/Traits/CardPaymentNoteTrait.php:30
 #, php-format
 msgid "Authorization ID: %s"
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:288
-#: src/PaymentHandler.php:304
+#: src/Legacy/LegacyPaymentHandler.php:295
+#: src/PaymentHandler.php:310
 msgid "To process a refund, there must be a transaction id associated with the order."
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:291
-#: src/PaymentHandler.php:307
+#: src/Legacy/LegacyPaymentHandler.php:298
+#: src/PaymentHandler.php:313
 msgid "This payment has a status of Authorize. Only captured payments can be refunded."
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:325
-#: src/PaymentHandler.php:333
+#: src/Legacy/LegacyPaymentHandler.php:332
+#: src/PaymentHandler.php:339
 #, php-format
 msgid "Error capturing payment. Reason: %s"
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:329
-#: src/PaymentHandler.php:337
+#: src/Legacy/LegacyPaymentHandler.php:336
+#: src/PaymentHandler.php:343
 #, php-format
 msgid "Payment captured in PayPal. Capture ID: %s Amount: %s"
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:361
-#: src/PaymentHandler.php:369
+#: src/Legacy/LegacyPaymentHandler.php:368
+#: src/PaymentHandler.php:375
 msgid "A valid authorization ID is required to perform a void."
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:375
-#: src/Legacy/LegacyPaymentHandler.php:405
-#: src/PaymentHandler.php:383
-#: src/PaymentHandler.php:413
+#: src/Legacy/LegacyPaymentHandler.php:382
+#: src/Legacy/LegacyPaymentHandler.php:412
+#: src/PaymentHandler.php:389
+#: src/PaymentHandler.php:419
 #, php-format
 msgid "PayPal authorization cancelled. Authorization ID: %s"
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:399
-#: src/PaymentHandler.php:407
+#: src/Legacy/LegacyPaymentHandler.php:406
+#: src/PaymentHandler.php:413
 msgid "Order cancellation"
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:467
-#: src/PaymentHandler.php:482
+#: src/Legacy/LegacyPaymentHandler.php:474
+#: src/PaymentHandler.php:488
 #, php-format
 msgid "PayPal order %1$s has already been completed and does not match store order ID %2$s."
 msgstr ""
@@ -1542,8 +1559,8 @@ msgid "3DS authentication status unknown. Please try again."
 msgstr ""
 
 #: src/Messages.php:37
-#: src/Payments/Gateways/ApplePayGateway.php:355
-#: src/Payments/Gateways/GooglePayGateway.php:421
+#: src/Payments/Gateways/ApplePayGateway.php:357
+#: src/Payments/Gateways/GooglePayGateway.php:423
 msgid "Total"
 msgstr ""
 
@@ -1563,7 +1580,7 @@ msgstr ""
 
 #: src/PaymentMethodController.php:64
 #: src/PaymentMethodController.php:65
-#: src/Payments/Gateways/ApplePayGateway.php:85
+#: src/Payments/Gateways/ApplePayGateway.php:87
 msgid "Apple Pay"
 msgstr ""
 
@@ -1574,7 +1591,7 @@ msgstr ""
 
 #: src/PaymentMethodController.php:70
 #: src/PaymentMethodController.php:71
-#: src/Payments/Gateways/GooglePayGateway.php:107
+#: src/Payments/Gateways/GooglePayGateway.php:109
 msgid "Google Pay"
 msgstr ""
 
@@ -1597,573 +1614,573 @@ msgstr ""
 msgid "This payment method does not supports vaulting."
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:58
+#: src/Payments/Gateways/ApplePayGateway.php:60
 msgid "Apple Pay Gateway By Payment Plugins"
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:59
+#: src/Payments/Gateways/ApplePayGateway.php:61
 msgid "Apple Pay Settings"
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:61
+#: src/Payments/Gateways/ApplePayGateway.php:63
 msgid "Offer Apple Pay through PayPal"
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:68
+#: src/Payments/Gateways/ApplePayGateway.php:70
 msgid "Domain Association File"
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:70
+#: src/Payments/Gateways/ApplePayGateway.php:72
 msgid "Add domain association file"
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:71
+#: src/Payments/Gateways/ApplePayGateway.php:73
 #, php-format
 msgid "Apple Pay requires a domain association file to verify domain ownership. Follow the %1$sSetup Guide%2$s to complete your domain registration."
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:80
-#: src/Payments/Gateways/CreditCardGateway.php:52
-#: src/Payments/Gateways/GooglePayGateway.php:102
-#: src/Payments/Gateways/PayPalGateway.php:68
+#: src/Payments/Gateways/ApplePayGateway.php:82
+#: src/Payments/Gateways/CreditCardGateway.php:54
+#: src/Payments/Gateways/GooglePayGateway.php:104
+#: src/Payments/Gateways/PayPalGateway.php:70
 msgid "Enable this option to offer PayPal on your site."
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:83
-#: src/Payments/Gateways/CreditCardGateway.php:55
-#: src/Payments/Gateways/GooglePayGateway.php:105
-#: src/Payments/Gateways/PayPalGateway.php:71
+#: src/Payments/Gateways/ApplePayGateway.php:85
+#: src/Payments/Gateways/CreditCardGateway.php:57
+#: src/Payments/Gateways/GooglePayGateway.php:107
+#: src/Payments/Gateways/PayPalGateway.php:73
 msgid "Title"
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:87
-#: src/Payments/Gateways/CreditCardGateway.php:59
-#: src/Payments/Gateways/GooglePayGateway.php:109
-#: src/Payments/Gateways/PayPalGateway.php:75
+#: src/Payments/Gateways/ApplePayGateway.php:89
+#: src/Payments/Gateways/CreditCardGateway.php:61
+#: src/Payments/Gateways/GooglePayGateway.php:111
+#: src/Payments/Gateways/PayPalGateway.php:77
 msgid "This is the title of the payment gateway which appears on the checkout page."
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:90
-#: src/Payments/Gateways/CreditCardGateway.php:62
-#: src/Payments/Gateways/GooglePayGateway.php:112
-#: src/Payments/Gateways/PayPalGateway.php:78
+#: src/Payments/Gateways/ApplePayGateway.php:92
+#: src/Payments/Gateways/CreditCardGateway.php:64
+#: src/Payments/Gateways/GooglePayGateway.php:114
+#: src/Payments/Gateways/PayPalGateway.php:80
 msgid "Description"
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:94
-#: src/Payments/Gateways/CreditCardGateway.php:66
-#: src/Payments/Gateways/GooglePayGateway.php:116
-#: src/Payments/Gateways/PayPalGateway.php:82
+#: src/Payments/Gateways/ApplePayGateway.php:96
+#: src/Payments/Gateways/CreditCardGateway.php:68
+#: src/Payments/Gateways/GooglePayGateway.php:118
+#: src/Payments/Gateways/PayPalGateway.php:84
 msgid "This is the description that appears when the payment gateway is selected on the checkout page."
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:99
-#: src/Payments/Gateways/CreditCardGateway.php:71
-#: src/Payments/Gateways/GooglePayGateway.php:121
-#: src/Payments/Gateways/PayPalGateway.php:87
-#: src/Payments/Gateways/PayPalGateway.php:620
+#: src/Payments/Gateways/ApplePayGateway.php:101
+#: src/Payments/Gateways/CreditCardGateway.php:73
+#: src/Payments/Gateways/GooglePayGateway.php:123
+#: src/Payments/Gateways/PayPalGateway.php:89
+#: src/Payments/Gateways/PayPalGateway.php:622
 msgid "Transaction Type"
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:103
-#: src/Payments/Gateways/CreditCardGateway.php:75
-#: src/Payments/Gateways/GooglePayGateway.php:125
-#: src/Payments/Gateways/PayPalGateway.php:91
-#: src/Payments/Gateways/PayPalGateway.php:625
+#: src/Payments/Gateways/ApplePayGateway.php:105
+#: src/Payments/Gateways/CreditCardGateway.php:77
+#: src/Payments/Gateways/GooglePayGateway.php:127
+#: src/Payments/Gateways/PayPalGateway.php:93
+#: src/Payments/Gateways/PayPalGateway.php:627
 msgid "Authorize"
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:106
-#: src/Payments/Gateways/CreditCardGateway.php:78
-#: src/Payments/Gateways/GooglePayGateway.php:128
-#: src/Payments/Gateways/PayPalGateway.php:94
-#: src/Payments/Gateways/PayPalGateway.php:628
+#: src/Payments/Gateways/ApplePayGateway.php:108
+#: src/Payments/Gateways/CreditCardGateway.php:80
+#: src/Payments/Gateways/GooglePayGateway.php:130
+#: src/Payments/Gateways/PayPalGateway.php:96
+#: src/Payments/Gateways/PayPalGateway.php:630
 msgid ""
 "If set to capture, funds will be captured immediately during checkout. Authorized transactions put a hold on the customer's funds but\n"
 "\t\t\t\t\t\tno payment is taken until the charge is captured. Authorized charges can be captured on the Admin Order page."
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:115
-#: src/Payments/Gateways/CreditCardGateway.php:87
-#: src/Payments/Gateways/GooglePayGateway.php:137
-#: src/Payments/Gateways/PayPalGateway.php:103
+#: src/Payments/Gateways/ApplePayGateway.php:117
+#: src/Payments/Gateways/CreditCardGateway.php:89
+#: src/Payments/Gateways/GooglePayGateway.php:139
+#: src/Payments/Gateways/PayPalGateway.php:105
 msgid "Authorized Order Status"
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:132
-#: src/Payments/Gateways/CreditCardGateway.php:104
-#: src/Payments/Gateways/GooglePayGateway.php:154
-#: src/Payments/Gateways/PayPalGateway.php:120
+#: src/Payments/Gateways/ApplePayGateway.php:134
+#: src/Payments/Gateways/CreditCardGateway.php:106
+#: src/Payments/Gateways/GooglePayGateway.php:156
+#: src/Payments/Gateways/PayPalGateway.php:122
 msgid "If the transaction is authorized, this is the status applied to the order."
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:139
+#: src/Payments/Gateways/ApplePayGateway.php:141
 msgid "Display name for your store shown in the Apple Pay wallet."
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:142
-#: src/Payments/Gateways/CreditCardGateway.php:107
-#: src/Payments/Gateways/GooglePayGateway.php:165
-#: src/Payments/Gateways/PayPalGateway.php:195
+#: src/Payments/Gateways/ApplePayGateway.php:144
+#: src/Payments/Gateways/CreditCardGateway.php:109
+#: src/Payments/Gateways/GooglePayGateway.php:167
+#: src/Payments/Gateways/PayPalGateway.php:197
 msgid "Button Text"
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:146
+#: src/Payments/Gateways/ApplePayGateway.php:148
 msgid "The text for the Place Order button when Apple Pay is selected. Leave blank to use the default WooCommerce text."
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:151
+#: src/Payments/Gateways/ApplePayGateway.php:153
 msgid "Apple Pay Payment Sections"
-msgstr ""
-
-#: src/Payments/Gateways/ApplePayGateway.php:156
-#: src/Payments/Gateways/GooglePayGateway.php:179
-#: src/Payments/Gateways/PayPalGateway.php:671
-msgid "Checkout Page"
-msgstr ""
-
-#: src/Payments/Gateways/ApplePayGateway.php:157
-#: src/Payments/Gateways/GooglePayGateway.php:180
-#: src/Payments/Gateways/PayPalGateway.php:669
-msgid "Product Page"
 msgstr ""
 
 #: src/Payments/Gateways/ApplePayGateway.php:158
 #: src/Payments/Gateways/GooglePayGateway.php:181
-#: src/Payments/Gateways/PayPalGateway.php:670
-msgid "Cart Page"
+#: src/Payments/Gateways/PayPalGateway.php:673
+msgid "Checkout Page"
 msgstr ""
 
 #: src/Payments/Gateways/ApplePayGateway.php:159
 #: src/Payments/Gateways/GooglePayGateway.php:182
-#: src/Payments/Gateways/PayPalGateway.php:674
-msgid "Minicart"
+#: src/Payments/Gateways/PayPalGateway.php:671
+msgid "Product Page"
 msgstr ""
 
 #: src/Payments/Gateways/ApplePayGateway.php:160
 #: src/Payments/Gateways/GooglePayGateway.php:183
 #: src/Payments/Gateways/PayPalGateway.php:672
-#: templates/checkout/express-checkout.php:12
-msgid "Express Checkout"
+msgid "Cart Page"
 msgstr ""
 
 #: src/Payments/Gateways/ApplePayGateway.php:161
 #: src/Payments/Gateways/GooglePayGateway.php:184
-#: src/Payments/Gateways/PayPalGateway.php:673
+#: src/Payments/Gateways/PayPalGateway.php:676
+msgid "Minicart"
+msgstr ""
+
+#: src/Payments/Gateways/ApplePayGateway.php:162
+#: src/Payments/Gateways/GooglePayGateway.php:185
+#: src/Payments/Gateways/PayPalGateway.php:674
+#: templates/checkout/express-checkout.php:12
+msgid "Express Checkout"
+msgstr ""
+
+#: src/Payments/Gateways/ApplePayGateway.php:163
+#: src/Payments/Gateways/GooglePayGateway.php:186
+#: src/Payments/Gateways/PayPalGateway.php:675
 msgid "Order Pay"
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:167
+#: src/Payments/Gateways/ApplePayGateway.php:169
 msgid "These are the sections that the Apple Pay payment button will appear. If Apple Pay is enabled, the button will show on the checkout page by default."
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:170
-#: src/Payments/Gateways/CreditCardGateway.php:116
-#: src/Payments/Gateways/GooglePayGateway.php:193
-#: src/Payments/Gateways/PayPalGateway.php:153
+#: src/Payments/Gateways/ApplePayGateway.php:172
+#: src/Payments/Gateways/CreditCardGateway.php:118
+#: src/Payments/Gateways/GooglePayGateway.php:195
+#: src/Payments/Gateways/PayPalGateway.php:155
 msgid "Payment Method Format"
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:175
-#: src/Payments/Gateways/CreditCardGateway.php:121
-#: src/Payments/Gateways/GooglePayGateway.php:198
-#: src/Payments/Gateways/PayPalGateway.php:158
+#: src/Payments/Gateways/ApplePayGateway.php:177
+#: src/Payments/Gateways/CreditCardGateway.php:123
+#: src/Payments/Gateways/GooglePayGateway.php:200
+#: src/Payments/Gateways/PayPalGateway.php:160
 msgid "This option controls how the PayPal payment method appears on the frontend."
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:178
-#: src/Payments/Gateways/GooglePayGateway.php:201
-#: src/Payments/Gateways/PayPalGateway.php:161
+#: src/Payments/Gateways/ApplePayGateway.php:180
+#: src/Payments/Gateways/GooglePayGateway.php:203
+#: src/Payments/Gateways/PayPalGateway.php:163
 msgid "Checkout page Button Placement"
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:181
-#: src/Payments/Gateways/GooglePayGateway.php:204
-#: src/Payments/Gateways/PayPalGateway.php:164
+#: src/Payments/Gateways/ApplePayGateway.php:183
+#: src/Payments/Gateways/GooglePayGateway.php:206
+#: src/Payments/Gateways/PayPalGateway.php:166
 msgid "Place Order Button"
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:182
-#: src/Payments/Gateways/GooglePayGateway.php:205
-#: src/Payments/Gateways/PayPalGateway.php:165
+#: src/Payments/Gateways/ApplePayGateway.php:184
+#: src/Payments/Gateways/GooglePayGateway.php:207
+#: src/Payments/Gateways/PayPalGateway.php:167
 msgid "In payment gateway section"
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:186
+#: src/Payments/Gateways/ApplePayGateway.php:188
 msgid "You can choose to render the Apple Pay button in either the payment method section of the checkout page or where the Place Order button is rendered."
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:190
-#: src/Payments/Gateways/CreditCardGateway.php:172
-#: src/Payments/Gateways/GooglePayGateway.php:225
+#: src/Payments/Gateways/ApplePayGateway.php:192
+#: src/Payments/Gateways/CreditCardGateway.php:174
+#: src/Payments/Gateways/GooglePayGateway.php:227
 msgid "3D Secure Options"
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:193
-#: src/Payments/Gateways/CreditCardGateway.php:175
-#: src/Payments/Gateways/GooglePayGateway.php:228
+#: src/Payments/Gateways/ApplePayGateway.php:195
+#: src/Payments/Gateways/CreditCardGateway.php:177
+#: src/Payments/Gateways/GooglePayGateway.php:230
 msgid "Enable 3DS"
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:198
-#: src/Payments/Gateways/CreditCardGateway.php:180
-#: src/Payments/Gateways/GooglePayGateway.php:233
+#: src/Payments/Gateways/ApplePayGateway.php:200
+#: src/Payments/Gateways/CreditCardGateway.php:182
+#: src/Payments/Gateways/GooglePayGateway.php:235
 msgid "When enabled, 3DS will be triggered when required."
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:201
-#: src/Payments/Gateways/CreditCardGateway.php:183
-#: src/Payments/Gateways/GooglePayGateway.php:236
+#: src/Payments/Gateways/ApplePayGateway.php:203
+#: src/Payments/Gateways/CreditCardGateway.php:185
+#: src/Payments/Gateways/GooglePayGateway.php:238
 msgid "Force 3DS"
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:206
-#: src/Payments/Gateways/CreditCardGateway.php:188
-#: src/Payments/Gateways/GooglePayGateway.php:241
+#: src/Payments/Gateways/ApplePayGateway.php:208
+#: src/Payments/Gateways/CreditCardGateway.php:190
+#: src/Payments/Gateways/GooglePayGateway.php:243
 msgid "When enabled, 3DS forced for all transactions when supported."
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:213
-#: src/Payments/Gateways/GooglePayGateway.php:248
+#: src/Payments/Gateways/ApplePayGateway.php:215
+#: src/Payments/Gateways/GooglePayGateway.php:250
 msgid "Button Options"
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:226
+#: src/Payments/Gateways/ApplePayGateway.php:228
 msgid "The style of the Apple Pay button."
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:229
-#: src/Payments/Gateways/GooglePayGateway.php:264
+#: src/Payments/Gateways/ApplePayGateway.php:231
+#: src/Payments/Gateways/GooglePayGateway.php:266
 msgid "Button Type"
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:233
+#: src/Payments/Gateways/ApplePayGateway.php:235
 msgid "Standard Button"
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:234
+#: src/Payments/Gateways/ApplePayGateway.php:236
 msgid "Buy with Apple Pay"
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:235
+#: src/Payments/Gateways/ApplePayGateway.php:237
 msgid "Checkout with Apple Pay"
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:239
-#: src/Payments/Gateways/GooglePayGateway.php:279
+#: src/Payments/Gateways/ApplePayGateway.php:241
+#: src/Payments/Gateways/GooglePayGateway.php:281
 msgid "The type/text of the Google Pay button."
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:252
-#: src/Payments/Gateways/GooglePayGateway.php:306
+#: src/Payments/Gateways/ApplePayGateway.php:254
+#: src/Payments/Gateways/GooglePayGateway.php:308
 msgid "Button Radius"
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:260
-#: src/Payments/Gateways/GooglePayGateway.php:314
+#: src/Payments/Gateways/ApplePayGateway.php:262
+#: src/Payments/Gateways/GooglePayGateway.php:316
 msgid "The border radius of the button in pixels. Must be a non-negative integer."
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:367
+#: src/Payments/Gateways/ApplePayGateway.php:369
 msgid "There was an error adding your domain association file. Reason:"
 msgstr ""
 
-#: src/Payments/Gateways/ApplePayGateway.php:409
+#: src/Payments/Gateways/ApplePayGateway.php:411
 msgid "Apple Pay Enabled"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:35
+#: src/Payments/Gateways/CreditCardGateway.php:37
 msgid "PayPal Credit Card Gateway By Payment Plugins"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:36
+#: src/Payments/Gateways/CreditCardGateway.php:38
 msgid "Credit Card Settings"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:38
+#: src/Payments/Gateways/CreditCardGateway.php:40
 msgid "Offer Credit Cards by PayPal"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:57
+#: src/Payments/Gateways/CreditCardGateway.php:59
 msgid "Credit/Debit Cards"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:111
-#: src/Payments/Gateways/PayPalGateway.php:199
+#: src/Payments/Gateways/CreditCardGateway.php:113
+#: src/Payments/Gateways/PayPalGateway.php:201
 msgid "The text for the Place Order button when PayPal is selected. Leave blank to use the default WooCommerce text."
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:124
+#: src/Payments/Gateways/CreditCardGateway.php:126
 msgid "Card Icons"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:129
+#: src/Payments/Gateways/CreditCardGateway.php:131
 msgid "Visa"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:130
+#: src/Payments/Gateways/CreditCardGateway.php:132
 msgid "Amex"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:131
+#: src/Payments/Gateways/CreditCardGateway.php:133
 msgid "Discover"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:132
+#: src/Payments/Gateways/CreditCardGateway.php:134
 msgid "MasterCard"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:133
+#: src/Payments/Gateways/CreditCardGateway.php:135
 msgid "JCB"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:134
+#: src/Payments/Gateways/CreditCardGateway.php:136
 msgid "Maestro"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:137
+#: src/Payments/Gateways/CreditCardGateway.php:139
 msgid "These are the icons that show next to the payment method title."
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:141
+#: src/Payments/Gateways/CreditCardGateway.php:143
 msgid "Card Form Options"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:144
+#: src/Payments/Gateways/CreditCardGateway.php:146
 msgid "Card Save Enabled"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:149
+#: src/Payments/Gateways/CreditCardGateway.php:151
 msgid "When enabled, customers will have the option to save their credit card on the checkout page. If you don't have vaulting enabled on the Advanced Settings page, this option will be disabled."
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:152
+#: src/Payments/Gateways/CreditCardGateway.php:154
 msgid "Enable Cardholder Name"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:157
+#: src/Payments/Gateways/CreditCardGateway.php:159
 msgid "When enabled, the credit card form will show a cardholder name input field."
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:160
+#: src/Payments/Gateways/CreditCardGateway.php:162
 msgid "Cardholder Name Required"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:165
+#: src/Payments/Gateways/CreditCardGateway.php:167
 msgid "When enabled, the cardholder name field will be required rather than optional."
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:195
+#: src/Payments/Gateways/CreditCardGateway.php:197
 msgid "Fastlane by PayPal"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:198
+#: src/Payments/Gateways/CreditCardGateway.php:200
 msgid "Fastlane Enabled"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:202
+#: src/Payments/Gateways/CreditCardGateway.php:204
 msgid "When enabled, Fastlane by PayPal will be available on the checkout page."
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:205
+#: src/Payments/Gateways/CreditCardGateway.php:207
 msgid "Fastlane Type"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:209
+#: src/Payments/Gateways/CreditCardGateway.php:211
 msgid "Express Checkout Button"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:210
+#: src/Payments/Gateways/CreditCardGateway.php:212
 msgid "Email Recognition"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:213
+#: src/Payments/Gateways/CreditCardGateway.php:215
 msgid ""
 "If the express checkout option is enabled, a Fastlane express button will be available. The email recognition option will use dynamic\n"
 "\t\t\t\temail detection to render the Fastlane payment flow."
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:221
+#: src/Payments/Gateways/CreditCardGateway.php:223
 msgid "Fastlane Signup Link"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:225
+#: src/Payments/Gateways/CreditCardGateway.php:227
 msgid "If enabled, a signup button will be visible above the credit card form on the checkout page so customers can signup for Fastlane."
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:231
+#: src/Payments/Gateways/CreditCardGateway.php:233
 msgid "Authenticate On Page Load"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:235
+#: src/Payments/Gateways/CreditCardGateway.php:237
 msgid "If enabled and the billing email is populated, the plugin will attempt to authenticate the user when the checkout page loads."
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:241
+#: src/Payments/Gateways/CreditCardGateway.php:243
 msgid "Fastlane Icon Enabled"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:245
+#: src/Payments/Gateways/CreditCardGateway.php:247
 msgid "If enabled, a PayPal Fastlane icon will render below the checkout page email field."
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:251
+#: src/Payments/Gateways/CreditCardGateway.php:253
 msgid "Email At Top"
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:255
+#: src/Payments/Gateways/CreditCardGateway.php:257
 msgid "When enabled, the email field appears at the top of the checkout page. This setting only applies when using the checkout shortcode on your site."
 msgstr ""
 
-#: src/Payments/Gateways/CreditCardGateway.php:335
+#: src/Payments/Gateways/CreditCardGateway.php:337
 msgid "The credit card form is incomplete"
 msgstr ""
 
-#: src/Payments/Gateways/GooglePayGateway.php:87
+#: src/Payments/Gateways/GooglePayGateway.php:89
 msgid "Google Pay Gateway By Payment Plugins"
 msgstr ""
 
-#: src/Payments/Gateways/GooglePayGateway.php:88
+#: src/Payments/Gateways/GooglePayGateway.php:90
 msgid "Google Pay Settings"
 msgstr ""
 
-#: src/Payments/Gateways/GooglePayGateway.php:90
+#: src/Payments/Gateways/GooglePayGateway.php:92
 msgid "Offer Google Pay through PayPal"
 msgstr ""
 
-#: src/Payments/Gateways/GooglePayGateway.php:169
+#: src/Payments/Gateways/GooglePayGateway.php:171
 msgid "The text for the Place Order button when Google Pay is selected. Leave blank to use the default WooCommerce text."
 msgstr ""
 
-#: src/Payments/Gateways/GooglePayGateway.php:174
+#: src/Payments/Gateways/GooglePayGateway.php:176
 msgid "Google Pay Payment Sections"
 msgstr ""
 
-#: src/Payments/Gateways/GooglePayGateway.php:190
+#: src/Payments/Gateways/GooglePayGateway.php:192
 msgid "These are the sections that the Google Pay payment button will appear. If Google Pay is enabled, the button will show on the checkout page by default."
 msgstr ""
 
-#: src/Payments/Gateways/GooglePayGateway.php:209
+#: src/Payments/Gateways/GooglePayGateway.php:211
 msgid "You can choose to render the Google Pay button in either the payment method section of the checkout page or where the Place Order button is rendered."
 msgstr ""
 
-#: src/Payments/Gateways/GooglePayGateway.php:212
-#: src/Payments/Gateways/PayPalGateway.php:123
+#: src/Payments/Gateways/GooglePayGateway.php:214
+#: src/Payments/Gateways/PayPalGateway.php:125
 msgid "Icon"
 msgstr ""
 
-#: src/Payments/Gateways/GooglePayGateway.php:215
+#: src/Payments/Gateways/GooglePayGateway.php:217
 msgid "With Rounded Outline"
 msgstr ""
 
-#: src/Payments/Gateways/GooglePayGateway.php:216
+#: src/Payments/Gateways/GooglePayGateway.php:218
 msgid "With Outline"
 msgstr ""
 
-#: src/Payments/Gateways/GooglePayGateway.php:217
-#: src/Payments/Gateways/PayPalGateway.php:265
+#: src/Payments/Gateways/GooglePayGateway.php:219
+#: src/Payments/Gateways/PayPalGateway.php:267
 msgid "Standard"
 msgstr ""
 
-#: src/Payments/Gateways/GooglePayGateway.php:221
+#: src/Payments/Gateways/GooglePayGateway.php:223
 msgid "This is the icon style that appears next to the gateway on the checkout page."
 msgstr ""
 
-#: src/Payments/Gateways/GooglePayGateway.php:255
+#: src/Payments/Gateways/GooglePayGateway.php:257
 msgid "Default"
 msgstr ""
 
-#: src/Payments/Gateways/GooglePayGateway.php:261
+#: src/Payments/Gateways/GooglePayGateway.php:263
 msgid "The color of the Google Pay button."
 msgstr ""
 
-#: src/Payments/Gateways/GooglePayGateway.php:268
+#: src/Payments/Gateways/GooglePayGateway.php:270
 msgid "Buy"
 msgstr ""
 
-#: src/Payments/Gateways/GooglePayGateway.php:269
-msgid "Plain"
-msgstr ""
-
-#: src/Payments/Gateways/GooglePayGateway.php:270
-#: src/Payments/Gateways/PayPalGateway.php:266
-msgid "Checkout"
-msgstr ""
-
 #: src/Payments/Gateways/GooglePayGateway.php:271
-msgid "Order"
+msgid "Plain"
 msgstr ""
 
 #: src/Payments/Gateways/GooglePayGateway.php:272
 #: src/Payments/Gateways/PayPalGateway.php:268
-msgid "Pay"
+msgid "Checkout"
 msgstr ""
 
 #: src/Payments/Gateways/GooglePayGateway.php:273
-msgid "Donate"
+msgid "Order"
 msgstr ""
 
 #: src/Payments/Gateways/GooglePayGateway.php:274
-msgid "Book"
+#: src/Payments/Gateways/PayPalGateway.php:270
+msgid "Pay"
 msgstr ""
 
 #: src/Payments/Gateways/GooglePayGateway.php:275
+msgid "Donate"
+msgstr ""
+
+#: src/Payments/Gateways/GooglePayGateway.php:276
+msgid "Book"
+msgstr ""
+
+#: src/Payments/Gateways/GooglePayGateway.php:277
 msgid "Subscribe"
 msgstr ""
 
-#: src/Payments/Gateways/GooglePayGateway.php:282
+#: src/Payments/Gateways/GooglePayGateway.php:284
 msgid "Button Border Type"
 msgstr ""
 
-#: src/Payments/Gateways/GooglePayGateway.php:286
+#: src/Payments/Gateways/GooglePayGateway.php:288
 msgid "No Border"
 msgstr ""
 
-#: src/Payments/Gateways/GooglePayGateway.php:287
+#: src/Payments/Gateways/GooglePayGateway.php:289
 msgid "Border"
 msgstr ""
 
-#: src/Payments/Gateways/GooglePayGateway.php:291
+#: src/Payments/Gateways/GooglePayGateway.php:293
 msgid "The border type of the Google Pay button."
 msgstr ""
 
-#: src/Payments/Gateways/GooglePayGateway.php:294
+#: src/Payments/Gateways/GooglePayGateway.php:296
 msgid "Button Size Mode"
 msgstr ""
 
-#: src/Payments/Gateways/GooglePayGateway.php:298
+#: src/Payments/Gateways/GooglePayGateway.php:300
 msgid "Static"
 msgstr ""
 
-#: src/Payments/Gateways/GooglePayGateway.php:299
+#: src/Payments/Gateways/GooglePayGateway.php:301
 msgid "Fill"
 msgstr ""
 
-#: src/Payments/Gateways/GooglePayGateway.php:303
+#: src/Payments/Gateways/GooglePayGateway.php:305
 msgid "Static buttons have a fixed width and height. Fill buttons expand to fill the width of their container."
 msgstr ""
 
-#: src/Payments/Gateways/GooglePayGateway.php:422
+#: src/Payments/Gateways/GooglePayGateway.php:424
 msgid "Google Pay is unavailable at this time."
 msgstr ""
 
-#: src/Payments/Gateways/GooglePayGateway.php:423
+#: src/Payments/Gateways/GooglePayGateway.php:425
 msgid "Google Pay is unavailable at this time. Login to developer.paypal.com > Apps & Credentials and click your application. Under \"Features\" check \"Google Pay\"."
 msgstr ""
 
-#: src/Payments/Gateways/GooglePayGateway.php:484
+#: src/Payments/Gateways/GooglePayGateway.php:486
 msgid "Google Pay Enabled"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:48
+#: src/Payments/Gateways/PayPalGateway.php:50
 msgid "PayPal Gateway By Payment Plugins"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:51
+#: src/Payments/Gateways/PayPalGateway.php:53
 msgid "Offer PayPal, PayLater, Venmo, and Credit Cards"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:73
+#: src/Payments/Gateways/PayPalGateway.php:75
 #: src/Tokens/PayPalToken.php:57
 #: src/Tokens/PayPalToken.php:58
 #: src/Tokens/PayPalToken.php:59
@@ -2171,215 +2188,215 @@ msgstr ""
 msgid "PayPal"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:127
+#: src/Payments/Gateways/PayPalGateway.php:129
 msgid "Logo V1"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:128
+#: src/Payments/Gateways/PayPalGateway.php:130
 msgid "Black Logo V2"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:129
+#: src/Payments/Gateways/PayPalGateway.php:131
 msgid "Monogram"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:131
+#: src/Payments/Gateways/PayPalGateway.php:133
 msgid "This is the PayPal icon which appears next to the payment method title on the checkout page."
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:134
+#: src/Payments/Gateways/PayPalGateway.php:136
 msgid "Billing Agreement Description"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:136
+#: src/Payments/Gateways/PayPalGateway.php:138
 msgid "Billing Agreement"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:138
+#: src/Payments/Gateways/PayPalGateway.php:140
 msgid "This is the billing agreement description that appears in the PayPal popup."
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:141
+#: src/Payments/Gateways/PayPalGateway.php:143
 msgid "PayPal Payment Sections"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:150
+#: src/Payments/Gateways/PayPalGateway.php:152
 msgid "These are the sections that the PayPal payment button will appear. If PayPal is enabled, the button will show on the checkout page by default."
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:169
+#: src/Payments/Gateways/PayPalGateway.php:171
 msgid "You can choose to render the PayPal button in either the payment method section of the checkout page or where the Place Order button is rendered."
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:175
+#: src/Payments/Gateways/PayPalGateway.php:177
 msgid "Show Popup Icon and Text"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:179
+#: src/Payments/Gateways/PayPalGateway.php:181
 msgid "If enabled, the PayPal payment gateway will render a popup icon indicating to the customer that they must click the PayPal button."
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:186
+#: src/Payments/Gateways/PayPalGateway.php:188
 msgid "Use Place Order Button"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:191
+#: src/Payments/Gateways/PayPalGateway.php:193
 msgid "If enabled, the plugin will use the Place Order button on the checkout page rather than rendering the PayPal buttons. This option does not affect express checkout."
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:207
+#: src/Payments/Gateways/PayPalGateway.php:209
 msgid "Immediate Payment Only"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:212
+#: src/Payments/Gateways/PayPalGateway.php:214
 msgid "If enabled, only payments which settle immediately will be available."
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:216
+#: src/Payments/Gateways/PayPalGateway.php:218
 msgid "Shipping Options"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:219
+#: src/Payments/Gateways/PayPalGateway.php:221
 msgid "Server-Side Shipping Callback"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:227
+#: src/Payments/Gateways/PayPalGateway.php:229
 #, php-format
 msgid "If enabled, PayPal will use a server-side callback to update shipping options and totals when the customer changes their shipping address or selects a shipping method in the PayPal popup. If disabled, the plugin will use the browser-based onShippingChange event supported by PayPal. Read more about this option %1$shere%2$s."
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:230
+#: src/Payments/Gateways/PayPalGateway.php:232
 msgid "Server-side shipping callbacks require WooCommerce 7.7 or higher. Please update WooCommerce to enable this feature."
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:234
+#: src/Payments/Gateways/PayPalGateway.php:236
 msgid "PayPal Button Design"
-msgstr ""
-
-#: src/Payments/Gateways/PayPalGateway.php:242
-#: src/Payments/Gateways/PayPalGateway.php:342
-msgid "Gold"
 msgstr ""
 
 #: src/Payments/Gateways/PayPalGateway.php:244
 #: src/Payments/Gateways/PayPalGateway.php:344
+msgid "Gold"
+msgstr ""
+
+#: src/Payments/Gateways/PayPalGateway.php:246
+#: src/Payments/Gateways/PayPalGateway.php:346
 msgid "Silver"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:255
+#: src/Payments/Gateways/PayPalGateway.php:257
 msgid "Pill"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:256
+#: src/Payments/Gateways/PayPalGateway.php:258
 msgid "Rectangle"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:267
+#: src/Payments/Gateways/PayPalGateway.php:269
 msgid "Buy Now"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:283
+#: src/Payments/Gateways/PayPalGateway.php:285
 msgid "Demo"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:286
+#: src/Payments/Gateways/PayPalGateway.php:288
 msgid "Enabled payment methods are listed below and can be sorted to control their display order on the frontend."
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:293
+#: src/Payments/Gateways/PayPalGateway.php:295
 msgid "Venmo Options"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:297
+#: src/Payments/Gateways/PayPalGateway.php:299
 msgid "Venmo"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:302
+#: src/Payments/Gateways/PayPalGateway.php:304
 msgid "If enabled, you will be able to offer Venmo. Venmo is a mobile payment method and the Venmo app must be installed on the customer's device in order to show."
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:306
+#: src/Payments/Gateways/PayPalGateway.php:308
 msgid "Venmo Payment Sections"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:318
+#: src/Payments/Gateways/PayPalGateway.php:320
 msgid "These are the sections that the Venmo payment button will appear."
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:326
+#: src/Payments/Gateways/PayPalGateway.php:328
 msgid "Pay Later"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:331
+#: src/Payments/Gateways/PayPalGateway.php:333
 msgid "If enabled, you will be able to offer PayPal\\s Pay Later option."
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:335
+#: src/Payments/Gateways/PayPalGateway.php:337
 msgid "Pay Later Button Color"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:350
+#: src/Payments/Gateways/PayPalGateway.php:352
 msgid "Pay Later Payment Sections"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:362
-#: src/Payments/Gateways/PayPalGateway.php:415
+#: src/Payments/Gateways/PayPalGateway.php:364
+#: src/Payments/Gateways/PayPalGateway.php:417
 msgid "These are the sections that the PayPal payment buttons will appear."
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:370
+#: src/Payments/Gateways/PayPalGateway.php:372
 msgid "Card Enabled"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:375
+#: src/Payments/Gateways/PayPalGateway.php:377
 msgid "If enabled, the card button will be included."
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:379
+#: src/Payments/Gateways/PayPalGateway.php:381
 msgid "Card Button Color"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:392
+#: src/Payments/Gateways/PayPalGateway.php:394
 msgid "Tagline enabled"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:397
+#: src/Payments/Gateways/PayPalGateway.php:399
 msgid "If enabled, the card button tagline will be rendered beneath the button."
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:403
+#: src/Payments/Gateways/PayPalGateway.php:405
 msgid "Credit Card Payment Sections"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:634
+#: src/Payments/Gateways/PayPalGateway.php:636
 msgid "PayPal Enabled"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:639
+#: src/Payments/Gateways/PayPalGateway.php:641
 msgid "Pay Later Enabled"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:645
+#: src/Payments/Gateways/PayPalGateway.php:647
 msgid "Credit Card Enabled"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:651
+#: src/Payments/Gateways/PayPalGateway.php:653
 msgid "Button Width"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:655
+#: src/Payments/Gateways/PayPalGateway.php:657
 msgid "Match add to cart button width"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:656
+#: src/Payments/Gateways/PayPalGateway.php:658
 msgid "Match width of container"
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:659
+#: src/Payments/Gateways/PayPalGateway.php:661
 msgid "This option allows you to control the width of the payment buttons."
 msgstr ""
 
-#: src/Payments/Gateways/PayPalGateway.php:726
+#: src/Payments/Gateways/PayPalGateway.php:728
 msgid "Place order"
 msgstr ""
 
@@ -2465,13 +2482,13 @@ msgstr ""
 msgid "Please fill out all required fields then click Place Order."
 msgstr ""
 
-#: src/Rest/Routes/CartItem.php:66
+#: src/Rest/Routes/CartItem.php:65
 #: src/Rest/Routes/CartOrder.php:70
 #: src/Rest/Routes/VaultSetupTokensRoute.php:73
 msgid "Invalid payment method provided."
 msgstr ""
 
-#: src/Rest/Routes/CartItem.php:72
+#: src/Rest/Routes/CartItem.php:71
 msgid "Error adding product to cart."
 msgstr ""
 

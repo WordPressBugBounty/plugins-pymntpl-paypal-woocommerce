@@ -7,6 +7,7 @@ use PaymentPlugins\PPCP\WooCommerceSubscriptions\Traits\SubscriptionTrait;
 use PaymentPlugins\WooCommerce\PPCP\ProductSettings;
 use PaymentPlugins\WooCommerce\PPCP\Tokens\CreditCardToken;
 use PaymentPlugins\WooCommerce\PPCP\Traits\CardPaymentNoteTrait;
+use PaymentPlugins\WooCommerce\PPCP\Traits\DeferredOrderCreationTrait;
 use PaymentPlugins\WooCommerce\PPCP\Traits\ThreeDSecureTrait;
 use PaymentPlugins\WooCommerce\PPCP\Traits\VaultTokenTrait;
 
@@ -17,6 +18,7 @@ class ApplePayGateway extends AbstractGateway {
 	use CardPaymentNoteTrait;
 	use SubscriptionTrait;
 	use PreOrdersTrait;
+	use DeferredOrderCreationTrait;
 
 	public $id = 'ppcp_applepay';
 

@@ -77,7 +77,7 @@ class AssetDataController {
 
 	public function get_update_order_review_data( $fragments ) {
 		$data = [
-			'cart' => apply_filters( 'wc_ppcp_cart_data', $this->transformer->transform_cart( WC()->cart ) )
+			'cart' => $this->transformer->transform_cart( WC()->cart )
 		];
 
 		$data = apply_filters( 'wc_ppcp_update_order_review_data', $data );

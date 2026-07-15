@@ -88,6 +88,9 @@ class OrderPay extends AbstractRoute {
 			$intent       = $payment_method->get_option( 'intent' );
 			$paypal_order = $this->factories->initialize( $order, $payment_method )->order->from_order( $intent );
 			$paypal_order->setPaymentSource( $this->factories->paymentSource->from_checkout() );
+
+			do_action( 'wc_ppcp_get_order_from_order_pay', $paypal_order, $order, $payment_method );
+
 			/**
 			 * @var PurchaseUnit $purchase_unit
 			 */

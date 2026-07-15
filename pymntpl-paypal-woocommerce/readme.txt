@@ -4,7 +4,7 @@ Tags: paypal, paylater, venmo, credit cards
 Requires at least: 4.7
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 2.0.22
+Stable tag: 2.0.23
 Copyright: Payment Plugins
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -51,6 +51,8 @@ Our documentation has a step-by-step guide on how to connect the plugin to your 
 Payment Plugins is the team behind several of the highest reviewed and installed Payment integrations for WooCommerce.
 
 == Changelog ==
+= 2.0.23 - 07/15/26 =
+* [2.0.23 Change Log](https://paymentplugins.com/documentation/paypal/releases/2.0.23/)
 = 2.0.22 - 07/08/26 =
 * [2.0.22 Change Log](https://paymentplugins.com/documentation/paypal/releases/2.0.22/)
 = 2.0.21 - 07/06/26 =

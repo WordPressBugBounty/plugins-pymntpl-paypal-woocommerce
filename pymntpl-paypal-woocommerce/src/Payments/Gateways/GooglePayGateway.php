@@ -5,6 +5,7 @@ namespace PaymentPlugins\WooCommerce\PPCP\Payments\Gateways;
 use PaymentPlugins\WooCommerce\PPCP\ProductSettings;
 use PaymentPlugins\WooCommerce\PPCP\Tokens\CreditCardToken;
 use PaymentPlugins\WooCommerce\PPCP\Traits\CardPaymentNoteTrait;
+use PaymentPlugins\WooCommerce\PPCP\Traits\DeferredOrderCreationTrait;
 use PaymentPlugins\WooCommerce\PPCP\Traits\ThreeDSecureTrait;
 use PaymentPlugins\WooCommerce\PPCP\Traits\TokenizationTrait;
 
@@ -12,6 +13,7 @@ class GooglePayGateway extends AbstractGateway {
 
 	use ThreeDSecureTrait;
 	use CardPaymentNoteTrait;
+	use DeferredOrderCreationTrait;
 
 	public $id = 'ppcp_googlepay';
 

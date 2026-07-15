@@ -1,1 +1,1 @@
-<?php return array('dependencies' => array('wc-ppcp-blocks-vendors', 'lodash', 'react', 'wc-blocks-checkout-events', 'wc-blocks-registry', 'wc-ppcp-utils', 'wc-settings', 'wp-api-fetch', 'wp-data', 'wp-element', 'wp-i18n'), 'version' => 'e810f73d399f1d48ec05');
+<?php return array('dependencies' => array('wc-ppcp-blocks-vendors', 'lodash', 'react', 'wc-blocks-checkout-events', 'wc-blocks-registry', 'wc-ppcp-utils', 'wc-settings', 'wp-api-fetch', 'wp-data', 'wp-element', 'wp-i18n'), 'version' => '31e50c912d3c6b655580');

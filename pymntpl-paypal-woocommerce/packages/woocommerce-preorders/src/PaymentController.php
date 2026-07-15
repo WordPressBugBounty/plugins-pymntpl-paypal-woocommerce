@@ -35,7 +35,7 @@ class PaymentController {
 	 * @param \WC_Order                                                          $order
 	 * @param \PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\AbstractGateway $payment_method
 	 *
-	 * @return void
+	 * @return array
 	 */
 	public function process_payment( $result, \WC_Order $order, AbstractGateway $payment_method ) {
 		/**

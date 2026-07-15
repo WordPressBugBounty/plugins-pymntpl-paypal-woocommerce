@@ -8,6 +8,7 @@ use PaymentPlugins\WooCommerce\PPCP\Cache\CacheInterface;
 use PaymentPlugins\WooCommerce\PPCP\Factories\CoreFactories;
 use PaymentPlugins\WooCommerce\PPCP\Logger;
 use PaymentPlugins\WooCommerce\PPCP\Payments\PaymentGateways;
+use PaymentPlugins\WooCommerce\PPCP\ProductSettings;
 use PaymentPlugins\WooCommerce\PPCP\Rest\Validators\RouteValidator;
 use PaymentPlugins\WooCommerce\PPCP\Utilities\OrderFilterUtil;
 use PaymentPlugins\WooCommerce\PPCP\Utils;
@@ -44,8 +45,12 @@ class AbstractCart extends AbstractRoute {
 	protected function get_order_from_cart( $request ) {
 		$payment_method = $this->get_payment_method_from_request( $request );
 		$payment_method->set_save_payment_method( ! empty( $request["{$payment_method->id}_save_payment"] ) );
-		$intent = $payment_method->get_option( 'intent' );
-		$order  = $this->factories->initialize( WC()->cart, WC()->customer, $payment_method )->order->from_cart( $intent );
+		// A product ID means this order is for a specific product bought via express checkout
+		// (e.g. product page "Buy with Apple Pay") - use that product's own intent override, if
+		// any, instead of the gateway's general setting.
+		$product_id = $request->get_param( 'product_id' );
+		$intent     = $product_id ? ( new ProductSettings( $product_id ) )->get_option( 'intent' ) : $payment_method->get_option( 'intent' );
+		$order      = $this->factories->initialize( WC()->cart, WC()->customer, $payment_method )->order->from_cart( $intent );
 
 		/**
 		 * @var PurchaseUnit $purchase_unit

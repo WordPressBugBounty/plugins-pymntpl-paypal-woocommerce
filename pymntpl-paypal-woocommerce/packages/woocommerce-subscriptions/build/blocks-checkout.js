@@ -1,0 +1,2 @@
+(()=>{"use strict";const t=window.wp.hooks,p=(t,p)=>{const c=p?.recurringTotal||0;return c&&t.total&&(t.total.amount=c),c&&t.newTotal&&(t.newTotal.amount=c),t};(0,t.addFilter)("applepay_blocks_payment_request","wc-ppcp/subscriptions",p),(0,t.addFilter)("applepay_blocks_complete_shipping_method_selection","wc-ppcp/subscriptions",p),(0,t.addFilter)("applepay_blocks_complete_shipping_contact_selection","wc-ppcp/subscriptions",p),(this.wcPPCP=this.wcPPCP||{})["blocks-checkout"]={}})();
+//# sourceMappingURL=blocks-checkout.js.map

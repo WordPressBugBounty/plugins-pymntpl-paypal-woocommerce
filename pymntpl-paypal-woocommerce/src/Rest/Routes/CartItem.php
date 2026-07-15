@@ -9,7 +9,6 @@ use PaymentPlugins\WooCommerce\PPCP\CheckoutValidator;
 use PaymentPlugins\WooCommerce\PPCP\Constants;
 use PaymentPlugins\WooCommerce\PPCP\ContextHandler;
 use PaymentPlugins\WooCommerce\PPCP\PaymentMethodRegistry;
-use PaymentPlugins\WooCommerce\PPCP\ProductSettings;
 
 /**
  * Route that handles PayPal product page one-click checkout.
@@ -72,15 +71,17 @@ class CartItem extends AbstractCart {
 				throw new \Exception( $this->get_wc_notice( 'error', __( 'Error adding product to cart.', 'pymntpl-paypal-woocommerce' ) ) );
 			}
 
-			if ( $request->get_param( 'needs_setup_token' ) === true ) {
+			if ( $request->get_param( 'needs_setup_token' ) === true || $payment_method->supports( 'deferred_order_creation' ) ) {
+				$data_transformer = new PayPalDataTransformer();
+
 				return [
-					'code' => null
+					'code'          => null,
+					'cart'          => $data_transformer->transform_cart( WC()->cart ),
+					'cart_item_key' => $cart_item_key,
 				];
 			}
 
-			$setting = new ProductSettings( $product_id );
-			$order   = $this->get_order_from_cart( $request );
-			$order->setIntent( $setting->get_option( 'intent' ) );
+			$order = $this->get_order_from_cart( $request );
 
 			$this->logger->info(
 				sprintf( 'Creating PayPal order via %s. Args: %s', __METHOD__, print_r( $order->toArray(), true ) ),

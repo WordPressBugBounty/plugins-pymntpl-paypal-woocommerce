@@ -4,6 +4,8 @@ namespace PaymentPlugins\PPCP\WooCommerceSubscriptions;
 
 use Automattic\WooCommerce\Internal\Admin\Settings\PaymentsController;
 use PaymentPlugins\PayPalSDK\PayPalClient;
+use PaymentPlugins\WooCommerce\PPCP\Assets\AssetsApi;
+use PaymentPlugins\WooCommerce\PPCP\Config;
 use PaymentPlugins\WooCommerce\PPCP\Factories\CoreFactories;
 use PaymentPlugins\WooCommerce\PPCP\Logger;
 use PaymentPlugins\WooCommerce\PPCP\Package\AbstractPackage;
@@ -18,6 +20,7 @@ class Package extends AbstractPackage {
 
 	public function initialize() {
 		$this->container->get( SubscriptionController::class )->initialize();
+		$this->container->get( FrontendScripts::class )->initialize();
 	}
 
 	public function register_dependencies() {
@@ -34,6 +37,13 @@ class Package extends AbstractPackage {
 				$container->get( PayPalClient::class ),
 				$container->get( CoreFactories::class ),
 				$container->get( Logger::class )
+			);
+		} );
+		$this->container->register( FrontendScripts::class, function () {
+			return new FrontendScripts(
+				new AssetsApi(
+					new Config( $this->version, dirname( __FILE__ ) )
+				)
 			);
 		} );
 	}
