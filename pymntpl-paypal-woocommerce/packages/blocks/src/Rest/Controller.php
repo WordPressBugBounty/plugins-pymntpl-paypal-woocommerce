@@ -25,6 +25,13 @@ class Controller {
 				} else {
 					$context->setShippingPreference( OrderApplicationContext::SET_PROVIDED_ADDRESS );
 				}
+				// order_update_callback_config's SHIPPING_ADDRESS/SHIPPING_OPTIONS callback events are only
+				// valid when shipping_preference is GET_FROM_FILE. Since it was just overridden away from
+				// that, the callback config set by ExperienceContextFactory::build() must be cleared too,
+				// otherwise PayPal rejects the order with an invalid shipping_preference/callback combination.
+				if ( $context->getOrderUpdateCallbackConfig() ) {
+					unset( $context->order_update_callback_config );
+				}
 			}
 		}
 
