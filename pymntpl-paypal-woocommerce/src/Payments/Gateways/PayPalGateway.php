@@ -213,6 +213,14 @@ class PayPalGateway extends AbstractGateway {
 				'desc_tip'    => true,
 				'description' => __( 'If enabled, only payments which settle immediately will be available.', 'pymntpl-paypal-woocommerce' )
 			],
+			'optional_billing_address'      => [
+				'title'       => __( 'Optional Billing Address', 'pymntpl-paypal-woocommerce' ),
+				'type'        => 'checkbox',
+				'default'     => 'yes',
+				'value'       => 'yes',
+				'desc_tip'    => false,
+				'description' => __( 'PayPal does not return a billing address for the customer and if shipping is not required, there is no shipping address to use for billing address population. If enabled, the billing address fields will not be required when processing a digital order on non checkout pages.', 'pymntpl-paypal-woocommerce' )
+			],
 			'shipping_options_title'        => [
 				'type'  => 'title',
 				'title' => __( 'Shipping Options', 'pymntpl-paypal-woocommerce' )

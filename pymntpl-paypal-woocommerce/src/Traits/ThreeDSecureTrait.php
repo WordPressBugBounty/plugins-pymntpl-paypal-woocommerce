@@ -2,6 +2,7 @@
 
 namespace PaymentPlugins\WooCommerce\PPCP\Traits;
 
+use PaymentPlugins\PayPalSDK\CreditCard;
 use PaymentPlugins\PayPalSDK\Order;
 use PaymentPlugins\WooCommerce\PPCP\Admin\Settings\AdvancedSettings;
 use PaymentPlugins\WooCommerce\PPCP\Messages;
@@ -53,7 +54,7 @@ trait ThreeDSecureTrait {
 				$card = $payment_source->getCard();
 			}
 
-			$authentication_result = $card ? $card->getAuthenticationResult() : null;
+			$authentication_result = $card && $card instanceof CreditCard ? $card->getAuthenticationResult() : null;
 
 			if ( ! $authentication_result || ! $authentication_result->getThreeDSecure() ) {
 				$key = 'N_N_NO';

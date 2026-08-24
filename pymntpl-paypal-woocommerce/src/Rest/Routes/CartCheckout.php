@@ -63,7 +63,55 @@ class CartCheckout extends AbstractCart {
 
 		$this->add_checkout_block_filters();
 
+		$this->remove_billing_address_requirements();
+
 		WC()->checkout()->process_checkout();
+	}
+
+	/**
+	 * PayPal doesn't return a billing address for the customer, and when shipping isn't required,
+	 * there's no shipping address to backfill billing with (see CheckoutFieldPopulator.populateShipping()'s
+	 * billing backfill, which only runs when shipping data is present). Relax the billing address
+	 * requirement for this express (cart/mini-cart/product page) request so it doesn't get sent back
+	 * to the checkout page over billing details PayPal never provided.
+	 *
+	 * @since 2.0.25
+	 */
+	private function remove_billing_address_requirements() {
+		// 'optional_billing_address' is only declared on PayPalGateway's form fields, so other
+		// gateways resolve to '' here and fall back to 'no' (see WC_Settings_API::get_option()).
+		if ( ! \wc_string_to_bool( $this->payment_method->get_option( 'optional_billing_address', 'no' ) ) ) {
+			return;
+		}
+		if ( ! WC()->cart || WC()->cart->needs_shipping() ) {
+			return;
+		}
+		add_filter( 'woocommerce_checkout_fields', function ( $fields ) {
+			foreach (
+				[
+					'billing_address_1',
+					'billing_address_2',
+					'billing_city',
+					'billing_state',
+					'billing_postcode',
+					'billing_country',
+					'billing_phone',
+				] as $field
+			) {
+				if ( isset( $fields['billing'][ $field ] ) ) {
+					$fields['billing'][ $field ]['required'] = false;
+				}
+			}
+
+			return $fields;
+		}, 100 );
+
+		// billing_address_1 empty means PayPal genuinely didn't provide an address (rather than
+		// this customer's checkout just lacking one) - don't let WC_Checkout::update_customer_data()
+		// overwrite a logged-in customer's saved billing address with these blank fields.
+		if ( empty( $_POST['billing_address_1'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			add_filter( 'woocommerce_checkout_update_customer_data', '__return_false' );
+		}
 	}
 
 	public function handle_checkout_validation( $data, $errors ) {
@@ -128,8 +176,8 @@ class CartCheckout extends AbstractCart {
 	 * If the checkout page is a block, check to see if the billing phone is required. If not required, update the
 	 * WC checkout fields.
 	 *
-	 * @since 1.0.45
 	 * @return void
+	 * @since 1.0.45
 	 */
 	private function add_checkout_block_filters() {
 		$checkout_page_id = wc_get_page_id( 'checkout' );
