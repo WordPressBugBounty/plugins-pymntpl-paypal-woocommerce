@@ -21,7 +21,6 @@ use PaymentPlugins\WooCommerce\PPCP\Rest\Routes\Admin\AdminOrder;
 use PaymentPlugins\WooCommerce\PPCP\Rest\Routes\Admin\AdminOrderTracking;
 use PaymentPlugins\WooCommerce\PPCP\Rest\Routes\Admin\AdminWebhookCreate;
 use PaymentPlugins\WooCommerce\PPCP\Rest\Routes\Admin\DomainAssociationRoute;
-use PaymentPlugins\WooCommerce\PPCP\Rest\Routes\BillingAgreementRoute;
 use PaymentPlugins\WooCommerce\PPCP\Rest\Routes\BillingAgreementToken;
 use PaymentPlugins\WooCommerce\PPCP\Rest\Routes\CartBilling;
 use PaymentPlugins\WooCommerce\PPCP\Rest\Routes\CartCheckout;
@@ -90,7 +89,6 @@ class RestController {
 				$this->container->get( CoreFactories::class ),
 				$this->container->get( CheckoutValidator::class )
 			),
-			'billing-agreement'          => new BillingAgreementRoute( $this->container->get( PayPalClient::class ) ),
 			'webhook'                    => new WebhookRoute(
 				$this->container->get( PayPalClient::class ),
 				$this->container->get( APISettings::class ),

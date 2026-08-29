@@ -18,6 +18,7 @@ use PaymentPlugins\WooCommerce\PPCP\Traits\FeaturesTrait;
 use PaymentPlugins\WooCommerce\PPCP\Traits\Settings as SettingsTrait;
 use PaymentPlugins\WooCommerce\PPCP\Utilities\OrderLock;
 use PaymentPlugins\WooCommerce\PPCP\Utilities\PayPalFee;
+use PaymentPlugins\WooCommerce\PPCP\Utils;
 
 /**
  * Class AbstractGateway
@@ -164,6 +165,7 @@ abstract class AbstractGateway extends \WC_Payment_Gateway {
 		}
 		printf( '<input type="hidden" id="%1$s" name="%1$s"/>', esc_attr( $this->id . '_paypal_order_id' ) );
 		printf( '<input type="hidden" id="%1$s" name="%1$s"/>', esc_attr( $this->id . '_payment_token' ) );
+		printf( '<input type="hidden" id="%1$s" name="%1$s"/>', esc_attr( $this->id . '_payment_token_nonce' ) );
 		printf( '<input type="hidden" id="%1$s" name="%1$s"/>', esc_attr( $this->id . '_billing_token' ) );
 
 		$client = $this->payment_handler->client;
@@ -284,6 +286,10 @@ abstract class AbstractGateway extends \WC_Payment_Gateway {
 				throw new \Exception( __( 'A payment token ID is required when adding a payment method.', 'pymntpl-paypal-woocommerce' ) );
 			}
 
+			if ( ! Utils::verify_payment_token_hash( $payment_token_id, $this->get_payment_token_nonce_from_request() ) ) {
+				throw new \Exception( __( 'You do not have permission to use this payment method.', 'pymntpl-paypal-woocommerce' ) );
+			}
+
 			$user_id = get_current_user_id();
 
 			$customer = Customer::instance( $user_id );
@@ -293,6 +299,10 @@ abstract class AbstractGateway extends \WC_Payment_Gateway {
 
 			if ( is_wp_error( $response ) ) {
 				throw new \Exception( $response->get_error_message() );
+			}
+
+			if ( $customer->has_id() && $response->getCustomer()->getId() !== $customer->get_id() ) {
+				throw new \Exception( __( 'You do not have permission to use this payment method.', 'pymntpl-paypal-woocommerce' ) );
 			}
 
 			/**

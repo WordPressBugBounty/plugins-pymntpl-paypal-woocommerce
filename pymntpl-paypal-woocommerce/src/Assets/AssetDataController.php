@@ -119,7 +119,8 @@ class AssetDataController {
 		}
 		if ( $this->context_handler->is_order_pay() ) {
 			$order = Utils::get_order_from_query_vars();
-			if ( $order ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( $order instanceof \WC_Order && $order->key_is_valid( wc_clean( wp_unslash( $_GET['key'] ?? '' ) ) ) ) {
 				$this->data_api->add( 'order', $this->transformer->transform_order( $order ) );
 			}
 		}

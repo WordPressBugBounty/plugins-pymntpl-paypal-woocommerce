@@ -364,7 +364,7 @@ class AdvancedSettings extends AbstractSettings {
                         <input type="hidden" name="<?php echo esc_attr( $field_key ) . '[' . $k . ']' ?>"
                                value="<?php echo esc_attr( $v ) ?>"
                                data-key="<?php echo esc_attr( $k ) ?>"
-                               data-default="<?php echo esc_attr( $actions[ $k ] ?? '' ) ?>"/>
+                               data-default="<?php echo esc_attr( $default_values[ $k ] ?? '' ) ?>"/>
 					<?php endforeach; ?>
                 </fieldset>
             </td>

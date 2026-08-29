@@ -46,10 +46,12 @@ class PaymentHandler extends LegacyPaymentHandler {
 		$needs_update = false;
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		$this->payment_method->set_save_payment_method( ! empty( $_POST["{$this->payment_method->id}_save_payment"] ) );
+		$order_id_from_cache = false;
 		try {
 			$paypal_order_id = $this->get_paypal_order_id_from_request();
 			if ( ! $paypal_order_id || $this->use_billing_agreement ) {
-				$paypal_order_id = $this->cache->get( sprintf( '%s_%s', $this->payment_method->id, Constants::PAYPAL_ORDER_ID ) );
+				$paypal_order_id     = $this->cache->get( sprintf( '%s_%s', $this->payment_method->id, Constants::PAYPAL_ORDER_ID ) );
+				$order_id_from_cache = (bool) $paypal_order_id;
 
 				// If there isn't an existing PayPal order ID, create a PayPal order.
 				// If the order ID came from the cache, but the customer is now using a saved payment method, create a new order.
@@ -82,7 +84,7 @@ class PaymentHandler extends LegacyPaymentHandler {
 				throw new \Exception( $paypal_order->get_error_message() );
 			}
 
-			$this->validate_paypal_order( $paypal_order, $order );
+			$this->validate_paypal_order( $paypal_order, $order, $order_id_from_cache );
 
 			$paypal_order_id = $paypal_order->getId();
 
@@ -459,38 +461,79 @@ class PaymentHandler extends LegacyPaymentHandler {
 	/**
 	 * @param \WP_Error|Order $paypal_order
 	 * @param \WC_Order       $order
+	 * @param bool            $order_id_from_cache Whether $paypal_order was resolved from our own
+	 *                                             cached PAYPAL_ORDER_ID rather than a
+	 *                                             client-submitted value. A mismatch in that case
+	 *                                             is our own bookkeeping going stale, not a
+	 *                                             customer/attacker-facing failure - see
+	 *                                             the RetryException branch below.
 	 *
 	 * @return void
 	 * @throws \Exception
+	 * @throws RetryException
 	 */
-	private function validate_paypal_order( $paypal_order, $order ) {
+	private function validate_paypal_order( $paypal_order, $order, $order_id_from_cache = false ) {
 		if ( ! $paypal_order instanceof Order ) {
 			return;
 		}
-		// Validate if this is a COMPLETED PayPal order. If it is, compare the PayPal order's custom_id
-		// to the WooCommerce order ID. If they don't match, reject this request.
-		if ( $paypal_order->isComplete() ) {
-			$ids_match = false;
-			foreach ( $paypal_order->getPurchaseUnits() as $purchase_unit ) {
-				/**
-				 * @var PurchaseUnit $purchase_unit
-				 */
-				$custom_id = $purchase_unit->getCustomId();
+		// Whenever the PayPal order carries a custom_id, compare it to the WooCommerce order ID
+		// regardless of PayPal order state - an APPROVED order is just as capturable as a
+		// COMPLETED one (see process_payment() below), so this can't be gated to isComplete()
+		// only. custom_id is absent for orders created via the REST-driven cart/express-checkout
+		// flow (PurchaseUnitFactory::from_cart() doesn't set it, since no WC order exists yet at
+		// that point) - deliberately left unvalidated here; see issue #15 for why (no identified
+		// exposure channel for this specific path, and every session-based fix attempted for it
+		// turned out to be unreliable across classic vs. Checkout Block checkout and login-state
+		// changes mid-flow).
+		$has_custom_id = false;
+		$ids_match     = false;
+		foreach ( $paypal_order->getPurchaseUnits() as $purchase_unit ) {
+			/**
+			 * @var PurchaseUnit $purchase_unit
+			 */
+			$custom_id = $purchase_unit->getCustomId();
+			if ( $custom_id ) {
+				$has_custom_id = true;
 				if ( (int) $custom_id === (int) $order->get_id() ) {
 					$ids_match = true;
 					break;
 				}
 			}
-			// If the custom_id didn't match the WC_Order ID then throw an exception.
-			if ( ! $ids_match ) {
-				throw new \Exception(
+		}
+		// If a custom_id was present and didn't match the WC_Order ID then throw an exception.
+		if ( $has_custom_id && ! $ids_match ) {
+			// Clear the cached PayPal order ID so a retry doesn't keep reusing this same stale
+			// entry - e.g. WooCommerce can create a new order object for a retry after a failed
+			// payment, leaving the cache pointing at a PayPal order already patched to the
+			// abandoned one. The next attempt will fall through to creating a fresh PayPal order
+			// for whichever WC order actually exists at that point.
+			$this->cache->delete( sprintf( '%s_%s', $this->payment_method->id, Constants::PAYPAL_ORDER_ID ) );
+
+			if ( $order_id_from_cache ) {
+				// This is our own cache going stale, not a client-submitted value - retry
+				// transparently now that the cache is cleared, instead of surfacing a hard
+				// failure to the customer for something they didn't do wrong. Whether the
+				// abandoned PayPal order is CREATED/APPROVED/COMPLETE doesn't matter here - it's
+				// never acted on, just replaced.
+				$this->payment_method->logger->info(
 					sprintf(
-						__( 'PayPal order %1$s has already been completed and does not match store order ID %2$s.', 'pymntpl-paypal-woocommerce' ),
+						'Cached PayPal order ID %1$s did not match store order %2$s via %3$s. Cache cleared, retrying with a new PayPal order.',
 						$paypal_order->getId(),
-						$order->get_id()
-					)
+						$order->get_id(),
+						__METHOD__
+					),
+					'payment'
 				);
+				throw new RetryException( 'Create new order' );
 			}
+
+			throw new \Exception(
+				sprintf(
+					__( 'PayPal order %1$s does not match store order ID %2$s.', 'pymntpl-paypal-woocommerce' ),
+					$paypal_order->getId(),
+					$order->get_id()
+				)
+			);
 		}
 
 		// Skip gateway validation for already-completed orders; those are handled by the ID check above.

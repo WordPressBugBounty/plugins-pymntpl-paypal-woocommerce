@@ -78,8 +78,12 @@ class AbstractGateway extends \WFOCU_Gateway {
 					 */
 					throw new \Exception( $paypal_order->get_error_message() );
 				}
-				// Store a reference to the PayPal Order ID.
+				// Store a reference to the PayPal Order ID and persist it immediately - the
+				// redirect-return leg (FunnelKitIntegration::handle_return_request()) relies on
+				// this value surviving across the approval round trip, so it can't be left to the
+				// needs_approval() branch below to flush it incidentally.
 				WFOCU_Core()->data->set( 'paypal_order_id', $paypal_order->getId(), 'paypal' );
+				WFOCU_Core()->data->save( 'paypal' );
 			}
 			if ( $paypal_order->isApproved() || $paypal_order->isCreated() ) {
 				if ( $paypal_order->getPaymentSource() ) {

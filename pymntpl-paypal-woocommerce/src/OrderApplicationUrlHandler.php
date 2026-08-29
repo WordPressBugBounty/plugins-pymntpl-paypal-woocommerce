@@ -31,6 +31,9 @@ class OrderApplicationUrlHandler {
 				$ba_token        = isset( $_GET['ba_token'] ) ? \wc_clean( wp_unslash( $_GET['ba_token'] ) ) : null;
 				$setup_token_id  = isset( $_GET['approval_token_id'] ) ? \wc_clean( wp_unslash( $_GET['approval_token_id'] ) ) : null;
 				$payment_gateway = $this->payment_gateways->get_gateway( $order->get_payment_method() );
+				if ( ! $payment_gateway ) {
+					throw new \Exception( __( 'Invalid payment method.', 'pymntpl-paypal-woocommerce' ) );
+				}
 
 				// Set the order ID so it can be retrieved
 				$_POST["{$payment_gateway->id}_paypal_order_id"] = $token;
@@ -78,6 +81,9 @@ class OrderApplicationUrlHandler {
 			$order = wc_get_order( $order_id );
 			if ( $order && $order->key_is_valid( $order_key ) ) {
 				$payment_gateway = $this->payment_gateways->get_gateway( $payment_method_id );
+				if ( ! $payment_gateway ) {
+					return;
+				}
 				// Set the order ID so it can be retrieved
 				$_POST["{$payment_gateway->id}_paypal_order_id"] = $token;
 				$_POST["{$payment_gateway->id}_billing_token"]   = $ba_token;

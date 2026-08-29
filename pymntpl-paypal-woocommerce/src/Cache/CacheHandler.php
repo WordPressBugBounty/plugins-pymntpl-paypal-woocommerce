@@ -6,18 +6,13 @@ class CacheHandler implements CacheInterface {
 
 	private $key;
 
-	/**
-	 * @var \WC_Session
-	 */
-	private $session;
-
 	private $data = [];
 
 	public function __construct( $key ) {
-		$this->key     = $key;
-		$this->session = WC()->session;
-		if ( $this->session ) {
-			$this->data = $this->session->get( $this->key, [] );
+		$this->key = $key;
+		$session   = $this->get_session();
+		if ( $session ) {
+			$this->data = $session->get( $this->key, [] );
 		}
 		$this->initialize();
 	}
@@ -45,14 +40,34 @@ class CacheHandler implements CacheInterface {
 	}
 
 	public function clear_cache() {
-		unset( $this->session->{$this->key} );
+		$session = $this->get_session();
+		if ( $session ) {
+			unset( $session->{$this->key} );
+		}
 		$this->data = [];
 	}
 
 	private function stash() {
-		if ( $this->session && ! empty( $this->data ) ) {
-			$this->session->set( $this->key, $this->data );
+		$session = $this->get_session();
+		if ( $session && ! empty( $this->data ) ) {
+			$session->set( $this->key, $this->data );
 		}
+	}
+
+	/**
+	 * Always reads WC()->session fresh rather than caching a reference to it - this class is
+	 * registered as a container singleton (constructed once per request), but WC()->session can
+	 * itself be reassigned to a different object instance mid-request (e.g. WooCommerce's Store
+	 * API swaps it to a separate, token-based session handler for /wc/store/* requests, which the
+	 * Checkout Block's own checkout-completion request is). Caching the reference at construction
+	 * time meant every operation after such a swap silently wrote to/cleared an orphaned session
+	 * object that never actually gets persisted, instead of the one WordPress/WooCommerce
+	 * actually saves on shutdown.
+	 *
+	 * @return \WC_Session|null
+	 */
+	private function get_session() {
+		return WC()->session;
 	}
 
 }

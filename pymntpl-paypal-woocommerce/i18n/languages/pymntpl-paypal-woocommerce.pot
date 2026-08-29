@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Payment Plugins for PayPal WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Payment Plugins for PayPal WooCommerce 2.0.25\n"
+"Project-Id-Version: Payment Plugins for PayPal WooCommerce 2.0.26\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pymntpl-paypal-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-24T19:15:55+00:00\n"
+"POT-Creation-Date: 2026-08-29T18:45:26+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: pymntpl-paypal-woocommerce\n"
@@ -162,7 +162,7 @@ msgid "Pay with PayPal"
 msgstr ""
 
 #: packages/checkoutwc/src/PaymentGateways/AbstractPaymentGateway.php:136
-#: src/Payments/Gateways/AbstractGateway.php:237
+#: src/Payments/Gateways/AbstractGateway.php:239
 #, php-format
 msgid "Error processing refund. Reason: %s"
 msgstr ""
@@ -509,13 +509,17 @@ msgstr ""
 msgid "PayPal Product Payment Buttons"
 msgstr ""
 
-#: packages/funnelkit/src/Upsell/FunnelKitIntegration.php:155
-#: packages/funnelkit/src/Upsell/FunnelKitIntegration.php:161
-#: src/Legacy/LegacyPaymentHandler.php:139
-#: src/Legacy/LegacyPaymentHandler.php:146
-#: src/PaymentHandler.php:130
-#: src/PaymentHandler.php:137
-#: src/PaymentHandler.php:158
+#: packages/funnelkit/src/Upsell/FunnelKitIntegration.php:128
+msgid "Invalid PayPal order."
+msgstr ""
+
+#: packages/funnelkit/src/Upsell/FunnelKitIntegration.php:157
+#: packages/funnelkit/src/Upsell/FunnelKitIntegration.php:163
+#: src/Legacy/LegacyPaymentHandler.php:141
+#: src/Legacy/LegacyPaymentHandler.php:148
+#: src/PaymentHandler.php:132
+#: src/PaymentHandler.php:139
+#: src/PaymentHandler.php:160
 #, php-format
 msgid "Error processing payment. Reason: %s"
 msgstr ""
@@ -536,21 +540,31 @@ msgstr ""
 msgid "If enabled, the PayPal express buttons will be grouped with the Stripe express buttons on product pages, cart pages, and the express checkout section."
 msgstr ""
 
-#: packages/woocommerce-preorders/src/PaymentController.php:54
+#: packages/woocommerce-preorders/src/PaymentController.php:55
 msgid "A valid payment method ID is required to process this order."
 msgstr ""
 
-#: packages/woocommerce-preorders/src/PaymentController.php:66
-#: packages/woocommerce-subscriptions/src/PaymentController.php:86
+#: packages/woocommerce-preorders/src/PaymentController.php:67
+#: packages/woocommerce-subscriptions/src/PaymentController.php:87
 msgid "A payment token is required to process this order."
 msgstr ""
 
-#: packages/woocommerce-preorders/src/PaymentController.php:86
-#: packages/woocommerce-subscriptions/src/PaymentController.php:108
+#: packages/woocommerce-preorders/src/PaymentController.php:83
+#: packages/woocommerce-subscriptions/src/PaymentController.php:104
+#: packages/woocommerce-subscriptions/src/PaymentController.php:427
+#: packages/woocommerce-subscriptions/src/PaymentController.php:438
+#: src/Payments/Gateways/AbstractGateway.php:290
+#: src/Payments/Gateways/AbstractGateway.php:305
+#: src/Traits/VaultTokenTrait.php:47
+msgid "You do not have permission to use this payment method."
+msgstr ""
+
+#: packages/woocommerce-preorders/src/PaymentController.php:97
+#: packages/woocommerce-subscriptions/src/PaymentController.php:120
 msgid "Customer ID for payment method does not match customer ID for logged in user."
 msgstr ""
 
-#: packages/woocommerce-preorders/src/PaymentController.php:187
+#: packages/woocommerce-preorders/src/PaymentController.php:198
 #: src/Integrations/WooCommercePreOrders.php:164
 #, php-format
 msgid "Payment for pre-order failed. Reason: %s"
@@ -563,40 +577,40 @@ msgstr ""
 msgid "Please select a shipping method for your order."
 msgstr ""
 
-#: packages/woocommerce-subscriptions/src/PaymentController.php:61
+#: packages/woocommerce-subscriptions/src/PaymentController.php:62
 msgid "The selected payment method could not be used. Please try another payment method."
 msgstr ""
 
-#: packages/woocommerce-subscriptions/src/PaymentController.php:169
-#: packages/woocommerce-subscriptions/src/PaymentController.php:455
+#: packages/woocommerce-subscriptions/src/PaymentController.php:181
+#: packages/woocommerce-subscriptions/src/PaymentController.php:476
 msgid "A PayPal order ID is required to save this payment method."
 msgstr ""
 
-#: packages/woocommerce-subscriptions/src/PaymentController.php:179
-#: packages/woocommerce-subscriptions/src/PaymentController.php:465
+#: packages/woocommerce-subscriptions/src/PaymentController.php:191
+#: packages/woocommerce-subscriptions/src/PaymentController.php:486
 msgid "The payment method could not be verified."
 msgstr ""
 
-#: packages/woocommerce-subscriptions/src/PaymentController.php:214
-#: packages/woocommerce-subscriptions/src/PaymentController.php:482
+#: packages/woocommerce-subscriptions/src/PaymentController.php:226
+#: packages/woocommerce-subscriptions/src/PaymentController.php:503
 #, php-format
 msgid "Failed to void the PayPal authorization (ID: %1$s) created to save the payment method. Reason: %2$s. This authorization may still be held on the customer's account and should be voided manually in PayPal if it does not expire on its own."
 msgstr ""
 
-#: packages/woocommerce-subscriptions/src/PaymentController.php:388
+#: packages/woocommerce-subscriptions/src/PaymentController.php:400
 #: src/Integrations/WooCommerceSubscriptions.php:260
 #, php-format
 msgid "Recurring payment failed. Reason: %s"
 msgstr ""
 
-#: packages/woocommerce-subscriptions/src/PaymentController.php:411
-#: src/Payments/Gateways/AbstractGateway.php:284
+#: packages/woocommerce-subscriptions/src/PaymentController.php:423
+#: src/Payments/Gateways/AbstractGateway.php:286
 msgid "A payment token ID is required when adding a payment method."
 msgstr ""
 
-#: packages/woocommerce-subscriptions/src/PaymentController.php:432
-#: packages/woocommerce-subscriptions/src/PaymentController.php:494
-#: packages/woocommerce-subscriptions/src/PaymentController.php:539
+#: packages/woocommerce-subscriptions/src/PaymentController.php:453
+#: packages/woocommerce-subscriptions/src/PaymentController.php:515
+#: packages/woocommerce-subscriptions/src/PaymentController.php:560
 #: src/Integrations/WooCommerceSubscriptions.php:169
 #, php-format
 msgid "Error saving payment method for subscription. Reason: %s"
@@ -1424,76 +1438,76 @@ msgstr ""
 msgid "Reconciliation"
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:187
-#: src/PaymentHandler.php:182
+#: src/Legacy/LegacyPaymentHandler.php:189
+#: src/PaymentHandler.php:184
 #, php-format
 msgid "PayPal capture status is pending. Reason: %1$s. Payment will complete when capture.completed webhook is received."
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:203
-#: src/Payments/Gateways/AbstractGateway.php:441
+#: src/Legacy/LegacyPaymentHandler.php:205
+#: src/Payments/Gateways/AbstractGateway.php:451
 #, php-format
 msgid "PayPal order %s created. %s"
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:204
-#: src/Payments/Gateways/AbstractGateway.php:443
+#: src/Legacy/LegacyPaymentHandler.php:206
+#: src/Payments/Gateways/AbstractGateway.php:453
 #: src/Traits/CardPaymentNoteTrait.php:28
 #, php-format
 msgid "Capture ID: %s"
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:204
-#: src/Payments/Gateways/AbstractGateway.php:443
+#: src/Legacy/LegacyPaymentHandler.php:206
+#: src/Payments/Gateways/AbstractGateway.php:453
 #: src/Traits/CardPaymentNoteTrait.php:30
 #, php-format
 msgid "Authorization ID: %s"
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:295
-#: src/PaymentHandler.php:310
+#: src/Legacy/LegacyPaymentHandler.php:297
+#: src/PaymentHandler.php:312
 msgid "To process a refund, there must be a transaction id associated with the order."
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:298
-#: src/PaymentHandler.php:313
+#: src/Legacy/LegacyPaymentHandler.php:300
+#: src/PaymentHandler.php:315
 msgid "This payment has a status of Authorize. Only captured payments can be refunded."
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:332
-#: src/PaymentHandler.php:339
+#: src/Legacy/LegacyPaymentHandler.php:334
+#: src/PaymentHandler.php:341
 #, php-format
 msgid "Error capturing payment. Reason: %s"
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:336
-#: src/PaymentHandler.php:343
+#: src/Legacy/LegacyPaymentHandler.php:338
+#: src/PaymentHandler.php:345
 #, php-format
 msgid "Payment captured in PayPal. Capture ID: %s Amount: %s"
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:368
-#: src/PaymentHandler.php:375
+#: src/Legacy/LegacyPaymentHandler.php:370
+#: src/PaymentHandler.php:377
 msgid "A valid authorization ID is required to perform a void."
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:382
-#: src/Legacy/LegacyPaymentHandler.php:412
-#: src/PaymentHandler.php:389
-#: src/PaymentHandler.php:419
+#: src/Legacy/LegacyPaymentHandler.php:384
+#: src/Legacy/LegacyPaymentHandler.php:414
+#: src/PaymentHandler.php:391
+#: src/PaymentHandler.php:421
 #, php-format
 msgid "PayPal authorization cancelled. Authorization ID: %s"
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:406
-#: src/PaymentHandler.php:413
+#: src/Legacy/LegacyPaymentHandler.php:408
+#: src/PaymentHandler.php:415
 msgid "Order cancellation"
 msgstr ""
 
-#: src/Legacy/LegacyPaymentHandler.php:474
-#: src/PaymentHandler.php:488
+#: src/Legacy/LegacyPaymentHandler.php:518
+#: src/PaymentHandler.php:532
 #, php-format
-msgid "PayPal order %1$s has already been completed and does not match store order ID %2$s."
+msgid "PayPal order %1$s does not match store order ID %2$s."
 msgstr ""
 
 #: src/Messages.php:20
@@ -1572,8 +1586,12 @@ msgstr ""
 msgid "This merchant account is not permitted to create Merchant Initiated Billing Agreements. Please contact PayPal support and request reference transaction access."
 msgstr ""
 
-#: src/OrderApplicationUrlHandler.php:46
-#: src/OrderApplicationUrlHandler.php:92
+#: src/OrderApplicationUrlHandler.php:35
+msgid "Invalid payment method."
+msgstr ""
+
+#: src/OrderApplicationUrlHandler.php:49
+#: src/OrderApplicationUrlHandler.php:98
 #, php-format
 msgid "Error saving payment method. Reason: %s"
 msgstr ""
@@ -1595,22 +1613,22 @@ msgstr ""
 msgid "Google Pay"
 msgstr ""
 
-#: src/Payments/Gateways/AbstractGateway.php:216
+#: src/Payments/Gateways/AbstractGateway.php:218
 #, php-format
 msgid "There was an error processing your payment. Reason: %s"
 msgstr ""
 
-#: src/Payments/Gateways/AbstractGateway.php:253
+#: src/Payments/Gateways/AbstractGateway.php:255
 #: src/WebhookEventReceiver.php:138
 #, php-format
 msgid "Order refunded in PayPal. Amount: %1$s. Refund ID: %2$s"
 msgstr ""
 
-#: src/Payments/Gateways/AbstractGateway.php:273
+#: src/Payments/Gateways/AbstractGateway.php:275
 msgid "You must be logged in to add a payment method."
 msgstr ""
 
-#: src/Payments/Gateways/AbstractGateway.php:276
+#: src/Payments/Gateways/AbstractGateway.php:278
 msgid "This payment method does not supports vaulting."
 msgstr ""
 
@@ -2529,7 +2547,7 @@ msgstr ""
 msgid "Invalid cart token."
 msgstr ""
 
-#: src/Rest/Routes/VaultPaymentTokensRoute.php:44
+#: src/Rest/Routes/VaultPaymentTokensRoute.php:45
 msgid "Invalid setup token ID."
 msgstr ""
 
@@ -2601,10 +2619,6 @@ msgstr ""
 
 #: src/Traits/ThreeDSecureTrait.php:84
 msgid "3DS payment has been rejected."
-msgstr ""
-
-#: src/Traits/VaultTokenTrait.php:47
-msgid "You do not have permission to use this payment method."
 msgstr ""
 
 #: src/Traits/VaultTokenTrait.php:50

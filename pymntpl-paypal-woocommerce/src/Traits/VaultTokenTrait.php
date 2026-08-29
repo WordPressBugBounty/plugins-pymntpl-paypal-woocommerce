@@ -86,6 +86,19 @@ trait VaultTokenTrait {
 	}
 
 	/**
+	 * Returns the value proving the payment token ID in the request was minted by
+	 * VaultPaymentTokensRoute, rather than merely supplied by the client.
+	 *
+	 * @return string
+	 */
+	public function get_payment_token_nonce_from_request() {
+		$key = $this->id . '_payment_token_nonce';
+
+		//phpcs:disable WordPress.Security.NonceVerification.Missing
+		return isset( $_POST[ $key ] ) ? \wc_clean( \wp_unslash( $_POST[ $key ] ) ) : '';
+	}
+
+	/**
 	 * Given a PayPal order object, determine if the customer's payment method needs to be saved.
 	 *
 	 * @param \PaymentPlugins\PayPalSDK\Order $order

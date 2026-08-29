@@ -168,6 +168,41 @@ class Utils {
 		return $order;
 	}
 
+	/**
+	 * A stateless proof that a payment token ID was minted by VaultPaymentTokensRoute for the
+	 * request that's now submitting it, rather than merely supplied by the client.
+	 *
+	 * Deliberately not wp_create_nonce()/wp_verify_nonce(): those tie the result to the current
+	 * user/session identity (uid + wp_get_session_token()), which breaks whenever that identity
+	 * can legitimately change between mint and verify - e.g. a guest becoming a logged-in
+	 * account mid-checkout (WooCommerce Subscriptions auto-creates an account for guests
+	 * purchasing a subscription). This is a pure function of the token ID and the site's own
+	 * secret salt, so it doesn't depend on any session/identity state at all.
+	 *
+	 * Uses HMAC-SHA256 directly rather than wp_hash() (which is HMAC-MD5) - there's no reason to
+	 * keep MD5 anywhere in this computation when a stronger algorithm costs nothing extra.
+	 *
+	 * @param string $payment_token_id
+	 *
+	 * @return string
+	 */
+	public static function get_payment_token_hash( $payment_token_id ) {
+		return hash_hmac( 'sha256', 'ppcp_payment_token_' . $payment_token_id, wp_salt( 'nonce' ) );
+	}
+
+	/**
+	 * Verifies a submitted proof value against what get_payment_token_hash() would have minted
+	 * for the given payment token ID.
+	 *
+	 * @param string $payment_token_id
+	 * @param string $submitted_hash
+	 *
+	 * @return bool
+	 */
+	public static function verify_payment_token_hash( $payment_token_id, $submitted_hash ) {
+		return hash_equals( self::get_payment_token_hash( $payment_token_id ), (string) $submitted_hash );
+	}
+
 	public static function parse_shipping_option( $id ) {
 		preg_match( Constants::SHIPPING_OPTION_REGEX, $id, $matches );
 		if ( $matches && isset( $matches[1], $matches[2] ) ) {

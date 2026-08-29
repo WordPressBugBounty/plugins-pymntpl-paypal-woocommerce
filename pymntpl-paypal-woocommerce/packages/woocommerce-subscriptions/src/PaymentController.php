@@ -15,6 +15,7 @@ use PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\AbstractGateway;
 use PaymentPlugins\WooCommerce\PPCP\Tokens\AbstractToken;
 use PaymentPlugins\WooCommerce\PPCP\Utilities\OrderFilterUtil;
 use PaymentPlugins\WooCommerce\PPCP\Utilities\PayPalFee;
+use PaymentPlugins\WooCommerce\PPCP\Utils;
 use PaymentPlugins\WooCommerce\PPCP\WPPayPalClient;
 
 class PaymentController {
@@ -90,6 +91,17 @@ class PaymentController {
 					'result'   => 'success',
 					'redirect' => $setup_token->getApprovalUrl()
 				];
+			}
+
+			/**
+			 * When the token ID was set programmatically via set_payment_token_id() - the PayPal
+			 * approval-redirect return path in OrderApplicationUrlHandler::handle_order_return() -
+			 * it was already derived server-side from a setup token exchange gated by that
+			 * handler's own order_key check, not pulled from raw request input. There's no
+			 * client-submitted value in that case for a nonce to verify.
+			 */
+			if ( ! $payment_method->get_payment_token_id() && ! Utils::verify_payment_token_hash( $payment_token_id, $payment_method->get_payment_token_nonce_from_request() ) ) {
+				throw new \Exception( __( 'You do not have permission to use this payment method.', 'pymntpl-paypal-woocommerce' ) );
 			}
 
 			$customer = Customer::instance( $order->get_customer_id(), wc_ppcp_get_order_mode( $order ) );
@@ -411,10 +423,19 @@ class PaymentController {
 					throw new \Exception( __( 'A payment token ID is required when adding a payment method.', 'pymntpl-paypal-woocommerce' ) );
 				}
 
+				if ( ! Utils::verify_payment_token_hash( $payment_token_id, $payment_method->get_payment_token_nonce_from_request() ) ) {
+					throw new \Exception( __( 'You do not have permission to use this payment method.', 'pymntpl-paypal-woocommerce' ) );
+				}
+
 				$payment_token = $this->client->orderMode( $order )->paymentTokensV3->retrieve( $payment_token_id );
 
 				if ( is_wp_error( $payment_token ) ) {
 					throw new \Exception( $payment_token->get_error_message() );
+				}
+
+				$customer = Customer::instance( $order->get_customer_id(), wc_ppcp_get_order_mode( $order ) );
+				if ( $customer->has_id() && $payment_token->getCustomer()->getId() !== $customer->get_id() ) {
+					throw new \Exception( __( 'You do not have permission to use this payment method.', 'pymntpl-paypal-woocommerce' ) );
 				}
 
 				$token = $payment_method->get_payment_method_token_instance();

@@ -5,6 +5,7 @@ namespace PaymentPlugins\WooCommerce\PPCP\Rest\Routes;
 use PaymentPlugins\PayPalSDK\PaymentSource;
 use PaymentPlugins\PayPalSDK\PaymentToken;
 use PaymentPlugins\WooCommerce\PPCP\Customer;
+use PaymentPlugins\WooCommerce\PPCP\Utils;
 use PaymentPlugins\WooCommerce\PPCP\WPPayPalClient;
 
 class VaultPaymentTokensRoute extends AbstractRoute {
@@ -80,7 +81,19 @@ class VaultPaymentTokensRoute extends AbstractRoute {
 			$response = $this->client->paymentTokensV3->create( $request );
 		}
 
-		return $response;
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		/**
+		 * Proves, at add-payment-method time, that this specific token was minted by this server
+		 * for the request that's now submitting it - not merely supplied by the client. See
+		 * Utils::get_payment_token_hash() for why this isn't a WP nonce.
+		 */
+		return [
+			'payment_token' => $response,
+			'nonce'         => Utils::get_payment_token_hash( $response->getId() ),
+		];
 	}
 
 

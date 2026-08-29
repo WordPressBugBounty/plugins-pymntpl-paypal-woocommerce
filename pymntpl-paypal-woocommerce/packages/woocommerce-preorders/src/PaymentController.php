@@ -15,6 +15,7 @@ use PaymentPlugins\WooCommerce\PPCP\PaymentResult;
 use PaymentPlugins\WooCommerce\PPCP\Payments\Gateways\AbstractGateway;
 use PaymentPlugins\WooCommerce\PPCP\Utilities\OrderFilterUtil;
 use PaymentPlugins\WooCommerce\PPCP\Utilities\PayPalFee;
+use PaymentPlugins\WooCommerce\PPCP\Utils;
 use PaymentPlugins\WooCommerce\PPCP\WPPayPalClient;
 
 class PaymentController {
@@ -70,6 +71,16 @@ class PaymentController {
 						'result'   => 'success',
 						'redirect' => $setup_token->getApprovalUrl()
 					];
+				}
+
+				/**
+				 * Skip only when the token ID was set programmatically via set_payment_token_id()
+				 * - the PayPal approval-redirect return path in
+				 * OrderApplicationUrlHandler::handle_order_return(), gated by its own order_key
+				 * check - rather than pulled from raw request input.
+				 */
+				if ( ! $payment_method->get_payment_token_id() && ! Utils::verify_payment_token_hash( $payment_token_id, $payment_method->get_payment_token_nonce_from_request() ) ) {
+					throw new \Exception( __( 'You do not have permission to use this payment method.', 'pymntpl-paypal-woocommerce' ) );
 				}
 
 				$payment_token = $this->client->orderMode( $order )->paymentTokensV3->retrieve( $payment_token_id );

@@ -117,13 +117,15 @@ class FunnelKitIntegration implements PluginIntegrationType {
 			$order     = null;
 			$order_id  = isset( $_GET['order_id'] ) ? absint( wc_clean( wp_unslash( $_GET['order_id'] ) ) ) : null;
 			$order_key = isset( $_GET['order_key'] ) ? wc_clean( wp_unslash( $_GET['order_key'] ) ) : null;
-			$token     = isset( $_GET['token'] ) ? wc_clean( wp_unslash( $_GET['token'] ) ) : null;
 			if ( $order_id && $order_key ) {
 				$order = wc_get_order( $order_id );
 				if ( $order && $order->key_is_valid( $order_key ) ) {
-					// token wasn't included in the query parameters so check the WooCommerce order.
+					// Always use the PayPal order ID this upsell session itself created rather than
+					// a client-supplied one - key_is_valid() only proves ownership of the WC order,
+					// not of which PayPal order ID should be retrieved and charged against it.
+					$token = WFOCU_Core()->data->get( 'paypal_order_id', null, 'paypal' );
 					if ( ! $token ) {
-						$token = WFOCU_Core()->data->get( 'paypal_order_id', null, 'paypal' );
+						throw new \Exception( __( 'Invalid PayPal order.', 'pymntpl-paypal-woocommerce' ) );
 					}
 					$paypal_order = $this->client->orderMode( $order )->orders->retrieve( $token );
 					if ( ! is_wp_error( $paypal_order ) ) {
