@@ -512,9 +512,13 @@ class SubscriptionController {
 
 	public function filter_express_payment_gateways( $payment_gateways ) {
 		if ( \WC_Subscriptions_Cart::cart_contains_subscription() ) {
-			if ( WC()->cart && ! WC()->cart->needs_payment() ) {
-				// WC Subscriptions itself doesn't require a payment method here (e.g. a $0 cart
-				// with automatic payments turned off site-wide) - no gateway should be offered.
+			if ( WC()->cart && ! WC()->cart->needs_payment()
+			     && ( ! \WC_Subscriptions_Cart::cart_contains_free_trial() || ! $this->zero_initial_checkout_requires_payment() ) ) {
+				// Nothing is due now and there's nothing to collect later either (automatic payments
+				// off site-wide, or the store allows $0 initial checkout with no payment method) -
+				// no gateway should be offered. A free trial is the exception, unless the store has
+				// opted out of collecting a method: the recurring charge still needs a vaulted
+				// method, taken via the express button's setup-token flow (needsSetupToken).
 				return [];
 			}
 			if ( ! $this->is_manual_renewal_enabled() ) {
@@ -533,9 +537,13 @@ class SubscriptionController {
 
 	public function filter_cart_payment_gateways( $payment_gateways ) {
 		if ( \WC_Subscriptions_Cart::cart_contains_subscription() ) {
-			if ( WC()->cart && ! WC()->cart->needs_payment() ) {
-				// WC Subscriptions itself doesn't require a payment method here (e.g. a $0 cart
-				// with automatic payments turned off site-wide) - no gateway should be offered.
+			if ( WC()->cart && ! WC()->cart->needs_payment()
+			     && ( ! \WC_Subscriptions_Cart::cart_contains_free_trial() || ! $this->zero_initial_checkout_requires_payment() ) ) {
+				// Nothing is due now and there's nothing to collect later either (automatic payments
+				// off site-wide, or the store allows $0 initial checkout with no payment method) -
+				// no gateway should be offered. A free trial is the exception, unless the store has
+				// opted out of collecting a method: the recurring charge still needs a vaulted
+				// method, taken via the express button's setup-token flow (needsSetupToken).
 				return [];
 			}
 			if ( ! $this->is_manual_renewal_enabled() ) {
@@ -560,6 +568,17 @@ class SubscriptionController {
 		}
 
 		return $gateways;
+	}
+
+	/**
+	 * Mirrors WCS_Zero_Initial_Payment_Checkout_Manager::zero_initial_checkout_requires_payment().
+	 * False when the store has "Allow $0 initial checkout without a payment method" enabled - i.e.
+	 * the store has opted out of collecting a payment method on a $0 initial checkout.
+	 *
+	 * @return bool
+	 */
+	private function zero_initial_checkout_requires_payment() {
+		return 'yes' !== get_option( \WC_Subscriptions_Admin::$option_prefix . '_zero_initial_payment_requires_payment', 'no' );
 	}
 
 	/**

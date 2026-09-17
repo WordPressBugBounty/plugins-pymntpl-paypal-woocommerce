@@ -6,14 +6,8 @@ class CacheHandler implements CacheInterface {
 
 	private $key;
 
-	private $data = [];
-
 	public function __construct( $key ) {
 		$this->key = $key;
-		$session   = $this->get_session();
-		if ( $session ) {
-			$this->data = $session->get( $this->key, [] );
-		}
 		$this->initialize();
 	}
 
@@ -22,21 +16,27 @@ class CacheHandler implements CacheInterface {
 	}
 
 	public function set( $key, $value ) {
-		$this->data[ $key ] = $value;
-		$this->stash();
+		$data         = $this->get_data();
+		$data[ $key ] = $value;
+		$this->stash( $data );
 	}
 
 	public function get( $key ) {
-		return isset( $this->data[ $key ] ) ? $this->data[ $key ] : null;
+		$data = $this->get_data();
+
+		return isset( $data[ $key ] ) ? $data[ $key ] : null;
 	}
 
 	public function delete( $key ) {
-		unset( $this->data[ $key ] );
-		$this->stash();
+		$data = $this->get_data();
+		unset( $data[ $key ] );
+		$this->stash( $data );
 	}
 
 	public function exists( $key ) {
-		return isset( $this->data[ $key ] );
+		$data = $this->get_data();
+
+		return isset( $data[ $key ] );
 	}
 
 	public function clear_cache() {
@@ -44,28 +44,31 @@ class CacheHandler implements CacheInterface {
 		if ( $session ) {
 			unset( $session->{$this->key} );
 		}
-		$this->data = [];
-	}
-
-	private function stash() {
-		$session = $this->get_session();
-		if ( $session && ! empty( $this->data ) ) {
-			$session->set( $this->key, $this->data );
-		}
 	}
 
 	/**
-	 * Always reads WC()->session fresh rather than caching a reference to it - this class is
-	 * registered as a container singleton (constructed once per request), but WC()->session can
-	 * itself be reassigned to a different object instance mid-request (e.g. WooCommerce's Store
-	 * API swaps it to a separate, token-based session handler for /wc/store/* requests, which the
-	 * Checkout Block's own checkout-completion request is). Caching the reference at construction
-	 * time meant every operation after such a swap silently wrote to/cleared an orphaned session
-	 * object that never actually gets persisted, instead of the one WordPress/WooCommerce
-	 * actually saves on shutdown.
+	 * Reads the current data straight from WC()->session on every call rather than from a value
+	 * snapshotted in the constructor. This class is a container singleton (built once per request),
+	 * and it can be constructed before WC()->session exists - e.g. when a 3rd party plugin
+	 * instantiates a gateway during plugins_loaded, or before WooCommerce swaps in its token-based
+	 * Store API session handler for /wc/store/* requests (Checkout Block completion). A snapshot
+	 * taken then left get()/exists() reading stale (often empty) data for the rest of the request.
 	 *
-	 * @return \WC_Session|null
+	 * @return array
 	 */
+	private function get_data() {
+		$session = $this->get_session();
+
+		return $session ? (array) $session->get( $this->key, [] ) : [];
+	}
+
+	private function stash( $data ) {
+		$session = $this->get_session();
+		if ( $session ) {
+			$session->set( $this->key, $data );
+		}
+	}
+
 	private function get_session() {
 		return WC()->session;
 	}

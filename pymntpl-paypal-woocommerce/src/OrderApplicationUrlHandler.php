@@ -84,6 +84,37 @@ class OrderApplicationUrlHandler {
 				if ( ! $payment_gateway ) {
 					return;
 				}
+
+				// The PayPal order id ($token) rides in the query string while the WooCommerce
+				// order is nominated separately ($order_id/$order_key). key_is_valid() only proves
+				// the caller owns that WooCommerce order - nothing here ties $token to it. Every
+				// plugin flow that builds a ppcp_order_return URL creates the PayPal order from an
+				// existing WooCommerce order (PurchaseUnitFactory::from_order(), which sets
+				// custom_id to the WC order id), so a legitimate $token always carries
+				// custom_id === $order->get_id(). Verify that before handing $token to the payment
+				// handler, so a different buyer's PayPal order id can't be paired with the caller's
+				// own order and captured against it (issue #15 / WPScan 47254).
+				if ( $token ) {
+					$paypal_order = $payment_gateway->payment_handler->client->orderMode( $order )->orders->retrieve( $token );
+					if ( is_wp_error( $paypal_order ) ) {
+						wc_add_notice( __( 'The PayPal order could not be verified. Please try again.', 'pymntpl-paypal-woocommerce' ), 'error' );
+						wp_safe_redirect( $order->get_checkout_payment_url() );
+						exit;
+					}
+					$custom_id = 0;
+					foreach ( $paypal_order->getPurchaseUnits() as $purchase_unit ) {
+						if ( $purchase_unit->getCustomId() ) {
+							$custom_id = $purchase_unit->getCustomId();
+							break;
+						}
+					}
+					if ( (int) $custom_id !== (int) $order->get_id() ) {
+						wc_add_notice( __( 'The PayPal order could not be matched to your order. Please try again.', 'pymntpl-paypal-woocommerce' ), 'error' );
+						wp_safe_redirect( $order->get_checkout_payment_url() );
+						exit;
+					}
+				}
+
 				// Set the order ID so it can be retrieved
 				$_POST["{$payment_gateway->id}_paypal_order_id"] = $token;
 				$_POST["{$payment_gateway->id}_billing_token"]   = $ba_token;

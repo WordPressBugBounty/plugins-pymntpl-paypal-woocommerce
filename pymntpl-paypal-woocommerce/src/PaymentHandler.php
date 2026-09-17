@@ -481,10 +481,8 @@ class PaymentHandler extends LegacyPaymentHandler {
 		// COMPLETED one (see process_payment() below), so this can't be gated to isComplete()
 		// only. custom_id is absent for orders created via the REST-driven cart/express-checkout
 		// flow (PurchaseUnitFactory::from_cart() doesn't set it, since no WC order exists yet at
-		// that point) - deliberately left unvalidated here; see issue #15 for why (no identified
-		// exposure channel for this specific path, and every session-based fix attempted for it
-		// turned out to be unreliable across classic vs. Checkout Block checkout and login-state
-		// changes mid-flow).
+		// that point); those orders are bound to the buyer by the session-cache check further
+		// down instead (issue #15 / WPScan 47254).
 		$has_custom_id = false;
 		$ids_match     = false;
 		foreach ( $paypal_order->getPurchaseUnits() as $purchase_unit ) {
@@ -534,6 +532,22 @@ class PaymentHandler extends LegacyPaymentHandler {
 					$order->get_id()
 				)
 			);
+		}
+
+		// No custom_id: order created from the cart (PurchaseUnitFactory::from_cart(), no WC order
+		// yet). A request-supplied id must then match the one CartOrder/CartItem cached in this
+		// session, so another buyer's order id can't be replayed against this order (#15).
+		if ( ! $has_custom_id && ! $order_id_from_cache ) {
+			$cache_key       = sprintf( '%s_%s', $this->payment_method->id, Constants::PAYPAL_ORDER_ID );
+			$cached_order_id = $this->cache->get( $cache_key );
+			if ( ! $cached_order_id || (string) $cached_order_id !== (string) $paypal_order->getId() ) {
+				// Clear the submitted id (else the retry re-reads it and loops), then retry with a
+				// fresh, WC-order-bound PayPal order.
+				unset( $_POST[ $this->payment_method->id . '_paypal_order_id' ] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+				$this->cache->delete( $cache_key );
+				$this->payment_method->logger->info( sprintf( 'PayPal order %1$s not bound to session for store order %2$s. Creating a new PayPal order.', $paypal_order->getId(), $order->get_id() ), 'payment' );
+				throw new RetryException( 'Create new order' );
+			}
 		}
 
 		// Skip gateway validation for already-completed orders; those are handled by the ID check above.
