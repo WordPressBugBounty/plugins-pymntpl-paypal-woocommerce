@@ -607,7 +607,8 @@ class PayPalGateway extends AbstractGateway {
 		$values  = [
 			wc_string_to_bool( $setting->get_option( 'paypal_enabled' ) ),
 			wc_string_to_bool( $setting->get_option( 'paylater_enabled' ) ),
-			wc_string_to_bool( $setting->get_option( 'card_enabled' ) )
+			wc_string_to_bool( $setting->get_option( 'card_enabled' ) ),
+			wc_string_to_bool( $setting->get_option( 'venmo_enabled' ) )
 		];
 
 		return count( array_filter( $values ) ) > 0;
@@ -657,6 +658,12 @@ class PayPalGateway extends AbstractGateway {
 					'value'   => 'yes',
 					'default' => wc_string_to_bool( $this->get_option( 'card_enabled' ) ) && in_array( 'product', $this->get_option( 'credit_card_sections', [] ) ) ? 'yes' : 'no'
 				],
+				'venmo_enabled'    => [
+					'title'   => __( 'Venmo Enabled', 'pymntpl-paypal-woocommerce' ),
+					'type'    => 'checkbox',
+					'value'   => 'yes',
+					'default' => wc_string_to_bool( $this->get_option( 'venmo_enabled' ) ) && in_array( 'product', $this->get_option( 'venmo_sections', [] ) ) ? 'yes' : 'no'
+				],
 				'width'            => [
 					'title'       => __( 'Button Width', 'pymntpl-paypal-woocommerce' ),
 					'type'        => 'select',
@@ -688,7 +695,8 @@ class PayPalGateway extends AbstractGateway {
 			// commented out in version 2.0.1
 			//unset( $options['checkout'] );
 		} elseif ( $type === 'venmo' ) {
-			unset( $options['product'], $options['cart'] );
+			// commented out in 2.0.28 because Venmo supports shipping changes now
+			//unset( $options['product'], $options['cart'] );
 		}
 
 		return apply_filters( 'wc_ppcp_get_payment_section_options', $options, $type, $this );
@@ -703,6 +711,9 @@ class PayPalGateway extends AbstractGateway {
 			if ( $context->is_product() ) {
 				$setting              = new ProductSettings( Utils::get_queried_product_id() );
 				$query_params->intent = $setting->get_option( 'intent' );
+				if ( wc_string_to_bool( $setting->get_option( 'venmo_enabled' ) ) ) {
+					$query_params->add_enabled_funding( 'venmo' );
+				}
 			} else {
 				$query_params->intent = $this->get_option( 'intent' );
 				if ( wc_string_to_bool( $this->get_option( "venmo_enabled" ) ) ) {

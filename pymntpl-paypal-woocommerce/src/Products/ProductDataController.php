@@ -54,7 +54,8 @@ class ProductDataController {
 				'funding'      => array_keys( array_filter( [
 					'paypal'   => \wc_string_to_bool( $settings->get_option( 'paypal_enabled' ) ),
 					'paylater' => \wc_string_to_bool( $settings->get_option( 'paylater_enabled' ) ),
-					'card'     => \wc_string_to_bool( $settings->get_option( 'card_enabled' ) )
+					'card'     => \wc_string_to_bool( $settings->get_option( 'card_enabled' ) ),
+					'venmo'    => \wc_string_to_bool( $settings->get_option( 'venmo_enabled' ) )
 				] ) )
 			] );
 		}

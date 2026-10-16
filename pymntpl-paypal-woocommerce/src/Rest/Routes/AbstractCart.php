@@ -63,7 +63,9 @@ class AbstractCart extends AbstractRoute {
 
 			// validate the address info
 			$address = $shipping->getAddress();
-			if ( ! Utils::is_valid_address( $address, 'shipping' ) ) {
+			if ( $this->is_shipping_address_excluded( $request ) ) {
+				unset( $shipping->address );
+			} elseif ( ! Utils::is_valid_address( $address, 'shipping' ) ) {
 				unset( $shipping->address );
 				// If the payer's address is valid, use that as the default address used by PayPal
 				if ( Utils::is_valid_address( $order->getPayer()->getAddress(), 'shipping' ) ) {
@@ -77,6 +79,21 @@ class AbstractCart extends AbstractRoute {
 		do_action( 'wc_ppcp_get_order_from_cart', $order, $request );
 
 		return $order;
+	}
+
+	/**
+	 * Venmo won't let the customer change a shipping address that's provided when the PayPal order
+	 * is created. Leave the address out unless the customer entered it on the checkout page, so they
+	 * can choose it in Venmo (e.g. product, cart, minicart, and express checkout).
+	 *
+	 * @param \WP_REST_Request $request
+	 *
+	 * @return bool
+	 * @since 2.0.28
+	 */
+	protected function is_shipping_address_excluded( $request ) {
+		return $request->get_param( 'funding_source' ) === 'venmo'
+		       && $request->get_param( 'context' ) !== 'checkout';
 	}
 
 	/**

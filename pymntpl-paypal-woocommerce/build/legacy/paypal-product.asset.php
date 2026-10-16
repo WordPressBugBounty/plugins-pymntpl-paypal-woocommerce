@@ -1,1 +1,1 @@
-<?php return array('dependencies' => array('jquery', 'lodash', 'wc-ppcp-actions', 'wc-ppcp-cart', 'wc-ppcp-product', 'wc-ppcp-utils', 'wp-api-fetch', 'wp-hooks'), 'version' => '00f600325a58bff5c3b7');
+<?php return array('dependencies' => array('jquery', 'lodash', 'wc-ppcp-actions', 'wc-ppcp-cart', 'wc-ppcp-product', 'wc-ppcp-utils', 'wp-api-fetch', 'wp-hooks'), 'version' => 'de812d7750bdd18b7561');

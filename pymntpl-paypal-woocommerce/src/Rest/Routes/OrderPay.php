@@ -4,6 +4,7 @@ namespace PaymentPlugins\WooCommerce\PPCP\Rest\Routes;
 
 use PaymentPlugins\PayPalSDK\OrderApplicationContext;
 use PaymentPlugins\PayPalSDK\PurchaseUnit;
+use PaymentPlugins\WooCommerce\PPCP\Constants;
 use PaymentPlugins\WooCommerce\PPCP\Factories\CoreFactories;
 use PaymentPlugins\WooCommerce\PPCP\Logger;
 use PaymentPlugins\WooCommerce\PPCP\Rest\Validators\RouteValidator;
@@ -110,8 +111,18 @@ class OrderPay extends AbstractRoute {
 			OrderFilterUtil::filter_order( $paypal_order );
 			$result = $this->client->orderMode( $order )->orders->create( $paypal_order );
 			if ( is_wp_error( $result ) ) {
+				/**
+				 * @var \WP_Error $result
+				 */
 				throw new \Exception( $result->get_error_message() );
 			}
+
+			// Bind the PayPal order to the WC order so PayPalOrderRoute can return it if the JS SDK's
+			// actions.order.get() fails. Order meta is used instead of the session because a guest
+			// paying from an email link may not have a persistent WC session.
+			// save_meta_data() avoids firing the order update hooks on every PayPal button click.
+			$order->update_meta_data( Constants::ORDER_ID, $result->id );
+			$order->save_meta_data();
 
 			return $result->id;
 		} catch ( \Exception $e ) {

@@ -32,6 +32,7 @@ use PaymentPlugins\WooCommerce\PPCP\Rest\Routes\CartShipping;
 use PaymentPlugins\WooCommerce\PPCP\Rest\Routes\Admin\ConnectAccount;
 use PaymentPlugins\WooCommerce\PPCP\Rest\Routes\CheckoutFormValidation;
 use PaymentPlugins\WooCommerce\PPCP\Rest\Routes\OrderPay;
+use PaymentPlugins\WooCommerce\PPCP\Rest\Routes\PayPalOrderRoute;
 use PaymentPlugins\WooCommerce\PPCP\Rest\Routes\VaultPaymentTokensRoute;
 use PaymentPlugins\WooCommerce\PPCP\Rest\Routes\VaultSetupTokensRoute;
 use PaymentPlugins\WooCommerce\PPCP\Rest\Routes\WebhookRoute;
@@ -78,6 +79,7 @@ class RestController {
 				$this->container->get( Logger::class )
 			),
 			'cart/order'                 => new CartOrder( $this->container->get( AdvancedSettings::class ), $this->container->get( CheckoutValidator::class ), ...$cart_args ),
+			'paypal-order'               => new PayPalOrderRoute( ...$cart_args ),
 			'order/pay'                  => new OrderPay(
 				$this->container->get( CoreFactories::class ),
 				$this->container->get( PayPalClient::class ),
